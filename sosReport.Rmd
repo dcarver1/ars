@@ -1,0 +1,111 @@
+---
+title: "Seeds of Success: Collection Diversity, Richness, and Conservation "
+author: Colin Khoury, Stephanie Green, Daniel Carver 
+date: June 22, 2018 
+output:
+  html_document:
+    theme: 'yeti'
+    highlight: 'tango'
+    toc: true
+    code_folding: hide
+    df_print: paged
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+# Goal 
+
+Aim of article- examine and report on the diversity collected via the BLM SOS program, and its past as well as potential future uses
+
+# Introduction 
+
+Total diversity collected (species, # of samples, maybe make maps of spatial distribution of collected diversity)
+How many are CWR
+
+```{r, echo = FALSE}
+#import SOS data 
+sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
+
+#Find the total number of recorded entries 
+totalSamples <- nrow(sosData)
+print(totalSamples)
+```
+
+```{r, echo=FALSE}
+#Determine the total number of unique families collect and the number of collection in each family 
+uniqueFam <- nrow(unique(sosData["FAMILY"]))
+
+## Determine the total number of unique GENUS collect and the number of collection in each GENUS 
+uniqueGen <- nrow(unique(sosData["GENUS"]))
+print(uniqueGen)
+
+
+## Determine the total number of unique SPECIES collect and the number of collection in each SPECIES 
+uniqueSpe <- nrow(unique(sosData["SPECIES"]))
+
+## Determine the total number of unique SubSPECIES collect and the number of collection in each SubSPECIES 
+subSpecies <- sosData[grep("ssp." ,sosData$NAME),]# for some reason the ['colName'] structure does not seem
+# work with the grep function
+uniqueSub<- nrow(unique(subSpecies["NAME"]))
+
+## Determine the total number of unique varieties collected and the number of collections in each varieties 
+varSpecies <- sosData[grep("var." ,sosData$NAME),] # for some reason the ['colName'] structure does not seem
+# work with the grep function
+uniqueVar<- nrow(unique(varSpecies["NAME"]))
+
+# rather then a print statement I think this should be a nice table. All outputs should be something interesting too look at. 
+print(paste( "This data set contains a total of "
+             ,totalSamples, "samples. Of which "
+             ,uniqueFam," plant families, "
+             , uniqueGen, " plant genus and "
+             ,uniqueSpe, " unique species are contained" ) )
+```
+
+```{r, echo = FALSE}
+# histogram with added parameters
+collectionYears <- sosData$COLL_YR
+hist(collectionYears,
+     main="Accessions collected by SOS",
+     xlab="Collection Year",
+     xlim = c(2000,2018),
+     ylab="Relative Abundance",
+     col="darkmagenta"
+)
+
+```
+
+
+
+
+# Conservation 
+
+- How much adopted by Curators, how much "orphaned" at W6 - need to pull from GRIN Global (examine "site") 
+- How much is at NLGRP for long term backup
+- Viability/conservation issues (Annette) - proportion easy to germinate vs not, other storage issues
+
+
+# Uses
+
+Report on distributions out of NPGS of materials from SOS, by year, by receiver, by species or taxonomic group
+Investigate reasons for use- narrative description in GRIN Global
+How many are CWR and impacts
+
+# Discussion
+
+- W6 doesnt have the resources to manage seeds indefinitely
+- Constraints / challenges to adopting more wild plants
+- Constraints with regard to getting materials into long term storage
+- Challenge of not having seed testing techniques/rules worked out for species
+
+
+## Quarterly Results {.tabset .tabset-fade .tabset-pills}
+
+
+```{r, echo = FALSE}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
