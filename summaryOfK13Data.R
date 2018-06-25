@@ -4,22 +4,22 @@
 # This is just the testing script for starting to play around with the Seeds Of Success information
 # ##
 
-arsData <- read.csv("H:\\SOS_Project\\analysisData\\CWR_US_inventory_2013_7_10.csv")
+K13Data <- read.csv("H:\\SOS_Project\\analysisData\\CWR_US_inventory_2013_7_10.csv")
 
 #create a list of col names 
-colNames <-colnames(arsData)
+colNames <-colnames(K13Data)
 print(colNames)
 
 # summary will produce a table that shows the count of all unique features 
-testSum <- head(summary(arsData[1]))
+testSum <- head(summary(K13Data[1]))
 testSum 
 
 #unique will produce a list of all the un 
-testName <-head(unique(arsData[1]))
+testName <-head(unique(K13Data[1]))
 print(testName)
 
 #Find the total number of recorded entries 
-totalSamples <- nrow(arsData)
+totalSamples <- nrow(K13Data)
 print(totalSamples)
 
 
@@ -28,7 +28,7 @@ print(totalSamples)
 ### 
 
 ## Determine the total number of unique SubSPECIES collect and the number of collection in each SubSPECIES 
-subSpecies <- arsData[grep("subsp." ,arsData$Taxon),]# for some reason the ['colName'] structure does not seem
+subSpecies <- K13Data[grep("subsp." ,K13Data$Taxon),]# for some reason the ['colName'] structure does not seem
 # work with the grep function
 uniqueSub<- nrow(unique(subSpecies["Taxon"]))
 print(uniqueSub)
@@ -36,7 +36,7 @@ summarySub <- summary(subSpecies["Taxon"])
 print(summarySub)
 
 ## Determine the total number of unique varieties collected and the number of collections in each varieties 
-varSpecies <- arsData[grep("var." ,arsData$Taxon),] # for some reason the ['colName'] structure does not seem
+varSpecies <- K13Data[grep("var." ,K13Data$Taxon),] # for some reason the ['colName'] structure does not seem
 # work with the grep function
 uniqueVar<- nrow(unique(varSpecies["Taxon"]))
 print(uniqueVar)

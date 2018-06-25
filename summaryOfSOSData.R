@@ -14,14 +14,31 @@ group <- sosData
 group1 <- gsub("ssp.","subsp.", group$NAME) 
 
 
-
 #create a list of col names 
 colNames <-colnames(sosData)
 print(colNames)
 
 # summary will produce a table that shows the count of all unique features 
-testSum <- head(summary(sosData[1]))
-testSum 
+testSum <- sort(table(sosData$NAME), decreasing = TRUE)
+head(testSum) 
+hist(testSum, 
+     main="Histogram for Air Passengers", 
+     xlab="Number of Accessions", 
+     border="blue", 
+     ylim = c(1,250),
+     xlim=c(5,500),
+     col="green",
+     breaks=50)
+
+testSum[1:100]
+
+plot(testSum,
+     type =  "h",
+     main = "Distribution of the number of Accessions Collected for SOS Taxa",
+     xlab = "Taxa",
+     ylab = "Number of Accessions")
+     
+
 
 #unique will produce a list of all the un 
 testName <-head(unique(sosData[1]))
@@ -58,7 +75,14 @@ uniqueFam <- nrow(unique(sosData["FAMILY"]))
 print(uniqueFam)
 summaryFam <- summary(sosData["FAMILY"])
 print(summaryFam)
+familyPlot <- sort(table(sosData$FAMILY), decreasing = TRUE)
 
+hist(familyPlot,
+     main="Accessions collected by SOS",
+     xlab="Collection Year",
+     ylab="Relative Abundance",
+     col="darkmagenta"
+)
 ## Determine the total number of unique GENUS collect and the number of collection in each GENUS 
 uniqueGen <- nrow(unique(sosData["GENUS"]))
 print(uniqueGen)
