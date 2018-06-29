@@ -22,45 +22,67 @@ Aim of article- examine and report on the diversity collected via the BLM SOS pr
 
 Total diversity collected (species, # of samples, maybe make maps of spatial distribution of collected diversity)
 How many are CWR
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#import all necessary libraries 
+#install.packages("dplyr", "lemon", "ggplot2", "plyr") #Keep this commented out to knit: look into how to get around this. 
+library(dplyr)
+library(lemon)
+library(ggplot2)
+library(plyr)
+```
 
-```{r, echo = FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #import SOS data 
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
 
 #Find the total number of recorded entries 
 totalSamples <- nrow(sosData)
-print(totalSamples)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #Determine the total number of unique families collect and the number of collection in each family 
-uniqueFam <- nrow(unique(sosData["FAMILY"]))
+uniqueFam <- dplyr::summarise(sosData,n_distinct(sosData$FAMILY))
+uniqueFam1 <- dplyr::count(sosData,FAMILY) #keep this in hear incase we want to display it 
 
 ## Determine the total number of unique GENUS collect and the number of collection in each GENUS 
-uniqueGen <- nrow(unique(sosData["GENUS"]))
-print(uniqueGen)
-
+uniqueGen <-  dplyr::summarise(sosData,n_distinct(sosData$GENUS))
+uniqueGen1 <- dplyr::count(sosData, GENUS)
 
 ## Determine the total number of unique SPECIES collect and the number of collection in each SPECIES 
-uniqueSpe <- nrow(unique(sosData["SPECIES"]))
+uniqueSpe <-  dplyr::summarise(sosData,n_distinct(sosData$SPECIES))
+uniqueSpe1 <- dplyr::count(sosData, SPECIES)
+
 
 ## Determine the total number of unique SubSPECIES collect and the number of collection in each SubSPECIES 
 subSpecies <- sosData[grep("ssp." ,sosData$NAME),]# for some reason the ['colName'] structure does not seem
 # work with the grep function
-uniqueSub<- nrow(unique(subSpecies["NAME"]))
+uniqueSub<- dplyr::summarise(subSpecies,n_distinct(subSpecies$NAME))
 
 ## Determine the total number of unique varieties collected and the number of collections in each varieties 
 varSpecies <- sosData[grep("var." ,sosData$NAME),] # for some reason the ['colName'] structure does not seem
 # work with the grep function
-uniqueVar<- nrow(unique(varSpecies["NAME"]))
+uniqueVar<- dplyr::summarise(varSpecies,n_distinct(varSpecies$NAME))
 
 # rather then a print statement I think this should be a nice table. All outputs should be something interesting too look at. 
 print(paste( "This data set contains a total of "
              ,totalSamples, "samples. Of which "
              ,uniqueFam," plant families, "
-             , uniqueGen, " plant genus and "
-             ,uniqueSpe, " unique species are contained" ) )
+             ,uniqueGen, " plant genus and "
+             ,uniqueSpe, " unique sub species are contained" ) )
+
+### 
+# testing about the nice charts using lemon and kable
+# https://cran.r-project.org/web/packages/lemon/vignettes/lemon_print.html
+###
+library(lemon)
+knit_print.data.frame <- lemon_print
+
 ```
+
+```{r caption="Data frame is now printed using `kable`.", rows.print=15}
+# uniqueFam1
+```
+The Seeds of Success program has been collecting seeds since 2000. The 
 
 ```{r, echo = FALSE}
 # histogram with added parameters
@@ -69,25 +91,63 @@ hist(collectionYears,
      main="Accessions collected by SOS",
      xlab="Collection Year",
      xlim = c(2000,2018),
-     ylab="Relative Abundance",
-     col="darkmagenta"
+     ylim = c(0,3500),
+     ylab="Number of Accession Collected",
+     col="blue"
 )
 
 ```
+
+The importance of this collection increased by the fact that many of the seed taxa that were collected are defined as either Wild Crop Relatives or World Economic Plants. 
 
 
 
 
 # Conservation 
 
-- How much adopted by Curators, how much "orphaned" at W6 - need to pull from GRIN Global (examine "site") 
+- How much adopted by Curators, how much "orphaned" at W6 - need to pull from GRIN Global (examine "site") #Not sure how to answer this some at this time 
 - How much is at NLGRP for long term backup
+    - * there are 12959 SOS accessions that are maintianed in long term storage backup at NLGRP.* 
 - Viability/conservation issues (Annette) - proportion easy to germinate vs not, other storage issues
+
+```{r}
+# read in the SOS data 
+grinData <- read.csv("H:\\SOS_Project\\analysisData\\sosAccessions.csv")
+
+
+#detemine the total number of taxon in dataset 
+grinTotalUnique <- nrow(unique(grinData[1]))
+
+
+
+```
 
 
 # Uses
 
 Report on distributions out of NPGS of materials from SOS, by year, by receiver, by species or taxonomic group
+```{r,caption="Data frame is now printed using `kable`}
+deliveryData <-read.csv("H:\\SOS_Project\\analysisData\\sosOrdersTotal.csv")
+print(deliveryData)
+
+# select all rows that were delivered to ARS locations 
+ars <- filter(deliveryData, category_code == "UARS")
+ars <- ars[,1:2]
+labelsColumns <- c('Number of Deliveries', "Reason for Delivery" )
+values2 <- c("Replenishment", "Germination", "Observation"
+                              ,"Information only", "Transfer", "Backup"
+                              ,"Distribution")
+ars$order_type_code <- values2
+
+colnames(ars) <- labelsColumns
+colnames(ars)
+ars<- ars[order(-ars$'Number of Deliveries'),]
+
+print(ars)
+
+
+```
+
 Investigate reasons for use- narrative description in GRIN Global
 How many are CWR and impacts
 
@@ -100,12 +160,3 @@ How many are CWR and impacts
 
 
 ## Quarterly Results {.tabset .tabset-fade .tabset-pills}
-
-
-```{r, echo = FALSE}
-plot(cars)
-```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
