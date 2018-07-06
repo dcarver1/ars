@@ -281,6 +281,35 @@ div.tocify {
 </div>
 
 
+<div id="checklist" class="section level1">
+<h1>CheckList</h1>
+<div id="datasets" class="section level2">
+<h2>Datasets</h2>
+<ul>
+<li>SOSdata = 1</li>
+<li>K13</li>
+<li>Economic Plants =2</li>
+<li>wild crop Relatives = 3</li>
+<li>GRINSOS</li>
+<li>all inventory = 4</li>
+<li>deliveries with taxon = 5</li>
+<li>WEP =6</li>
+</ul>
+</div>
+<div id="connections" class="section level2">
+<h2>connections</h2>
+<ul>
+<li>1&amp;2 = Of all the SOS seeds collected how many species are considered to be Economic plants in north america</li>
+<li>1&amp;3 = Of all the SOS seeds collected how may species are considiered to be Wild Crop Relatives in North America</li>
+<li>4&amp;2 = Of all the SOS seeds maintained by ARS how many species are considered to be Economic plants in north america</li>
+<li>4&amp;3 = Of all the SOS seeds maintained by ARS how many species are considered to be Wild Crop Relatives in north america</li>
+<li>5 = Deliveries: Who received, Reason, data, taxa shipped</li>
+<li>1&amp;6 = 1&amp;2 = Of all the SOS seeds collected how many species are considered to be World Economic plants</li>
+<li>4&amp;6 = 1&amp;2 = Of all the SOS seeds maintained by ARS how many species are considered to be World Economic plants</li>
+<li>1 = summary of all taxa collected</li>
+</ul>
+</div>
+</div>
 <div id="goal" class="section level1">
 <h1>Goal</h1>
 <p>Aim of article- examine and report on the diversity collected via the BLM SOS program, and its past as well as potential future uses</p>
@@ -288,734 +317,241 @@ div.tocify {
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>Total diversity collected (species, # of samples, maybe make maps of spatial distribution of collected diversity) How many are CWR</p>
-<pre><code>## [1] &quot;This data set contains a total of  23577 samples. Of which  176  plant families,  1153  plant genus and  2693  unique sub species are contained&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">uniqueFam1</code></pre></div>
-<table>
-<caption>Data frame is now printed using <code>kable</code>.</caption>
-<thead>
-<tr class="header">
-<th align="left">FAMILY</th>
-<th align="right">n</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left"></td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">ACANTHACEAE</td>
-<td align="right">16</td>
-</tr>
-<tr class="odd">
-<td align="left">ACERACEAE</td>
-<td align="right">20</td>
-</tr>
-<tr class="even">
-<td align="left">ACORACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">AGAVACEAE</td>
-<td align="right">81</td>
-</tr>
-<tr class="even">
-<td align="left">AIZOACEAE</td>
-<td align="right">5</td>
-</tr>
-<tr class="odd">
-<td align="left">ALISMATACEAE</td>
-<td align="right">21</td>
-</tr>
-<tr class="even">
-<td align="left">ALLIACEAE</td>
-<td align="right">274</td>
-</tr>
-<tr class="odd">
-<td align="left">AMARANTHACEAE</td>
-<td align="right">37</td>
-</tr>
-<tr class="even">
-<td align="left">AMARYLLIDACEAE</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="left">AMBYSTOMATIDAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">ANACARDIACEAE</td>
-<td align="right">99</td>
-</tr>
-<tr class="odd">
-<td align="left">ANNONACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">ANTHERICACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">APIACEAE</td>
-<td align="right">585</td>
-</tr>
-<tr class="even">
-<td align="left">APOCYNACEAE</td>
-<td align="right">21</td>
-</tr>
-<tr class="odd">
-<td align="left">AQUIFOLIACEAE</td>
-<td align="right">40</td>
-</tr>
-<tr class="even">
-<td align="left">ARACEAE</td>
-<td align="right">6</td>
-</tr>
-<tr class="odd">
-<td align="left">ARALIACEAE</td>
-<td align="right">18</td>
-</tr>
-<tr class="even">
-<td align="left">ARECACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">ARISTOLOCHIACEAE</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">ASCLEPIADACEAE</td>
-<td align="right">146</td>
-</tr>
-<tr class="odd">
-<td align="left">ASTERACEAE</td>
-<td align="right">5303</td>
-</tr>
-<tr class="even">
-<td align="left">BALSAMINACEAE</td>
-<td align="right">5</td>
-</tr>
-<tr class="odd">
-<td align="left">BATACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">BERBERIDACEAE</td>
-<td align="right">33</td>
-</tr>
-<tr class="odd">
-<td align="left">BETULACEAE</td>
-<td align="right">42</td>
-</tr>
-<tr class="even">
-<td align="left">BIGNONIACEAE</td>
-<td align="right">25</td>
-</tr>
-<tr class="odd">
-<td align="left">BLECHNACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">BORAGINACEAE</td>
-<td align="right">244</td>
-</tr>
-<tr class="odd">
-<td align="left">BRASSICACEAE</td>
-<td align="right">376</td>
-</tr>
-<tr class="even">
-<td align="left">BROMELIACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">BUDDLEJACEAE</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="left">CACTACEAE</td>
-<td align="right">77</td>
-</tr>
-<tr class="odd">
-<td align="left">CALYCANTHACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">CAMPANULACEAE</td>
-<td align="right">85</td>
-</tr>
-<tr class="odd">
-<td align="left">CANNABACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">CAPPARACEAE</td>
-<td align="right">121</td>
-</tr>
-<tr class="odd">
-<td align="left">CAPRIFOLIACEAE</td>
-<td align="right">127</td>
-</tr>
-<tr class="even">
-<td align="left">CARYOPHYLLACEAE</td>
-<td align="right">124</td>
-</tr>
-<tr class="odd">
-<td align="left">CELASTRACEAE</td>
-<td align="right">9</td>
-</tr>
-<tr class="even">
-<td align="left">CHENOPODIACEAE</td>
-<td align="right">614</td>
-</tr>
-<tr class="odd">
-<td align="left">CISTACEAE</td>
-<td align="right">46</td>
-</tr>
-<tr class="even">
-<td align="left">CLETHRACEAE</td>
-<td align="right">33</td>
-</tr>
-<tr class="odd">
-<td align="left">CLUSIACEAE</td>
-<td align="right">47</td>
-</tr>
-<tr class="even">
-<td align="left">COCHLOSPERMACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">COMMELINACEAE</td>
-<td align="right">30</td>
-</tr>
-<tr class="even">
-<td align="left">COMPOSITAE</td>
-<td align="right">131</td>
-</tr>
-<tr class="odd">
-<td align="left">CONVALLARIACEAE</td>
-<td align="right">12</td>
-</tr>
-<tr class="even">
-<td align="left">CONVOLVULACEAE</td>
-<td align="right">24</td>
-</tr>
-<tr class="odd">
-<td align="left">CORNACEAE</td>
-<td align="right">36</td>
-</tr>
-<tr class="even">
-<td align="left">CORYLACEAE</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="left">CRASSULACEAE</td>
-<td align="right">54</td>
-</tr>
-<tr class="even">
-<td align="left">CROSSOSOMATACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">CUCURBITACEAE</td>
-<td align="right">9</td>
-</tr>
-<tr class="even">
-<td align="left">CUPRESSACEAE</td>
-<td align="right">72</td>
-</tr>
-<tr class="odd">
-<td align="left">CYPERACEAE</td>
-<td align="right">1165</td>
-</tr>
-<tr class="even">
-<td align="left">CYRILLACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">DIAPENSIACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">DIOSCOREACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">DRACAENACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">DROSERACEAE</td>
-<td align="right">8</td>
-</tr>
-<tr class="odd">
-<td align="left">EBENACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">ELAEAGNACEAE</td>
-<td align="right">20</td>
-</tr>
-<tr class="odd">
-<td align="left">ELATINACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">EMPETRACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">EPHEDRACEAE</td>
-<td align="right">21</td>
-</tr>
-<tr class="even">
-<td align="left">ERICACEAE</td>
-<td align="right">232</td>
-</tr>
-<tr class="odd">
-<td align="left">ERIOCAULACEAE</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="left">EUPHORBIACEAE</td>
-<td align="right">75</td>
-</tr>
-<tr class="odd">
-<td align="left">FABACEAE</td>
-<td align="right">1122</td>
-</tr>
-<tr class="even">
-<td align="left">FAGACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">FOUQUIERIACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">FRANKENIACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">FUMARIACEAE</td>
-<td align="right">18</td>
-</tr>
-<tr class="even">
-<td align="left">GARRYACEAE</td>
-<td align="right">8</td>
-</tr>
-<tr class="odd">
-<td align="left">GENTIANACEAE</td>
-<td align="right">118</td>
-</tr>
-<tr class="even">
-<td align="left">GERANIACEAE</td>
-<td align="right">32</td>
-</tr>
-<tr class="odd">
-<td align="left">GROSSULARIACEAE</td>
-<td align="right">73</td>
-</tr>
-<tr class="even">
-<td align="left">HAEMODORACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">HALORAGACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">HAMAMELIDACEAE</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="left">HYACINTHACEAE</td>
-<td align="right">18</td>
-</tr>
-<tr class="even">
-<td align="left">HYDRANGEACEAE</td>
-<td align="right">18</td>
-</tr>
-<tr class="odd">
-<td align="left">HYDROCHARITACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">HYDROPHYLLACEAE</td>
-<td align="right">235</td>
-</tr>
-<tr class="odd">
-<td align="left">HYPOXIDACEAE</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="left">ILLECEBRACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">IRIDACEAE</td>
-<td align="right">81</td>
-</tr>
-<tr class="even">
-<td align="left">JUNCACEAE</td>
-<td align="right">335</td>
-</tr>
-<tr class="odd">
-<td align="left">JUNCAGINACEAE</td>
-<td align="right">16</td>
-</tr>
-<tr class="even">
-<td align="left">KRAMERIACEAE</td>
-<td align="right">8</td>
-</tr>
-<tr class="odd">
-<td align="left">LAMIACEAE</td>
-<td align="right">430</td>
-</tr>
-<tr class="even">
-<td align="left">LAURACEAE</td>
-<td align="right">14</td>
-</tr>
-<tr class="odd">
-<td align="left">LEMNACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">LENTIBULARIACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">LILIACEAE</td>
-<td align="right">164</td>
-</tr>
-<tr class="even">
-<td align="left">LIMNANTHACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">LINACEAE</td>
-<td align="right">79</td>
-</tr>
-<tr class="even">
-<td align="left">LOASACEAE</td>
-<td align="right">135</td>
-</tr>
-<tr class="odd">
-<td align="left">LOGANIACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">LYTHRACEAE</td>
-<td align="right">28</td>
-</tr>
-<tr class="odd">
-<td align="left">MAGNOLIACEAE</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="left">MALPIGHIACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">MALVACEAE</td>
-<td align="right">333</td>
-</tr>
-<tr class="even">
-<td align="left">MELANTHIACEAE</td>
-<td align="right">56</td>
-</tr>
-<tr class="odd">
-<td align="left">MELASTOMATACEAE</td>
-<td align="right">25</td>
-</tr>
-<tr class="even">
-<td align="left">MENISPERMACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">MENYANTHACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">MOLLUGINACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">MYRICACEAE</td>
-<td align="right">46</td>
-</tr>
-<tr class="even">
-<td align="left">NELUMBONACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">NYCTAGINACEAE</td>
-<td align="right">40</td>
-</tr>
-<tr class="even">
-<td align="left">OLEACEAE</td>
-<td align="right">36</td>
-</tr>
-<tr class="odd">
-<td align="left">ONAGRACEAE</td>
-<td align="right">434</td>
-</tr>
-<tr class="even">
-<td align="left">ORCHIDACEAE</td>
-<td align="right">35</td>
-</tr>
-<tr class="odd">
-<td align="left">OXALIDACEAE</td>
-<td align="right">5</td>
-</tr>
-<tr class="even">
-<td align="left">PAEONIACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">PAPAVERACEAE</td>
-<td align="right">103</td>
-</tr>
-<tr class="even">
-<td align="left">PARNASSIACEAE</td>
-<td align="right">24</td>
-</tr>
-<tr class="odd">
-<td align="left">PASSIFLORACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">PEDALIACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">PENTHORACEAE</td>
-<td align="right">6</td>
-</tr>
-<tr class="even">
-<td align="left">PHRYMACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">PHYTOLACCACEAE</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">PINACEAE</td>
-<td align="right">45</td>
-</tr>
-<tr class="odd">
-<td align="left">PLANTAGINACEAE</td>
-<td align="right">132</td>
-</tr>
-<tr class="even">
-<td align="left">PLATANACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">PLUMBAGINACEAE</td>
-<td align="right">33</td>
-</tr>
-<tr class="even">
-<td align="left">POACEAE</td>
-<td align="right">4522</td>
-</tr>
-<tr class="odd">
-<td align="left">POLEMONIACEAE</td>
-<td align="right">199</td>
-</tr>
-<tr class="even">
-<td align="left">POLYGALACEAE</td>
-<td align="right">6</td>
-</tr>
-<tr class="odd">
-<td align="left">POLYGONACEAE</td>
-<td align="right">582</td>
-</tr>
-<tr class="even">
-<td align="left">PONTEDERIACEAE</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="left">PORTULACACEAE</td>
-<td align="right">42</td>
-</tr>
-<tr class="even">
-<td align="left">POTAMOGETONACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">PRIMULACEAE</td>
-<td align="right">66</td>
-</tr>
-<tr class="even">
-<td align="left">PYROLACEAE</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="left">RANUNCULACEAE</td>
-<td align="right">312</td>
-</tr>
-<tr class="even">
-<td align="left">RESEDACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">RHAMNACEAE</td>
-<td align="right">130</td>
-</tr>
-<tr class="even">
-<td align="left">ROSACEAE</td>
-<td align="right">977</td>
-</tr>
-<tr class="odd">
-<td align="left">RUBIACEAE</td>
-<td align="right">79</td>
-</tr>
-<tr class="even">
-<td align="left">RUTACEAE</td>
-<td align="right">17</td>
-</tr>
-<tr class="odd">
-<td align="left">SALICACEAE</td>
-<td align="right">46</td>
-</tr>
-<tr class="even">
-<td align="left">SANTALACEAE</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="left">SAPINDACEAE</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="left">SAPOTACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">SARRACENIACEAE</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">SAURURACEAE</td>
-<td align="right">13</td>
-</tr>
-<tr class="odd">
-<td align="left">SAXIFRAGACEAE</td>
-<td align="right">77</td>
-</tr>
-<tr class="even">
-<td align="left">SCHEUCHZERIACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">SCROPHULARIACEAE</td>
-<td align="right">1027</td>
-</tr>
-<tr class="even">
-<td align="left">SIMAROUBACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">SIMMONDSIACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">SMILACACEAE</td>
-<td align="right">17</td>
-</tr>
-<tr class="odd">
-<td align="left">SOLANACEAE</td>
-<td align="right">92</td>
-</tr>
-<tr class="even">
-<td align="left">STAPHYLEACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">STERCULIACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">STYRACACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">TAXACEAE</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">TAXODIACEAE</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">THEACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">TRILLIACEAE</td>
-<td align="right">6</td>
-</tr>
-<tr class="odd">
-<td align="left">TYPHACEAE</td>
-<td align="right">74</td>
-</tr>
-<tr class="even">
-<td align="left">ULMACEAE</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="left">UNKNOWN</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">URTICACEAE</td>
-<td align="right">13</td>
-</tr>
-<tr class="odd">
-<td align="left">VALERIANACEAE</td>
-<td align="right">21</td>
-</tr>
-<tr class="even">
-<td align="left">VERBENACEAE</td>
-<td align="right">67</td>
-</tr>
-<tr class="odd">
-<td align="left">VIOLACEAE</td>
-<td align="right">36</td>
-</tr>
-<tr class="even">
-<td align="left">VISCACEAE</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="left">VITACEAE</td>
-<td align="right">22</td>
-</tr>
-<tr class="even">
-<td align="left">WOODSIACEAE</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">XYRIDACEAE</td>
-<td align="right">13</td>
-</tr>
-<tr class="even">
-<td align="left">ZYGOPHYLLACEAE</td>
-<td align="right">84</td>
-</tr>
-</tbody>
-</table>
-<p><img src="data:image/png;base64,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" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#import SOS data </span>
+sosData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;H:</span><span class="ch">\\</span><span class="st">SOS_Project</span><span class="ch">\\</span><span class="st">analysisData</span><span class="ch">\\</span><span class="st">SOSdata_20180614_forARS.csv&quot;</span>)
+
+<span class="co">#Find the total number of recorded entries </span>
+totalSamples &lt;-<span class="st"> </span><span class="kw">nrow</span>(sosData)</code></pre></div>
+<pre><code>## [1] &quot;This Seeds of Success program has collected a total of  23577  seed samples. Of which  176  plant families,  1153  plant genus and  2693  unique sub species are represented&quot;</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["All Accessions"],"name":[1],"type":["int"],"align":["right"]},{"label":["Total Number of Familes"],"name":[2],"type":["int"],"align":["right"]},{"label":["Total Number of Genus"],"name":[3],"type":["int"],"align":["right"]},{"label":["Total Number of Sub Species"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"23577","2":"176","3":"1153","4":"2693","_rn_":"SOS Collection"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre><code>## [1] 176</code></pre>
+<p>This is a better way to make print statements</p>
+<p>This Seeds of Success program has collected a total of 23577 seed samples. Of which 176 plant families 1153 plant genus and 2693 unique sub species are represented.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">families &lt;-<span class="st"> </span>dplyr::<span class="kw">arrange</span>(uniqueFam1, <span class="kw">desc</span>(n)) 
+<span class="kw">colnames</span>(families) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Family&quot;</span>, <span class="st">&quot;Total Number of Accessions&quot;</span>)
+families</code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Family"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Total Number of Accessions"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"ASTERACEAE","2":"5303"},{"1":"POACEAE","2":"4522"},{"1":"CYPERACEAE","2":"1165"},{"1":"FABACEAE","2":"1122"},{"1":"SCROPHULARIACEAE","2":"1027"},{"1":"ROSACEAE","2":"977"},{"1":"CHENOPODIACEAE","2":"614"},{"1":"APIACEAE","2":"585"},{"1":"POLYGONACEAE","2":"582"},{"1":"ONAGRACEAE","2":"434"},{"1":"LAMIACEAE","2":"430"},{"1":"BRASSICACEAE","2":"376"},{"1":"JUNCACEAE","2":"335"},{"1":"MALVACEAE","2":"333"},{"1":"RANUNCULACEAE","2":"312"},{"1":"ALLIACEAE","2":"274"},{"1":"BORAGINACEAE","2":"244"},{"1":"HYDROPHYLLACEAE","2":"235"},{"1":"ERICACEAE","2":"232"},{"1":"POLEMONIACEAE","2":"199"},{"1":"LILIACEAE","2":"164"},{"1":"ASCLEPIADACEAE","2":"146"},{"1":"LOASACEAE","2":"135"},{"1":"PLANTAGINACEAE","2":"132"},{"1":"COMPOSITAE","2":"131"},{"1":"RHAMNACEAE","2":"130"},{"1":"CAPRIFOLIACEAE","2":"127"},{"1":"CARYOPHYLLACEAE","2":"124"},{"1":"CAPPARACEAE","2":"121"},{"1":"GENTIANACEAE","2":"118"},{"1":"PAPAVERACEAE","2":"103"},{"1":"ANACARDIACEAE","2":"99"},{"1":"SOLANACEAE","2":"92"},{"1":"CAMPANULACEAE","2":"85"},{"1":"ZYGOPHYLLACEAE","2":"84"},{"1":"AGAVACEAE","2":"81"},{"1":"IRIDACEAE","2":"81"},{"1":"LINACEAE","2":"79"},{"1":"RUBIACEAE","2":"79"},{"1":"CACTACEAE","2":"77"},{"1":"SAXIFRAGACEAE","2":"77"},{"1":"EUPHORBIACEAE","2":"75"},{"1":"TYPHACEAE","2":"74"},{"1":"GROSSULARIACEAE","2":"73"},{"1":"CUPRESSACEAE","2":"72"},{"1":"VERBENACEAE","2":"67"},{"1":"PRIMULACEAE","2":"66"},{"1":"MELANTHIACEAE","2":"56"},{"1":"CRASSULACEAE","2":"54"},{"1":"CLUSIACEAE","2":"47"},{"1":"CISTACEAE","2":"46"},{"1":"MYRICACEAE","2":"46"},{"1":"SALICACEAE","2":"46"},{"1":"PINACEAE","2":"45"},{"1":"BETULACEAE","2":"42"},{"1":"PORTULACACEAE","2":"42"},{"1":"AQUIFOLIACEAE","2":"40"},{"1":"NYCTAGINACEAE","2":"40"},{"1":"AMARANTHACEAE","2":"37"},{"1":"CORNACEAE","2":"36"},{"1":"OLEACEAE","2":"36"},{"1":"VIOLACEAE","2":"36"},{"1":"ORCHIDACEAE","2":"35"},{"1":"BERBERIDACEAE","2":"33"},{"1":"CLETHRACEAE","2":"33"},{"1":"PLUMBAGINACEAE","2":"33"},{"1":"GERANIACEAE","2":"32"},{"1":"COMMELINACEAE","2":"30"},{"1":"LYTHRACEAE","2":"28"},{"1":"BIGNONIACEAE","2":"25"},{"1":"MELASTOMATACEAE","2":"25"},{"1":"CONVOLVULACEAE","2":"24"},{"1":"PARNASSIACEAE","2":"24"},{"1":"VITACEAE","2":"22"},{"1":"ALISMATACEAE","2":"21"},{"1":"APOCYNACEAE","2":"21"},{"1":"EPHEDRACEAE","2":"21"},{"1":"VALERIANACEAE","2":"21"},{"1":"ACERACEAE","2":"20"},{"1":"ELAEAGNACEAE","2":"20"},{"1":"ARALIACEAE","2":"18"},{"1":"FUMARIACEAE","2":"18"},{"1":"HYACINTHACEAE","2":"18"},{"1":"HYDRANGEACEAE","2":"18"},{"1":"RUTACEAE","2":"17"},{"1":"SMILACACEAE","2":"17"},{"1":"ACANTHACEAE","2":"16"},{"1":"JUNCAGINACEAE","2":"16"},{"1":"LAURACEAE","2":"14"},{"1":"SAURURACEAE","2":"13"},{"1":"URTICACEAE","2":"13"},{"1":"XYRIDACEAE","2":"13"},{"1":"CONVALLARIACEAE","2":"12"},{"1":"CELASTRACEAE","2":"9"},{"1":"CUCURBITACEAE","2":"9"},{"1":"DROSERACEAE","2":"8"},{"1":"GARRYACEAE","2":"8"},{"1":"KRAMERIACEAE","2":"8"},{"1":"","2":"7"},{"1":"ARISTOLOCHIACEAE","2":"7"},{"1":"CORYLACEAE","2":"7"},{"1":"PHYTOLACCACEAE","2":"7"},{"1":"PYROLACEAE","2":"7"},{"1":"SANTALACEAE","2":"7"},{"1":"SARRACENIACEAE","2":"7"},{"1":"ULMACEAE","2":"7"},{"1":"ARACEAE","2":"6"},{"1":"PENTHORACEAE","2":"6"},{"1":"POLYGALACEAE","2":"6"},{"1":"TRILLIACEAE","2":"6"},{"1":"AIZOACEAE","2":"5"},{"1":"BALSAMINACEAE","2":"5"},{"1":"OXALIDACEAE","2":"5"},{"1":"AMARYLLIDACEAE","2":"4"},{"1":"BUDDLEJACEAE","2":"4"},{"1":"ERIOCAULACEAE","2":"4"},{"1":"HAMAMELIDACEAE","2":"4"},{"1":"HYPOXIDACEAE","2":"4"},{"1":"MAGNOLIACEAE","2":"4"},{"1":"PONTEDERIACEAE","2":"4"},{"1":"SAPINDACEAE","2":"4"},{"1":"VISCACEAE","2":"4"},{"1":"BROMELIACEAE","2":"3"},{"1":"CANNABACEAE","2":"3"},{"1":"CYRILLACEAE","2":"3"},{"1":"DRACAENACEAE","2":"3"},{"1":"EBENACEAE","2":"3"},{"1":"FOUQUIERIACEAE","2":"3"},{"1":"HAEMODORACEAE","2":"3"},{"1":"MENYANTHACEAE","2":"3"},{"1":"PHRYMACEAE","2":"3"},{"1":"PLATANACEAE","2":"3"},{"1":"STERCULIACEAE","2":"3"},{"1":"TAXODIACEAE","2":"3"},{"1":"ANNONACEAE","2":"2"},{"1":"ARECACEAE","2":"2"},{"1":"HALORAGACEAE","2":"2"},{"1":"LENTIBULARIACEAE","2":"2"},{"1":"LIMNANTHACEAE","2":"2"},{"1":"LOGANIACEAE","2":"2"},{"1":"PASSIFLORACEAE","2":"2"},{"1":"PEDALIACEAE","2":"2"},{"1":"POTAMOGETONACEAE","2":"2"},{"1":"SIMMONDSIACEAE","2":"2"},{"1":"STYRACACEAE","2":"2"},{"1":"TAXACEAE","2":"2"},{"1":"UNKNOWN","2":"2"},{"1":"ACORACEAE","2":"1"},{"1":"AMBYSTOMATIDAE","2":"1"},{"1":"ANTHERICACEAE","2":"1"},{"1":"BATACEAE","2":"1"},{"1":"BLECHNACEAE","2":"1"},{"1":"CALYCANTHACEAE","2":"1"},{"1":"COCHLOSPERMACEAE","2":"1"},{"1":"CROSSOSOMATACEAE","2":"1"},{"1":"DIAPENSIACEAE","2":"1"},{"1":"DIOSCOREACEAE","2":"1"},{"1":"ELATINACEAE","2":"1"},{"1":"EMPETRACEAE","2":"1"},{"1":"FAGACEAE","2":"1"},{"1":"FRANKENIACEAE","2":"1"},{"1":"HYDROCHARITACEAE","2":"1"},{"1":"ILLECEBRACEAE","2":"1"},{"1":"LEMNACEAE","2":"1"},{"1":"MALPIGHIACEAE","2":"1"},{"1":"MENISPERMACEAE","2":"1"},{"1":"MOLLUGINACEAE","2":"1"},{"1":"NELUMBONACEAE","2":"1"},{"1":"PAEONIACEAE","2":"1"},{"1":"RESEDACEAE","2":"1"},{"1":"SAPOTACEAE","2":"1"},{"1":"SCHEUCHZERIACEAE","2":"1"},{"1":"SIMAROUBACEAE","2":"1"},{"1":"STAPHYLEACEAE","2":"1"},{"1":"THEACEAE","2":"1"},{"1":"WOODSIACEAE","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+  </script>
+</div>
+<p>The Seeds of Success program has been collecting seeds since 2000.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># histogram with added parameters</span>
+sosData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;H:</span><span class="ch">\\</span><span class="st">SOS_Project</span><span class="ch">\\</span><span class="st">analysisData</span><span class="ch">\\</span><span class="st">SOSdata_20180614_forARS.csv&quot;</span>)
+
+collectionYears &lt;-<span class="st"> </span>sosData$COLL_YR
+<span class="kw">hist</span>(collectionYears,
+  <span class="dt">main=</span><span class="st">&quot;Accessions collected by SOS&quot;</span>,
+  <span class="dt">xlab=</span><span class="st">&quot;Collection Year&quot;</span>,
+  <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">2000</span>,<span class="dv">2018</span>),
+  <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">3500</span>),
+  <span class="dt">ylab=</span><span class="st">&quot;Number of Accession Collected&quot;</span>,
+  <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>
+)</code></pre></div>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+<p>The importance of this collection increased by the fact that many of the seed taxa that were collected are defined as either Wild Crop Relatives or World Economic Plants. We will use two datasets that have defined economically useful plants, Khoury et al 2013, and <em>get reference for the WEP dataset received from Daniel</em>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># caption=&quot;Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.&quot;, rows.print=15</span>
+<span class="co"># Create a summary chart showing the total number of accession, total taxa, # of WCR NA, # eco NA, # of economic WEP  </span>
+<span class="co"># this may be added to also include the data about what's managed by the usda and what's at the NLGRP </span>
+<span class="co">#</span>
+
+<span class="co"># Replace the name column of the sos data so that the &quot;ssp.&quot; notation is replaced with &quot;subsp.&quot; as defined</span>
+<span class="co"># by the grin Data base </span>
+<span class="co"># created a new column that has the same col name as the K13 data set. I will use the col to join on </span>
+sosData$Taxon &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;ssp.&quot;</span>,<span class="st">&quot;subsp.&quot;</span>, sosData$NAME) 
+
+<span class="co">#detemine the total number of taxon in dataset </span>
+sosTotalUnique &lt;-<span class="st"> </span><span class="kw">nrow</span>(<span class="kw">unique</span>(sosData[<span class="dv">1</span>]))
+
+
+<span class="co"># read in the K13 data </span>
+K13Data &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;H:</span><span class="ch">\\</span><span class="st">SOS_Project</span><span class="ch">\\</span><span class="st">analysisData</span><span class="ch">\\</span><span class="st">CWR_US_inventory_2013_7_10.csv&quot;</span>)
+
+<span class="co">#detemine the total number of taxon in dataset </span>
+K13TotalUnique &lt;-<span class="st"> </span><span class="kw">nrow</span>(<span class="kw">unique</span>(K13Data[<span class="dv">1</span>]))
+
+<span class="co"># join the data sets</span>
+combinedData &lt;-<span class="st"> </span><span class="kw">join</span>(sosData, K13Data, <span class="dt">by=</span><span class="st">'Taxon'</span>, <span class="dt">type=</span><span class="st">'left'</span>, <span class="dt">match=</span><span class="st">'all'</span>)
+
+<span class="co">#trim the data so that taxon that do not have values for the K13 specific data columns are dropped. </span>
+trimCombinedData &lt;-<span class="st"> </span>combinedData[!<span class="kw">is.na</span>(combinedData$Taxon_w_author), ]
+
+<span class="co">#subset all WIld Utilizes Species and calculater total number of species </span>
+wusSamples &lt;-<span class="st"> </span><span class="kw">filter</span>(trimCombinedData, Type==<span class="st"> 'WUS'</span>)
+uniqueWUS &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(wusSamples$Taxon)
+
+<span class="co">#subset all Crop Wild RElatives and calculater total number of species </span>
+cwrSamples &lt;-<span class="st"> </span><span class="kw">filter</span>(trimCombinedData, Type==<span class="st"> 'CWR'</span>)
+uniqueCWR &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(cwrSamples$Taxon)
+
+### 
+<span class="co">#Read in the WEP dataset </span>
+<span class="co"># read in the WEP data </span>
+WEPData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;H:</span><span class="ch">\\</span><span class="st">SOS_Project</span><span class="ch">\\</span><span class="st">analysisData</span><span class="ch">\\</span><span class="st">EconomicUseCategoriesOfSpecies.csv&quot;</span>)
+
+## Rename the name column to match the newly created column from the SOS data 
+<span class="kw">colnames</span>(WEPData)[<span class="dv">2</span>] &lt;-<span class="st"> &quot;Taxon&quot;</span>
+
+
+<span class="co">#detemine the total number of taxon in dataset </span>
+WEPTotalUnique &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(WEPData$taxonomy_species_id)
+
+<span class="co"># join the data sets</span>
+combinedData2 &lt;-<span class="st"> </span><span class="kw">join</span>(sosData, WEPData, <span class="dt">by=</span><span class="st">'Taxon'</span>, <span class="dt">type=</span><span class="st">'left'</span>, <span class="dt">match=</span><span class="st">'all'</span>)
+
+<span class="co">#trim the data so that taxon that do not have values for the WEP specific data columns are dropped. </span>
+trimCombinedData2 &lt;-<span class="st"> </span><span class="kw">filter</span>(combinedData2, !<span class="kw">is.na</span>(economic_usage_code))
+
+<span class="co">#calculate total number of species from </span>
+uniqueWEP &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(trimCombinedData2$SPECIES)
+
+
+## DEfeine row and column names 
+labelsRow &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;SOS Collection&quot;</span>)
+labelsCol &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'All Accession'</span>, <span class="st">&quot;Total Number of Taxon&quot;</span>, <span class="st">&quot;Total Number of WUS from K13&quot;</span>, <span class="st">&quot;Total Number of CWR from K13&quot;</span>, <span class="st">&quot;Total Number of WEP&quot;</span>)
+
+<span class="co">#Initiate an empty dataframe </span>
+sosSummary2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>()
+
+<span class="co"># create the first row of the dataframe </span>
+sosCollection &lt;-<span class="st"> </span><span class="kw">c</span>(totalSamples, sosTotalUnique, uniqueWUS, uniqueCWR, uniqueWEP)
+
+<span class="co">#bind the two df together </span>
+sosSummary2 &lt;-<span class="st"> </span><span class="kw">rbind</span>(sosSummary2, sosCollection)
+<span class="co">#define column names and row names </span>
+<span class="kw">colnames</span>(sosSummary2) &lt;-<span class="st"> </span>labelsCol
+<span class="kw">rownames</span>(sosSummary2) &lt;-<span class="st"> </span>labelsRow
+sosSummary2</code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["All Accession"],"name":[1],"type":["int"],"align":["right"]},{"label":["Total Number of Taxon"],"name":[2],"type":["int"],"align":["right"]},{"label":["Total Number of WUS from K13"],"name":[3],"type":["int"],"align":["right"]},{"label":["Total Number of CWR from K13"],"name":[4],"type":["int"],"align":["right"]},{"label":["Total Number of WEP"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"23577","2":"5651","3":"1001","4":"737","5":"829","_rn_":"SOS Collection"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 <div id="conservation" class="section level1">
 <h1>Conservation</h1>
+<p>The Seeds of Success program provide the boots on the ground effort in the collection of seed resources and the program partners with the Agricultural Research Service of USDA to store, maintian, and distribute the seeds collected. The Pullman, Washinto ng section of the ARS is the group primarily responsable for the initial onboarding and entering of the seeds into the Genetic Resoruce Inventory Network(GRIN) as well as mainting the seeds in environments that support preservation. Once within the ARS system the quality of the seed collections are accessed and samples that are deemed benifical to preserve over an extended period of time are transfer to the National Laboratory for Genetic Resource Preservation in Fort Collins, Colorado. The NLRGP specialized in the long term storage of genetic resources. Below is a few diagrams and table that illistrate the relationship between the Seeds of Success program and the ARS.</p>
 <ul>
-<li>How much adopted by Curators, how much “orphaned” at W6 - need to pull from GRIN Global (examine “site”)</li>
-<li>How much is at NLGRP for long term backup</li>
-<li>Viability/conservation issues (Annette) - proportion easy to germinate vs not, other storage issues</li>
+<li><p>How much adopted by Curators, how much “orphaned” at W6 - need to pull from GRIN Global (examine “site”) #Not sure how to answer this some at this time</p></li>
+<li>How much is at NLGRP for long term backup
+<ul>
+<li><ul>
+<li>there are 12959 SOS accessions that are maintianed in long term storage backup at NLGRP.*</li>
+</ul></li>
+</ul></li>
+<li><p>Viability/conservation issues (Annette) - proportion easy to germinate vs not, other storage issues</p></li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">orders &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;H:</span><span class="ch">\\</span><span class="st">SOS_Project</span><span class="ch">\\</span><span class="st">orginalData</span><span class="ch">\\</span><span class="st">GRIN</span><span class="ch">\\</span><span class="st">sosOrdersTotal.csv&quot;</span>)
-<span class="kw">print</span>(orders)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read in GRIN Accessions </span>
+grinData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;H:</span><span class="ch">\\</span><span class="st">SOS_Project</span><span class="ch">\\</span><span class="st">analysisData</span><span class="ch">\\</span><span class="st">sosAccessions.csv&quot;</span>)
+
+<span class="co"># calcualte the total number of features and the total number of taxon </span>
+totalSamplesGRIN &lt;-<span class="st"> </span><span class="kw">nrow</span>(grinData)<span class="co"># why would these two numbers be different? Question for Renee </span>
+totalName &lt;-<span class="st"> </span>dplyr::<span class="kw">n_distinct</span>(grinData$Name)<span class="co"># why would these two numbers be different? Question for Renee </span>
+totalTaxon &lt;-<span class="st"> </span>totalName &lt;-<span class="st"> </span>dplyr::<span class="kw">n_distinct</span>(grinData$Taxon)
+
+
+<span class="co"># join the the GRIN data with the K13 Dataset </span>
+combinedData3 &lt;-<span class="st"> </span><span class="kw">join</span>(grinData, K13Data, <span class="dt">by=</span><span class="st">'Taxon'</span>, <span class="dt">type=</span><span class="st">'left'</span>, <span class="dt">match=</span><span class="st">'all'</span>)
+
+<span class="co">#trim the data so that taxon that do not have values for the K13 specific data columns are dropped. </span>
+trimCombinedData3 &lt;-<span class="st"> </span>combinedData[!<span class="kw">is.na</span>(combinedData3$Taxon_w_author), ]
+
+<span class="co">#subset all WIld Utilizes Species and calculater total number of species </span>
+wusSamples3 &lt;-<span class="st"> </span><span class="kw">filter</span>(trimCombinedData3, Type==<span class="st"> 'WUS'</span>)
+uniqueWUS3 &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(wusSamples3$Taxon)
+
+<span class="co">#subset all Crop Wild RElatives and calculater total number of species </span>
+cwrSamples3 &lt;-<span class="st"> </span><span class="kw">filter</span>(trimCombinedData3, Type==<span class="st"> 'CWR'</span>)
+uniqueCWR3 &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(cwrSamples3$Taxon)
+
+#### Repeat with the WEP DATAset 
+<span class="co"># join the grin data with the WEP data</span>
+combinedData4 &lt;-<span class="st"> </span><span class="kw">join</span>(grinData, WEPData, <span class="dt">by=</span><span class="st">'Taxon'</span>, <span class="dt">type=</span><span class="st">'left'</span>, <span class="dt">match=</span><span class="st">'all'</span>)
+
+<span class="co">#trim the data so that taxon that do not have values for the WEP specific data columns are dropped. </span>
+trimCombinedData4 &lt;-<span class="st"> </span><span class="kw">filter</span>(combinedData4, !<span class="kw">is.na</span>(economic_usage_code))
+
+<span class="co">#calculate total number of species from </span>
+uniqueWEP4 &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(trimCombinedData4$Taxon)
+
+
+<span class="co"># create the first row of the dataframe </span>
+grinCollection &lt;-<span class="st"> </span><span class="kw">c</span>(totalSamplesGRIN, totalTaxon, uniqueWUS3, uniqueCWR3, uniqueWEP4)
+
+<span class="co">#bind the two df together </span>
+sosSummary2 &lt;-<span class="st"> </span><span class="kw">rbind</span>(sosSummary2, grinCollection)
+<span class="kw">rownames</span>(sosSummary2)[<span class="dv">2</span>] &lt;-<span class="st"> &quot;GRIN Collection&quot;</span>
+sosSummary2</code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["All Accession"],"name":[1],"type":["int"],"align":["right"]},{"label":["Total Number of Taxon"],"name":[2],"type":["int"],"align":["right"]},{"label":["Total Number of WUS from K13"],"name":[3],"type":["int"],"align":["right"]},{"label":["Total Number of CWR from K13"],"name":[4],"type":["int"],"align":["right"]},{"label":["Total Number of WEP"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"23577","2":"5651","3":"1001","4":"737","5":"829","_rn_":"SOS Collection"},{"1":"13702","2":"3732","3":"783","4":"513","5":"1014","_rn_":"GRIN Collection"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+  </script>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#filter based on the &quot;is backuped&quot; column.  </span>
+backedUp &lt;-<span class="st"> </span>dplyr::<span class="kw">filter</span>(grinData, Is.Backed.Up. ==<span class="st"> 'Y'</span> )
+totaledBackedUp &lt;-<span class="kw">nrow</span>(backedUp)
+<span class="co">#filter based on the backup location being NLGRP </span>
+nlgrpData &lt;-<span class="st"> </span>dplyr::<span class="kw">filter</span>(backedUp, Backup.Location<span class="fl">.1</span> ==<span class="st"> 'NSSL'</span> )
+totalBackedUp &lt;-<span class="st"> </span><span class="kw">nrow</span>(nlgrpData)
+## Example of the backed up features that are missing a backup location????
+#### does this mean an error in data entry, can we assume 
+MissingBackup &lt;-<span class="st"> </span><span class="kw">count</span>(backedUp$Backup.Location<span class="fl">.1</span> )
+
+<span class="co">#define the total number of species present in backup</span>
+totalTaxonNLGRP &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(nlgrpData$Taxon)
+
+<span class="co"># apply simliar subsets based on the connection between K13 dataset</span>
+
+<span class="co"># join the the GRIN data with the K13 Dataset </span>
+combinedData5 &lt;-<span class="st"> </span><span class="kw">join</span>(nlgrpData, K13Data, <span class="dt">by=</span><span class="st">'Taxon'</span>, <span class="dt">type=</span><span class="st">'left'</span>, <span class="dt">match=</span><span class="st">'all'</span>)
+
+<span class="co">#trim the data so that taxon that do not have values for the K13 specific data columns are dropped. </span>
+trimCombinedData5 &lt;-<span class="st"> </span>combinedData[!<span class="kw">is.na</span>(combinedData5$Taxon_w_author), ]
+
+<span class="co">#subset all WIld Utilizes Species and calculater total number of species </span>
+wusSamples5 &lt;-<span class="st"> </span><span class="kw">filter</span>(trimCombinedData5, Type==<span class="st"> 'WUS'</span>)
+uniqueWUS5 &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(wusSamples5$Taxon)
+
+<span class="co">#subset all Crop Wild RElatives and calculater total number of species </span>
+cwrSamples5 &lt;-<span class="st"> </span><span class="kw">filter</span>(trimCombinedData5, Type==<span class="st"> 'CWR'</span>)
+uniqueCWR5 &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(cwrSamples5$Taxon)
+
+
+#### Repeat with the WEP DATAset 
+<span class="co"># join the grin data with the WEP data</span>
+combinedData6 &lt;-<span class="st"> </span><span class="kw">join</span>(nlgrpData, WEPData, <span class="dt">by=</span><span class="st">'Taxon'</span>, <span class="dt">type=</span><span class="st">'left'</span>, <span class="dt">match=</span><span class="st">'all'</span>)
+
+<span class="co">#trim the data so that taxon that do not have values for the WEP specific data columns are dropped. </span>
+trimCombinedData6 &lt;-<span class="st"> </span><span class="kw">filter</span>(combinedData6, !<span class="kw">is.na</span>(economic_usage_code))
+
+<span class="co">#calculate total number of species from </span>
+uniqueWEP6 &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(trimCombinedData6$Taxon)
+
+
+
+
+<span class="co"># create the first row of the dataframe </span>
+nlgrpCollection &lt;-<span class="st"> </span><span class="kw">c</span>(totalBackedUp, totalTaxonNLGRP, uniqueWUS5, uniqueCWR5, uniqueWEP6)
+
+<span class="co">#bind the two df together </span>
+sosSummary2 &lt;-<span class="st"> </span><span class="kw">rbind</span>(sosSummary2, nlgrpCollection)
+<span class="kw">rownames</span>(sosSummary2)[<span class="dv">3</span>] &lt;-<span class="st"> &quot;NLGRP Collection&quot;</span>
+sosSummary2</code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["All Accession"],"name":[1],"type":["int"],"align":["right"]},{"label":["Total Number of Taxon"],"name":[2],"type":["int"],"align":["right"]},{"label":["Total Number of WUS from K13"],"name":[3],"type":["int"],"align":["right"]},{"label":["Total Number of CWR from K13"],"name":[4],"type":["int"],"align":["right"]},{"label":["Total Number of WEP"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"23577","2":"5651","3":"1001","4":"737","5":"829","_rn_":"SOS Collection"},{"1":"13702","2":"3732","3":"783","4":"513","5":"1014","_rn_":"GRIN Collection"},{"1":"9893","2":"3124","3":"802","4":"522","5":"826","_rn_":"NLGRP Collection"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="uses" class="section level1">
+<h1>Uses</h1>
+<p>Report on distributions out of NPGS of materials from SOS, by year, by receiver, by species or taxonomic group</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deliveryData &lt;-<span class="kw">read.csv</span>(<span class="st">&quot;H:</span><span class="ch">\\</span><span class="st">SOS_Project</span><span class="ch">\\</span><span class="st">analysisData</span><span class="ch">\\</span><span class="st">sosOrdersTotal.csv&quot;</span>)
+<span class="kw">print</span>(deliveryData)</code></pre></div>
 <pre><code>##    COUNT order_type_code category_code
 ## 1   2482              TR           STA
 ## 2    125              DI          FIND
@@ -1046,24 +582,30 @@ div.tocify {
 ## 27   743              DI          UARS
 ## 28  1627              DI          UCOM
 ## 29  1360              DI          UPRU</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(orders)</code></pre></div>
-<pre><code>##      COUNT       order_type_code category_code
-##  Min.   :    1   DI     :10      UARS   :7    
-##  1st Qu.:   15   NR     : 6      STA    :6    
-##  Median :  224   IO     : 3      UIND   :3    
-##  Mean   : 1623   BA     : 2      UPRU   :3    
-##  3rd Qu.: 1360   GR     : 2      FCOM   :2    
-##  Max.   :15831   OB     : 2      FGEN   :2    
-##                  (Other): 4      (Other):6</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">###
-<span class="co"># need to find what all the aycromns means </span>
-<span class="co"># Showcase the number of inventories that are backed up </span>
-<span class="co"># Number of seeds that were distributed else where </span>
-### </code></pre></div>
-</div>
-<div id="uses" class="section level1">
-<h1>Uses</h1>
-<p>Report on distributions out of NPGS of materials from SOS, by year, by receiver, by species or taxonomic group Investigate reasons for use- narrative description in GRIN Global How many are CWR and impacts</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># select all rows that were delivered to ARS locations </span>
+ars &lt;-<span class="st"> </span><span class="kw">filter</span>(deliveryData, category_code ==<span class="st"> &quot;UARS&quot;</span>)
+ars &lt;-<span class="st"> </span>ars[,<span class="dv">1</span>:<span class="dv">2</span>]
+labelsColumns &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'Number of Deliveries'</span>, <span class="st">&quot;Reason for Delivery&quot;</span> )
+values2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Replenishment&quot;</span>, <span class="st">&quot;Germination&quot;</span>, <span class="st">&quot;Observation&quot;</span>
+                              ,<span class="st">&quot;Information only&quot;</span>, <span class="st">&quot;Transfer&quot;</span>, <span class="st">&quot;Backup&quot;</span>
+                              ,<span class="st">&quot;Distribution&quot;</span>)
+ars$order_type_code &lt;-<span class="st"> </span>values2
+
+<span class="kw">colnames</span>(ars) &lt;-<span class="st"> </span>labelsColumns
+<span class="kw">colnames</span>(ars)</code></pre></div>
+<pre><code>## [1] &quot;Number of Deliveries&quot; &quot;Reason for Delivery&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ars&lt;-<span class="st"> </span>ars[<span class="kw">order</span>(-ars$<span class="st">'Number of Deliveries'</span>),]
+
+<span class="kw">print</span>(ars)</code></pre></div>
+<pre><code>##   Number of Deliveries Reason for Delivery
+## 6                15831              Backup
+## 5                 6885            Transfer
+## 4                 1044    Information only
+## 7                  743        Distribution
+## 2                  740         Germination
+## 1                  224       Replenishment
+## 3                   36         Observation</code></pre>
+<p>Investigate reasons for use- narrative description in GRIN Global How many are CWR and impacts</p>
 </div>
 <div id="discussion" class="section level1">
 <h1>Discussion</h1>

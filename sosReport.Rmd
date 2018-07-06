@@ -1,18 +1,41 @@
 ---
-title: "Seeds of Success: Collection Diversity, Richness, and Conservation "
-author: Colin Khoury, Stephanie Green, Daniel Carver 
-date: June 22, 2018 
+title: 'Seeds of Success: Collection Diversity, Richness, and Conservation '
+author: "Colin Khoury, Stephanie Green, Daniel Carver"
+date: "June 22, 2018"
 output:
   html_document:
-    theme: 'yeti'
-    highlight: 'tango'
-    toc: true
     code_folding: hide
     df_print: paged
+    highlight: tango
+    theme: yeti
+    toc: yes
     toc_float:
-      collapsed: false
-      smooth_scroll: false
+      collapsed: no
+      smooth_scroll: no
+  pdf_document:
+    toc: yes
 ---
+
+# CheckList 
+## Datasets
+- SOSdata = 1
+- K13
+  - Economic Plants =2 
+  - wild crop Relatives = 3 
+- GRINSOS
+  - all inventory = 4
+  - deliveries with taxon = 5 
+- WEP =6 
+
+## connections 
+- 1&2 = Of all the SOS seeds collected how many species are considered to be Economic plants in north america 
+- 1&3 = Of all the SOS seeds collected how may species are considiered to be Wild Crop Relatives in North America 
+- 4&2 = Of all the SOS seeds maintained by ARS how many species are considered to be Economic plants in north america 
+- 4&3 = Of all the SOS seeds maintained by ARS how many species are considered to be Wild Crop Relatives in north america 
+- 5 = Deliveries: Who received, Reason, data, taxa shipped 
+- 1&6 = 1&2 = Of all the SOS seeds collected how many species are considered to be World Economic plants 
+- 4&6 = 1&2 = Of all the SOS seeds maintained by ARS how many species are considered to be World Economic plants 
+- 1 = summary of all taxa collected 
 
 # Goal 
 
@@ -31,7 +54,7 @@ library(ggplot2)
 library(plyr)
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE}
 #import SOS data 
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
 
@@ -39,7 +62,7 @@ sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv"
 totalSamples <- nrow(sosData)
 ```
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #Determine the total number of unique families collect and the number of collection in each family 
 uniqueFam <- dplyr::summarise(sosData,n_distinct(sosData$FAMILY))
 uniqueFam1 <- dplyr::count(sosData,FAMILY) #keep this in hear incase we want to display it 
@@ -64,60 +87,268 @@ varSpecies <- sosData[grep("var." ,sosData$NAME),] # for some reason the ['colNa
 uniqueVar<- dplyr::summarise(varSpecies,n_distinct(varSpecies$NAME))
 
 # rather then a print statement I think this should be a nice table. All outputs should be something interesting too look at. 
-print(paste( "This data set contains a total of "
-             ,totalSamples, "samples. Of which "
+print(paste( "This Seeds of Success program has collected a total of "
+             ,totalSamples, " seed samples. Of which "
              ,uniqueFam," plant families, "
              ,uniqueGen, " plant genus and "
-             ,uniqueSpe, " unique sub species are contained" ) )
+             ,uniqueSpe, " unique sub species are represented" ) )
 
+## DEfeine row and column names 
+labelsRow1 <- c("SOS Collection")
+labelsCol1 <- c('All Accessions', "Total Number of Familes", "Total Number of Genus", "Total Number of Sub Species")
+
+#Initiate an empty dataframe 
+sosSummary <- data.frame()
+
+# create the first row of the dataframe 
+sosData <- c(totalSamples, uniqueFam, uniqueGen, uniqueSpe)
+
+#bind the two df together 
+sosSummary <- rbind(sosSummary, sosData)
+#define column names and row names 
+colnames(sosSummary) <- labelsCol1
+rownames(sosSummary) <- labelsRow1
+sosSummary
+
+uniqueFam[1,]
+
+```
+```{r lemon, echo=FALSE}
 ### 
 # testing about the nice charts using lemon and kable
 # https://cran.r-project.org/web/packages/lemon/vignettes/lemon_print.html
 ###
 library(lemon)
-knit_print.data.frame <- lemon_print
-
+#knit_print.data.frame <- lemon_print
 ```
 
-```{r caption="Data frame is now printed using `kable`.", rows.print=15}
-# uniqueFam1
-```
-The Seeds of Success program has been collecting seeds since 2000. The 
+This is a better way to make print statements 
 
-```{r, echo = FALSE}
+This Seeds of Success program has collected a total of `r totalSamples` seed samples. Of which `r uniqueFam[1,]` plant families
+`r uniqueGen[1,]`  plant genus and `r uniqueSpe[1,]` unique sub species are represented.
+
+```{r ref.label='lemon' }
+#this allow me to define code chunks can call them at later times. Kinda tricky not so sure of the applicaiton just yet/. 
+```
+
+
+```{r caption="Number of Collections per Family from the SOS program.", rows.print=15}
+families <- dplyr::arrange(uniqueFam1, desc(n)) 
+colnames(families) <- c("Family", "Total Number of Accessions")
+families
+
+```
+The Seeds of Success program has been collecting seeds since 2000. 
+
+```{r, caption="Number of Collections per Family from the SOS program." }
 # histogram with added parameters
+sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
+
 collectionYears <- sosData$COLL_YR
 hist(collectionYears,
-     main="Accessions collected by SOS",
-     xlab="Collection Year",
-     xlim = c(2000,2018),
-     ylim = c(0,3500),
-     ylab="Number of Accession Collected",
-     col="blue"
+  main="Accessions collected by SOS",
+  xlab="Collection Year",
+  xlim = c(2000,2018),
+  ylim = c(0,3500),
+  ylab="Number of Accession Collected",
+  col="blue"
 )
 
 ```
 
-The importance of this collection increased by the fact that many of the seed taxa that were collected are defined as either Wild Crop Relatives or World Economic Plants. 
+The importance of this collection increased by the fact that many of the seed taxa that were collected are defined as either Wild Crop Relatives or World Economic Plants. We will use two datasets that have defined economically useful plants, Khoury et al 2013, and *get reference for the WEP dataset received from Daniel*. 
 
 
+```{r}
+
+# caption="Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.", rows.print=15
+# Create a summary chart showing the total number of accession, total taxa, # of WCR NA, # eco NA, # of economic WEP  
+# this may be added to also include the data about what's managed by the usda and what's at the NLGRP 
+#
+
+# Replace the name column of the sos data so that the "ssp." notation is replaced with "subsp." as defined
+# by the grin Data base 
+# created a new column that has the same col name as the K13 data set. I will use the col to join on 
+sosData$Taxon <- gsub("ssp.","subsp.", sosData$NAME) 
+
+#detemine the total number of taxon in dataset 
+sosTotalUnique <- nrow(unique(sosData[1]))
+
+
+# read in the K13 data 
+K13Data <- read.csv("H:\\SOS_Project\\analysisData\\CWR_US_inventory_2013_7_10.csv")
+
+#detemine the total number of taxon in dataset 
+K13TotalUnique <- nrow(unique(K13Data[1]))
+
+# join the data sets
+combinedData <- join(sosData, K13Data, by='Taxon', type='left', match='all')
+
+#trim the data so that taxon that do not have values for the K13 specific data columns are dropped. 
+trimCombinedData <- combinedData[!is.na(combinedData$Taxon_w_author), ]
+
+#subset all WIld Utilizes Species and calculater total number of species 
+wusSamples <- filter(trimCombinedData, Type== 'WUS')
+uniqueWUS <- n_distinct(wusSamples$Taxon)
+
+#subset all Crop Wild RElatives and calculater total number of species 
+cwrSamples <- filter(trimCombinedData, Type== 'CWR')
+uniqueCWR <- n_distinct(cwrSamples$Taxon)
+
+### 
+#Read in the WEP dataset 
+# read in the WEP data 
+WEPData <- read.csv("H:\\SOS_Project\\analysisData\\EconomicUseCategoriesOfSpecies.csv")
+
+## Rename the name column to match the newly created column from the SOS data 
+colnames(WEPData)[2] <- "Taxon"
+
+
+#detemine the total number of taxon in dataset 
+WEPTotalUnique <- n_distinct(WEPData$taxonomy_species_id)
+
+# join the data sets
+combinedData2 <- join(sosData, WEPData, by='Taxon', type='left', match='all')
+
+#trim the data so that taxon that do not have values for the WEP specific data columns are dropped. 
+trimCombinedData2 <- filter(combinedData2, !is.na(economic_usage_code))
+
+#calculate total number of species from 
+uniqueWEP <- n_distinct(trimCombinedData2$SPECIES)
+
+
+## DEfeine row and column names 
+labelsRow <- c("SOS Collection")
+labelsCol <- c('All Accession', "Total Number of Taxon", "Total Number of WUS from K13", "Total Number of CWR from K13", "Total Number of WEP")
+
+#Initiate an empty dataframe 
+sosSummary2 <- data.frame()
+
+# create the first row of the dataframe 
+sosCollection <- c(totalSamples, sosTotalUnique, uniqueWUS, uniqueCWR, uniqueWEP)
+
+#bind the two df together 
+sosSummary2 <- rbind(sosSummary2, sosCollection)
+#define column names and row names 
+colnames(sosSummary2) <- labelsCol
+rownames(sosSummary2) <- labelsRow
+sosSummary2
+
+
+```
 
 
 # Conservation 
 
+The Seeds of Success program provide the boots on the ground effort in the collection of seed resources and the program partners with the Agricultural Research Service of USDA to store, maintian, and distribute the seeds collected. The Pullman, Washinto
+ng section of the ARS is the group primarily responsable for the initial onboarding and entering of the seeds into the Genetic Resoruce Inventory Network(GRIN) as well as mainting the seeds in environments that support preservation. Once within the ARS system the quality of the seed collections are accessed and samples that are deemed benifical to preserve over an extended period of time are transfer to the National Laboratory for Genetic Resource Preservation in Fort Collins, Colorado. The NLRGP specialized in the long term storage of genetic resources. Below is a few diagrams and table that illistrate the relationship between the Seeds of Success program and the ARS. 
+
+
+
+
 - How much adopted by Curators, how much "orphaned" at W6 - need to pull from GRIN Global (examine "site") #Not sure how to answer this some at this time 
+
+
 - How much is at NLGRP for long term backup
     - * there are 12959 SOS accessions that are maintianed in long term storage backup at NLGRP.* 
 - Viability/conservation issues (Annette) - proportion easy to germinate vs not, other storage issues
 
-```{r}
-# read in the SOS data 
+```{r caption="Summary of SOS and GRIN Relative to CWR and WEP", rows.print=15}
+# read in GRIN Accessions 
 grinData <- read.csv("H:\\SOS_Project\\analysisData\\sosAccessions.csv")
 
+# calcualte the total number of features and the total number of taxon 
+totalSamplesGRIN <- nrow(grinData)# why would these two numbers be different? Question for Renee 
+totalName <- dplyr::n_distinct(grinData$Name)# why would these two numbers be different? Question for Renee 
+totalTaxon <- totalName <- dplyr::n_distinct(grinData$Taxon)
 
-#detemine the total number of taxon in dataset 
-grinTotalUnique <- nrow(unique(grinData[1]))
 
+# join the the GRIN data with the K13 Dataset 
+combinedData3 <- join(grinData, K13Data, by='Taxon', type='left', match='all')
+
+#trim the data so that taxon that do not have values for the K13 specific data columns are dropped. 
+trimCombinedData3 <- combinedData[!is.na(combinedData3$Taxon_w_author), ]
+
+#subset all WIld Utilizes Species and calculater total number of species 
+wusSamples3 <- filter(trimCombinedData3, Type== 'WUS')
+uniqueWUS3 <- n_distinct(wusSamples3$Taxon)
+
+#subset all Crop Wild RElatives and calculater total number of species 
+cwrSamples3 <- filter(trimCombinedData3, Type== 'CWR')
+uniqueCWR3 <- n_distinct(cwrSamples3$Taxon)
+
+#### Repeat with the WEP DATAset 
+# join the grin data with the WEP data
+combinedData4 <- join(grinData, WEPData, by='Taxon', type='left', match='all')
+
+#trim the data so that taxon that do not have values for the WEP specific data columns are dropped. 
+trimCombinedData4 <- filter(combinedData4, !is.na(economic_usage_code))
+
+#calculate total number of species from 
+uniqueWEP4 <- n_distinct(trimCombinedData4$Taxon)
+
+
+# create the first row of the dataframe 
+grinCollection <- c(totalSamplesGRIN, totalTaxon, uniqueWUS3, uniqueCWR3, uniqueWEP4)
+
+#bind the two df together 
+sosSummary2 <- rbind(sosSummary2, grinCollection)
+rownames(sosSummary2)[2] <- "GRIN Collection"
+sosSummary2
+
+```
+
+```{r}
+#filter based on the "is backuped" column.  
+backedUp <- dplyr::filter(grinData, Is.Backed.Up. == 'Y' )
+totaledBackedUp <-nrow(backedUp)
+#filter based on the backup location being NLGRP 
+nlgrpData <- dplyr::filter(backedUp, Backup.Location.1 == 'NSSL' )
+totalBackedUp <- nrow(nlgrpData)
+## Example of the backed up features that are missing a backup location????
+#### does this mean an error in data entry, can we assume 
+MissingBackup <- count(backedUp$Backup.Location.1 )
+
+#define the total number of species present in backup
+totalTaxonNLGRP <- n_distinct(nlgrpData$Taxon)
+
+# apply simliar subsets based on the connection between K13 dataset
+
+# join the the GRIN data with the K13 Dataset 
+combinedData5 <- join(nlgrpData, K13Data, by='Taxon', type='left', match='all')
+
+#trim the data so that taxon that do not have values for the K13 specific data columns are dropped. 
+trimCombinedData5 <- combinedData[!is.na(combinedData5$Taxon_w_author), ]
+
+#subset all WIld Utilizes Species and calculater total number of species 
+wusSamples5 <- filter(trimCombinedData5, Type== 'WUS')
+uniqueWUS5 <- n_distinct(wusSamples5$Taxon)
+
+#subset all Crop Wild RElatives and calculater total number of species 
+cwrSamples5 <- filter(trimCombinedData5, Type== 'CWR')
+uniqueCWR5 <- n_distinct(cwrSamples5$Taxon)
+
+
+#### Repeat with the WEP DATAset 
+# join the grin data with the WEP data
+combinedData6 <- join(nlgrpData, WEPData, by='Taxon', type='left', match='all')
+
+#trim the data so that taxon that do not have values for the WEP specific data columns are dropped. 
+trimCombinedData6 <- filter(combinedData6, !is.na(economic_usage_code))
+
+#calculate total number of species from 
+uniqueWEP6 <- n_distinct(trimCombinedData6$Taxon)
+
+
+
+
+# create the first row of the dataframe 
+nlgrpCollection <- c(totalBackedUp, totalTaxonNLGRP, uniqueWUS5, uniqueCWR5, uniqueWEP6)
+
+#bind the two df together 
+sosSummary2 <- rbind(sosSummary2, nlgrpCollection)
+rownames(sosSummary2)[3] <- "NLGRP Collection"
+sosSummary2
 
 
 ```
@@ -126,7 +357,7 @@ grinTotalUnique <- nrow(unique(grinData[1]))
 # Uses
 
 Report on distributions out of NPGS of materials from SOS, by year, by receiver, by species or taxonomic group
-```{r,caption="Data frame is now printed using `kable`}
+```{r}
 deliveryData <-read.csv("H:\\SOS_Project\\analysisData\\sosOrdersTotal.csv")
 print(deliveryData)
 

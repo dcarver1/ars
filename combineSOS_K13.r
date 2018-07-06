@@ -48,27 +48,8 @@ head(testSum)
 testSum
 
 
-###
-# this is not working at the moment and it's not very important so let's skip it for now 
-### 
 
-###
-# playing with some better table representations 
-###
-# install.packages("flextable")
-# library(flextable)
-# 
-# 
-# testSumDF <- as.data.frame.matrix(testSum)
-# 
-# myft <- regulartable(
-#   testSumDF, 
-#   col_keys = c("Taxon", "Total Collections"))
-# myft
-
-
-
-#unique will produce a list of all the un 
+#unique will produce a list of all the unique taxons 
 testName <-unique(trimCombinedData[1])
 numUnique <- nrow(testName)
 print(paste( "There are a total of ",
