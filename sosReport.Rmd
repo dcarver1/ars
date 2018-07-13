@@ -27,7 +27,7 @@ output:
   - deliveries with taxon = 5 
 - WEP =6 
 
-## connections 
+## connections that will be made (NOTES)
 - 1&2 = Of all the SOS seeds collected how many species are considered to be Economic plants in north america 
 - 1&3 = Of all the SOS seeds collected how may species are considiered to be Wild Crop Relatives in North America 
 - 4&2 = Of all the SOS seeds maintained by ARS how many species are considered to be Economic plants in north america 
@@ -39,7 +39,7 @@ output:
 
 # Goal 
 
-Aim of article- examine and report on the diversity collected via the BLM SOS program, and its past as well as potential future uses
+This report is meant to summarize the relationship between the BLM SOS program and the USDA ARS group. These twoa group are leading the nation in collecting, conserving, and perserving the native plants present on the public lands. 
 
 # Introduction 
 
@@ -86,12 +86,12 @@ varSpecies <- sosData[grep("var." ,sosData$NAME),] # for some reason the ['colNa
 # work with the grep function
 uniqueVar<- dplyr::summarise(varSpecies,n_distinct(varSpecies$NAME))
 
-# rather then a print statement I think this should be a nice table. All outputs should be something interesting too look at. 
-print(paste( "This Seeds of Success program has collected a total of "
-             ,totalSamples, " seed samples. Of which "
-             ,uniqueFam," plant families, "
-             ,uniqueGen, " plant genus and "
-             ,uniqueSpe, " unique sub species are represented" ) )
+# # rather then a print statement I think this should be a nice table. All outputs should be something interesting too look at. 
+# print(paste( "This Seeds of Success program has collected a total of "
+#              ,totalSamples, " seed samples. Of which "
+#              ,uniqueFam," plant families, "
+#              ,uniqueGen, " plant genus and "
+#              ,uniqueSpe, " unique sub species are represented" ) )
 
 ## DEfeine row and column names 
 labelsRow1 <- c("SOS Collection")
@@ -104,25 +104,15 @@ sosSummary <- data.frame()
 sosData <- c(totalSamples, uniqueFam, uniqueGen, uniqueSpe)
 
 #bind the two df together 
-sosSummary <- rbind(sosSummary, sosData)
+sosSummary <- tbl_df(rbind(sosSummary, sosData))
 #define column names and row names 
 colnames(sosSummary) <- labelsCol1
 rownames(sosSummary) <- labelsRow1
-sosSummary
+sosSummary 
 
 uniqueFam[1,]
 
 ```
-```{r lemon, echo=FALSE}
-### 
-# testing about the nice charts using lemon and kable
-# https://cran.r-project.org/web/packages/lemon/vignettes/lemon_print.html
-###
-library(lemon)
-#knit_print.data.frame <- lemon_print
-```
-
-This is a better way to make print statements 
 
 This Seeds of Success program has collected a total of `r totalSamples` seed samples. Of which `r uniqueFam[1,]` plant families
 `r uniqueGen[1,]`  plant genus and `r uniqueSpe[1,]` unique sub species are represented.
@@ -156,7 +146,7 @@ hist(collectionYears,
 
 ```
 
-The importance of this collection increased by the fact that many of the seed taxa that were collected are defined as either Wild Crop Relatives or World Economic Plants. We will use two datasets that have defined economically useful plants, Khoury et al 2013, and *get reference for the WEP dataset received from Daniel*. 
+The importance of this collection is increased by the fact that many of the seed taxa that were collected do the SOS program are defined as either Wild Crop Relatives or World Economic Plants. We will use two datasets that have defined economically useful plants, Khoury et al 2013, and *get reference for the WEP dataset received from Daniel*. 
 
 
 ```{r}
@@ -247,11 +237,22 @@ ng section of the ARS is the group primarily responsable for the initial onboard
 
 
 - How much adopted by Curators, how much "orphaned" at W6 - need to pull from GRIN Global (examine "site") #Not sure how to answer this some at this time 
+```{r}
+#call in sosAccessions: summaries by maintaince site or owned by ***check with Colin or Renee on this one***
+# produce a table showing number of successions and proportion of total 
+sosAccessions <- read.csv("H:\\SOS_Project\\analysisData\\sosAccessions.csv")
+sosAccessions <- tbl_df(sosAccessions)
 
 
+
+```
 - How much is at NLGRP for long term backup
     - * there are 12959 SOS accessions that are maintianed in long term storage backup at NLGRP.* 
-- Viability/conservation issues (Annette) - proportion easy to germinate vs not, other storage issues
+```{r}
+#call in sosAccessions: summarize by is backed up or backup location 
+
+``` 
+
 
 ```{r caption="Summary of SOS and GRIN Relative to CWR and WEP", rows.print=15}
 # read in GRIN Accessions 
@@ -353,6 +354,29 @@ sosSummary2
 
 ```
 
+- Viability/conservation issues (Annette) - proportion easy to germinate vs not, other storage issues
+```{r caption="Listing of Seed Viability by Genus", rows.print=15}
+library(dplyr)
+viability <- read.csv("H:\\SOS_Project\\analysisData\\generaAverageGermination.csv")
+viability <- tbl_df(viability)
+colnames(viability) <- c('Genus', 'percentViable' )
+arrange(viability, desc(percentViable))
+```
+
+```{r caption="Summary of SOS and GRIN Relative to CWR and WEP", rows.print=15}
+# histogram with added parameters
+hist(viability$percentViable,
+  main="Successfully Sprouted Seeds",
+  xlab="Percent Successful",
+  ylab="Number of Species Tested",
+  col="green",
+  border="white", 
+  las=1, #defien the orientation of the label 
+  breaks=10
+)
+
+
+```
 
 # Uses
 
