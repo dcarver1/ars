@@ -36,24 +36,27 @@ output:
 - 1&6 = 1&2 = Of all the SOS seeds collected how many species are considered to be World Economic plants 
 - 4&6 = 1&2 = Of all the SOS seeds maintained by ARS how many species are considered to be World Economic plants 
 - 1 = summary of all taxa collected 
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#import all necessary libraries 
+#install.packages("dplyr", "lemon", "ggplot2", "plyr",'tidyr' #Keep this commented out to knit: look into how to get around this. 
+library(dplyr)
+library(lemon)
+library(ggplot2)
+library(plyr)
+library(tidyr)
+```
+
+```{r ref.label='lemon' }
+#this allow me to define code chunks can call them at later times. Kinda tricky not so sure of the applicaiton just yet/. 
+```
+
+
 
 # Goal 
 
 This report is meant to summarize the relationship between the BLM SOS program and the USDA ARS group. These twoa group are leading the nation in collecting, conserving, and perserving the native plants present on the public lands. 
 
 # Introduction 
-
-Total diversity collected (species, # of samples, maybe make maps of spatial distribution of collected diversity)
-How many are CWR
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-#import all necessary libraries 
-#install.packages("dplyr", "lemon", "ggplot2", "plyr") #Keep this commented out to knit: look into how to get around this. 
-library(dplyr)
-library(lemon)
-library(ggplot2)
-library(plyr)
-```
-
 ```{r, message=FALSE, warning=FALSE}
 #import SOS data 
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
@@ -62,6 +65,35 @@ sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv"
 totalSamples <- nrow(sosData)
 ```
 
+### need to say why SOS program started, what was aims, timeline, etc
+The Seeds of Success program was established in 2001 to facilitate the collection of native seeds. To make use of the seeds collected, the SOS program partners with land management agengies to support the revegetation of areas, the United State Department of Agriculture to preserve the genetic deversity long term, and academic and professional partners to promote and advance scienctific research.   
+ - fill this out to capture aims 
+ - continue to add content to this as I learn more; good resource to ask colin and stephanie about 
+
+
+```{r, caption="Number of Collections per Family from the SOS program." }
+# histogram with added parameters
+sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
+
+collectionYears <- sosData$COLL_YR
+hist(collectionYears,
+  main="Accessions collected by SOS",
+  xlab="Collection Year",
+  xlim = c(2000,2018),
+  ylim = c(0,3500),
+  ylab="Number of Accession Collected",
+  col="blue"
+)
+
+```
+
+
+### But- not well known how much diversity has been collected in total, and what its uses have been
+
+### Therefore- article examining these issues
+
+
+### Total diversity collected (species, # of samples, maybe make maps of spatial distribution of collected diversity)
 ```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #Determine the total number of unique families collect and the number of collection in each family 
 uniqueFam <- dplyr::summarise(sosData,n_distinct(sosData$FAMILY))
@@ -86,13 +118,6 @@ varSpecies <- sosData[grep("var." ,sosData$NAME),] # for some reason the ['colNa
 # work with the grep function
 uniqueVar<- dplyr::summarise(varSpecies,n_distinct(varSpecies$NAME))
 
-# # rather then a print statement I think this should be a nice table. All outputs should be something interesting too look at. 
-# print(paste( "This Seeds of Success program has collected a total of "
-#              ,totalSamples, " seed samples. Of which "
-#              ,uniqueFam," plant families, "
-#              ,uniqueGen, " plant genus and "
-#              ,uniqueSpe, " unique sub species are represented" ) )
-
 ## DEfeine row and column names 
 labelsRow1 <- c("SOS Collection")
 labelsCol1 <- c('All Accessions', "Total Number of Familes", "Total Number of Genus", "Total Number of Sub Species")
@@ -108,19 +133,15 @@ sosSummary <- tbl_df(rbind(sosSummary, sosData))
 #define column names and row names 
 colnames(sosSummary) <- labelsCol1
 rownames(sosSummary) <- labelsRow1
-sosSummary 
-
-uniqueFam[1,]
+sosSummary
 
 ```
+
+
+
 
 This Seeds of Success program has collected a total of `r totalSamples` seed samples. Of which `r uniqueFam[1,]` plant families
 `r uniqueGen[1,]`  plant genus and `r uniqueSpe[1,]` unique sub species are represented.
-
-```{r ref.label='lemon' }
-#this allow me to define code chunks can call them at later times. Kinda tricky not so sure of the applicaiton just yet/. 
-```
-
 
 ```{r caption="Number of Collections per Family from the SOS program.", rows.print=15}
 families <- dplyr::arrange(uniqueFam1, desc(n)) 
@@ -128,54 +149,45 @@ colnames(families) <- c("Family", "Total Number of Accessions")
 families
 
 ```
-The Seeds of Success program has been collecting seeds since 2000. 
-
-```{r, caption="Number of Collections per Family from the SOS program." }
-# histogram with added parameters
-sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
-
-collectionYears <- sosData$COLL_YR
-hist(collectionYears,
-  main="Accessions collected by SOS",
-  xlab="Collection Year",
-  xlim = c(2000,2018),
-  ylim = c(0,3500),
-  ylab="Number of Accession Collected",
-  col="blue"
-)
-
-```
-
-The importance of this collection is increased by the fact that many of the seed taxa that were collected do the SOS program are defined as either Wild Crop Relatives or World Economic Plants. We will use two datasets that have defined economically useful plants, Khoury et al 2013, and *get reference for the WEP dataset received from Daniel*. 
 
 
-```{r}
 
-# caption="Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.", rows.print=15
+### How many are CWR
+
+The importance of this collection is increased by the fact that many of the seed taxa that were collected do the SOS program are defined as either Wild Crop Relatives or World Economic Plants. We will use two datasets that have defined economically useful plants, Khoury et al 2013, and 
+*get reference for the WEP dataset received from Daniel*.
+- expand upon these datasource a bit to explain why they are important 
+
+
+```{r caption="Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.", rows.print=15}
+
+###
 # Create a summary chart showing the total number of accession, total taxa, # of WCR NA, # eco NA, # of economic WEP  
 # this may be added to also include the data about what's managed by the usda and what's at the NLGRP 
 #
 
 # Replace the name column of the sos data so that the "ssp." notation is replaced with "subsp." as defined
 # by the grin Data base 
+
+#import SOS data 
+sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
 # created a new column that has the same col name as the K13 data set. I will use the col to join on 
 sosData$Taxon <- gsub("ssp.","subsp.", sosData$NAME) 
 
 #detemine the total number of taxon in dataset 
 sosTotalUnique <- nrow(unique(sosData[1]))
 
-
 # read in the K13 data 
 K13Data <- read.csv("H:\\SOS_Project\\analysisData\\CWR_US_inventory_2013_7_10.csv")
 
 #detemine the total number of taxon in dataset 
-K13TotalUnique <- nrow(unique(K13Data[1]))
+K13TotalUnique <- n_distinct(K13Data$Taxon)
 
 # join the data sets
 combinedData <- join(sosData, K13Data, by='Taxon', type='left', match='all')
 
 #trim the data so that taxon that do not have values for the K13 specific data columns are dropped. 
-trimCombinedData <- combinedData[!is.na(combinedData$Taxon_w_author), ]
+trimCombinedData <- filter(combinedData, !is.na(Taxon_w_author))
 
 #subset all WIld Utilizes Species and calculater total number of species 
 wusSamples <- filter(trimCombinedData, Type== 'WUS')
@@ -193,9 +205,8 @@ WEPData <- read.csv("H:\\SOS_Project\\analysisData\\EconomicUseCategoriesOfSpeci
 ## Rename the name column to match the newly created column from the SOS data 
 colnames(WEPData)[2] <- "Taxon"
 
-
 #detemine the total number of taxon in dataset 
-WEPTotalUnique <- n_distinct(WEPData$taxonomy_species_id)
+WEPTotalUnique <- n_distinct(WEPData$Taxon)
 
 # join the data sets
 combinedData2 <- join(sosData, WEPData, by='Taxon', type='left', match='all')
@@ -204,8 +215,7 @@ combinedData2 <- join(sosData, WEPData, by='Taxon', type='left', match='all')
 trimCombinedData2 <- filter(combinedData2, !is.na(economic_usage_code))
 
 #calculate total number of species from 
-uniqueWEP <- n_distinct(trimCombinedData2$SPECIES)
-
+uniqueWEP <- n_distinct(trimCombinedData2$Taxon)
 
 ## DEfeine row and column names 
 labelsRow <- c("SOS Collection")
@@ -231,44 +241,22 @@ sosSummary2
 # Conservation 
 
 The Seeds of Success program provide the boots on the ground effort in the collection of seed resources and the program partners with the Agricultural Research Service of USDA to store, maintian, and distribute the seeds collected. The Pullman, Washinto
-ng section of the ARS is the group primarily responsable for the initial onboarding and entering of the seeds into the Genetic Resoruce Inventory Network(GRIN) as well as mainting the seeds in environments that support preservation. Once within the ARS system the quality of the seed collections are accessed and samples that are deemed benifical to preserve over an extended period of time are transfer to the National Laboratory for Genetic Resource Preservation in Fort Collins, Colorado. The NLRGP specialized in the long term storage of genetic resources. Below is a few diagrams and table that illistrate the relationship between the Seeds of Success program and the ARS. 
+ng section of the ARS is the group primarily responsable for the initial onboarding and entering of the seeds into the Genetic Resoruce Inventory Network(GRIN) as well as mainting the seeds in environments that support preservation.  
 
-
-
-
-- How much adopted by Curators, how much "orphaned" at W6 - need to pull from GRIN Global (examine "site") #Not sure how to answer this some at this time 
-```{r}
-#call in sosAccessions: summaries by maintaince site or owned by ***check with Colin or Renee on this one***
-# produce a table showing number of successions and proportion of total 
-sosAccessions <- read.csv("H:\\SOS_Project\\analysisData\\sosAccessions.csv")
-sosAccessions <- tbl_df(sosAccessions)
-
-
-
-```
-- How much is at NLGRP for long term backup
-    - * there are 12959 SOS accessions that are maintianed in long term storage backup at NLGRP.* 
-```{r}
-#call in sosAccessions: summarize by is backed up or backup location 
-
-``` 
-
-
+### stored within ARS system 
 ```{r caption="Summary of SOS and GRIN Relative to CWR and WEP", rows.print=15}
 # read in GRIN Accessions 
-grinData <- read.csv("H:\\SOS_Project\\analysisData\\sosAccessions.csv")
+grinData <- read.csv("H:\\SOS_Project\\analysisData\\sosAllAccessions.csv")
 
 # calcualte the total number of features and the total number of taxon 
 totalSamplesGRIN <- nrow(grinData)# why would these two numbers be different? Question for Renee 
-totalName <- dplyr::n_distinct(grinData$Name)# why would these two numbers be different? Question for Renee 
-totalTaxon <- totalName <- dplyr::n_distinct(grinData$Taxon)
-
+totalTaxon <- dplyr::n_distinct(grinData$Taxon)
 
 # join the the GRIN data with the K13 Dataset 
 combinedData3 <- join(grinData, K13Data, by='Taxon', type='left', match='all')
 
 #trim the data so that taxon that do not have values for the K13 specific data columns are dropped. 
-trimCombinedData3 <- combinedData[!is.na(combinedData3$Taxon_w_author), ]
+trimCombinedData3 <- filter(combinedData3, !is.na(Taxon_w_author))
 
 #subset all WIld Utilizes Species and calculater total number of species 
 wusSamples3 <- filter(trimCombinedData3, Type== 'WUS')
@@ -285,9 +273,9 @@ combinedData4 <- join(grinData, WEPData, by='Taxon', type='left', match='all')
 #trim the data so that taxon that do not have values for the WEP specific data columns are dropped. 
 trimCombinedData4 <- filter(combinedData4, !is.na(economic_usage_code))
 
+
 #calculate total number of species from 
 uniqueWEP4 <- n_distinct(trimCombinedData4$Taxon)
-
 
 # create the first row of the dataframe 
 grinCollection <- c(totalSamplesGRIN, totalTaxon, uniqueWUS3, uniqueCWR3, uniqueWEP4)
@@ -298,6 +286,11 @@ rownames(sosSummary2)[2] <- "GRIN Collection"
 sosSummary2
 
 ```
+
+
+### How much is at NLGRP for long term backup
+
+Once within the ARS system the quality of the seed collections are accessed and samples that are deemed benifical to preserve over an extended period of time are transfer to the National Laboratory for Genetic Resource Preservation in Fort Collins, Colorado. The NLRGP specialized in the long term storage of genetic resources. If a set of seeds is stored at NLGRP it can be assured that it is protect and preserved to the highest standard. The coordinating efforts to bring seeds into the long term storage is essential to the longevity of the genetic material store within the seeds. 
 
 ```{r}
 #filter based on the "is backuped" column.  
@@ -313,13 +306,12 @@ MissingBackup <- count(backedUp$Backup.Location.1 )
 #define the total number of species present in backup
 totalTaxonNLGRP <- n_distinct(nlgrpData$Taxon)
 
-# apply simliar subsets based on the connection between K13 dataset
-
+### apply simliar subsets based on the connection between K13 dataset
 # join the the GRIN data with the K13 Dataset 
 combinedData5 <- join(nlgrpData, K13Data, by='Taxon', type='left', match='all')
 
 #trim the data so that taxon that do not have values for the K13 specific data columns are dropped. 
-trimCombinedData5 <- combinedData[!is.na(combinedData5$Taxon_w_author), ]
+trimCombinedData5 <- filter(combinedData5, !is.na(Taxon_w_author))
 
 #subset all WIld Utilizes Species and calculater total number of species 
 wusSamples5 <- filter(trimCombinedData5, Type== 'WUS')
@@ -354,13 +346,45 @@ sosSummary2
 
 ```
 
-- Viability/conservation issues (Annette) - proportion easy to germinate vs not, other storage issues
+
+
+### How much adopted by Curators, how much "orphaned" at W6 - need to pull from GRIN Global (examine "site") #Not sure how to answer this some at this time 
+
+The challenge of coodinating the preservation of these seeds is seen in part by how my samples become orphaned within the system. Orphaned seeds are those which do not fit into any of the existing collections. As a results seed curators need to assess how the seeds can best be intergrated and is it worth incorperating that sample. While this decission making process is occuring the seeds are not being backed up and are not grown out to plants to replenish the existing seed population. 
+
+```{r}
+#call in sosAccessions: summaries by maintaince site or owned by ***check with Colin or Renee on this one***
+# produce a table showing number of successions and proportion of total 
+sosAccessions <- read.csv("H:\\SOS_Project\\analysisData\\sosAllAccessions.csv")
+sosAccessions <- tbl_df(sosAccessions)
+sosOwner <- select(sosAccessions, Accession.Prefix) 
+sosCount <- count(sosOwner)
+sosCount %>% arrange(desc(freq))
+
+### Question for David Stout 
+
+```
+
+### Viability/conservation issues (Annette) - proportion easy to germinate vs not, other storage issues
+
+Collection and storage are only part of the story. Germination and the ability to grow out the plant to collect new seeds is a large part of what the ARS supports. The troublesome fact about the SOS seeds is that these species have not often been collected and mainted in seed banks before the initiation of the SOS program. One of the side effects of that is it little is known about the conditions required to germinate the seeds. 
+```{r}
+viability <- read.csv("H:\\SOS_Project\\analysisData\\generaAverageGermination.csv")
+viability <- tbl_df(viability)
+uniqueGenus <- n_distinct(viability$Genus)
+percentGenus <- 100*(uniqueGenus/uniqueGen)
+```
+
+An experiment was developed and performed by Annette *find her last name* of NLGRP. Annette tested the viability of seeds to germinate for `r uniqueGenus` unique genus. This accounts for `r percentGenus[1,]` percent of all the genus collected by the SOS program. The data generated by this study illustrates how difficult it will be for the ARS to continue generate new generations of the plants moving forward. 
+
+
 ```{r caption="Listing of Seed Viability by Genus", rows.print=15}
 library(dplyr)
 viability <- read.csv("H:\\SOS_Project\\analysisData\\generaAverageGermination.csv")
 viability <- tbl_df(viability)
 colnames(viability) <- c('Genus', 'percentViable' )
 arrange(viability, desc(percentViable))
+
 ```
 
 ```{r caption="Summary of SOS and GRIN Relative to CWR and WEP", rows.print=15}
@@ -372,34 +396,84 @@ hist(viability$percentViable,
   col="green",
   border="white", 
   las=1, #defien the orientation of the label 
-  breaks=10
+  breaks=20
 )
-
 
 ```
 
+
 # Uses
 
-Report on distributions out of NPGS of materials from SOS, by year, by receiver, by species or taxonomic group
+### Report on distributions out of NPGS of materials from SOS, by year, by receiver, by species or taxonomic group
+
+The ARS systems store and distribute the seeds that are collected by SOS. Seeds are distributed for a number of reasons including, academic research studies and educational demostrations. Many of the distributions take place within the ARS when seeds are sent to and from various seed labs. The distribution of seeds is end user driven for the volume of seeds transfered flucates over time. 
+
+```{r caption="Distribution of seeds over time", rows.print=15}
+activeOrders <- read.csv("H:\\SOS_Project\\analysisData\\sosActiveOrders.csv")
+date <- separate(activeOrders, Ordered.Date, into = c("month","day", "year"), sep = "/")
+# histogram with added parameters
+hist(as.numeric(date$year),
+  main="SOS Samples Distributed Over Time",
+  xlab="Year",
+  ylab="Number of Samples Distributed",
+  col="grey",
+  border="white", 
+  las=1 #defines the orientation of the label 
+)
+```
+The seeds can be used for multiple reasons though by far Research and Education are the top two requests.  
+
 ```{r}
-deliveryData <-read.csv("H:\\SOS_Project\\analysisData\\sosOrdersTotal.csv")
-print(deliveryData)
+orderType <- count(activeOrders$Intended.Use)
+arrange(orderType, desc(freq)) %>% `colnames<-`(c("Reason for Distribution", "Individual Shipments"))
+```
 
-# select all rows that were delivered to ARS locations 
-ars <- filter(deliveryData, category_code == "UARS")
-ars <- ars[,1:2]
-labelsColumns <- c('Number of Deliveries', "Reason for Delivery" )
-values2 <- c("Replenishment", "Germination", "Observation"
-                              ,"Information only", "Transfer", "Backup"
-                              ,"Distribution")
-ars$order_type_code <- values2
+```{r}
+distribution <- read.csv("H:\\SOS_Project\\analysisData\\SOSOrdersTaxa.csv")
+reciever <- count(distribution$title)
+arrange(reciever, desc(freq)) %>% `colnames<-`(c("Entity Recieving Seeds", "Individual Shipments"))
 
-colnames(ars) <- labelsColumns
-colnames(ars)
-ars<- ars[order(-ars$'Number of Deliveries'),]
+```
 
-print(ars)
+```{r}
+# call in data on the distribution of species 
+speciesOrdered <- read.csv("H:\\SOS_Project\\analysisData\\sosOrderItems.csv")
+speciesOrdered <- mutate(speciesOrdered, Order.Request.ID = as.factor(order_request_id))
+# one to main join with activeOrders based on "Order.Request.ID"
+speciesOr <- full_join(speciesOrdered, activeOrders, by="Order.Request.ID")
 
+
+intendedUse <- arrange(count(speciesOr$Intended.Use) , desc(freq)) %>% `colnames<-`(c("Intended Use", "Individual Species Sent"))
+
+accessionsSent <- arrange(count(speciesOr$accession_number) , desc(freq)) %>% `colnames<-`(c("Accession", "Accessions Pulled From"))
+accessionsSent 
+
+taxaSent <- arrange(count(speciesOr$Taxon) , desc(freq)) %>% `colnames<-`(c("Taxon", "Taxa Delivered"))
+taxaSent
+
+requestor <- arrange(count(speciesOr$Requestor) , desc(freq)) %>% `colnames<-`(c("Entity Recieving Seeds", "Individual Species Sent"))
+requestor
+
+```
+
+```{r}
+### come back to this at some point 
+
+# deliveryData <-read.csv("H:\\SOS_Project\\analysisData\\sosOrdersTotal.csv")
+# print(deliveryData)
+# 
+# # select all rows that were delivered to ARS locations 
+# ars <- filter(deliveryData, category_code == "UARS")
+# ars <- ars[,1:2]
+# labelsColumns <- c('Number of Deliveries', "Reason for Delivery" )
+# values2 <- c("Replenishment", "Germination", "Observation"
+#                               ,"Information only", "Transfer", "Backup"
+#                               ,"Distribution")
+# ars$order_type_code <- values2
+# 
+# colnames(ars) <- labelsColumns
+# colnames(ars)
+# ars<- ars[order(-ars$'Number of Deliveries'),]
 
 ```
 
