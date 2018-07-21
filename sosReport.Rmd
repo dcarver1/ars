@@ -3,6 +3,8 @@ title: 'Seeds of Success: Collection Diversity, Richness, and Conservation '
 author: "Colin Khoury, Stephanie Green, Daniel Carver"
 date: "June 22, 2018"
 output:
+  pdf_document:
+    toc: yes
   html_document:
     code_folding: hide
     df_print: paged
@@ -12,8 +14,6 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: no
-  pdf_document:
-    toc: yes
 ---
 
 # CheckList 
@@ -28,14 +28,14 @@ output:
 - WEP =6 
 
 ## connections that will be made (NOTES)
-- 1&2 = Of all the SOS seeds collected how many species are considered to be Economic plants in north america 
-- 1&3 = Of all the SOS seeds collected how may species are considiered to be Wild Crop Relatives in North America 
-- 4&2 = Of all the SOS seeds maintained by ARS how many species are considered to be Economic plants in north america 
-- 4&3 = Of all the SOS seeds maintained by ARS how many species are considered to be Wild Crop Relatives in north america 
-- 5 = Deliveries: Who received, Reason, data, taxa shipped 
-- 1&6 = 1&2 = Of all the SOS seeds collected how many species are considered to be World Economic plants 
-- 4&6 = 1&2 = Of all the SOS seeds maintained by ARS how many species are considered to be World Economic plants 
-- 1 = summary of all taxa collected 
+- ~~1&2 = Of all the SOS seeds collected how many species are considered to be Economic plants in north america~~ 
+- ~~1&3 = Of all the SOS seeds collected how may species are considered to be Wild Crop Relatives in North America~~ 
+- ~~4&2 = Of all the SOS seeds maintained by ARS how many species are considered to be Economic plants in north america~~
+- ~~4&3 = Of all the SOS seeds maintained by ARS how many species are considered to be Wild Crop Relatives in north america~~ 
+- 5 = Deliveries: Who received, Reason, date, taxa shipped 
+- ~~1&6 = 1&2 = Of all the SOS seeds collected how many species are considered to be World Economic plants~~
+- ~~4&6 = 1&2 = Of all the SOS seeds maintained by ARS how many species are considered to be World Economic plants~~ 
+- ~~1 = summary of all taxa collected~~ 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #import all necessary libraries 
 #install.packages("dplyr", "lemon", "ggplot2", "plyr",'tidyr' #Keep this commented out to knit: look into how to get around this. 
@@ -44,6 +44,9 @@ library(lemon)
 library(ggplot2)
 library(plyr)
 library(tidyr)
+#install.packages('devtools')
+#library(devtools)
+#install_version("rmarkdown",version=1.8)
 ```
 
 ```{r ref.label='lemon' }
@@ -54,10 +57,10 @@ library(tidyr)
 
 # Goal 
 
-This report is meant to summarize the relationship between the BLM SOS program and the USDA ARS group. These twoa group are leading the nation in collecting, conserving, and perserving the native plants present on the public lands. 
+This report is meant to summarize the relationship between the BLM SOS program and the USDA ARS group. These two groups are leading the nation in collecting, conserving, and preserving the native plants present on the public lands. 
 
 # Introduction 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
 #import SOS data 
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
 
@@ -66,9 +69,9 @@ totalSamples <- nrow(sosData)
 ```
 
 ### need to say why SOS program started, what was aims, timeline, etc
-The Seeds of Success program was established in 2001 to facilitate the collection of native seeds. To make use of the seeds collected, the SOS program partners with land management agengies to support the revegetation of areas, the United State Department of Agriculture to preserve the genetic deversity long term, and academic and professional partners to promote and advance scienctific research.   
+The Seeds of Success program was established in 2001 to facilitate the collection of native seeds. To make use of the seeds collected, the SOS program partners with land management agencies to support the re-vegetation of areas, the United State Department of Agriculture to preserve the genetic diversity long term, and academic and professional partners to promote and advance scientific research.   
  - fill this out to capture aims 
- - continue to add content to this as I learn more; good resource to ask colin and stephanie about 
+ - continue to add content to this as I learn more; good resource to ask Colin and Stephanie about 
 
 
 ```{r, caption="Number of Collections per Family from the SOS program." }
@@ -82,6 +85,7 @@ hist(collectionYears,
   xlim = c(2000,2018),
   ylim = c(0,3500),
   ylab="Number of Accession Collected",
+  border="white",
   col="blue"
 )
 
@@ -89,8 +93,11 @@ hist(collectionYears,
 
 
 ### But- not well known how much diversity has been collected in total, and what its uses have been
+Detailed collection methodologies mean that SOS samples have information about species collected, the region it was collected from, the land management agency where that collection occured and positional data in the form of latitude, longitude, and elevation. This data provides good information about the seeds collected but does not tell us anything about what happened to the seeds after the collection occurs. The article is meant to create those connections and tell the full story of how these seeds are poviding services to the landscape and understanding of the species. 
+
 
 ### Therefore- article examining these issues
+This will be done by accessing how many of these collections represent economically useful and/or wild crop relatives at both the national and international scale. The relationship between the SOS collections and the ARS collection will be examined to determine how many collections are store in long term storage and who is using the seeds outside of the ARS and for what purpose. 
 
 
 ### Total diversity collected (species, # of samples, maybe make maps of spatial distribution of collected diversity)
@@ -154,9 +161,11 @@ families
 
 ### How many are CWR
 
-The importance of this collection is increased by the fact that many of the seed taxa that were collected do the SOS program are defined as either Wild Crop Relatives or World Economic Plants. We will use two datasets that have defined economically useful plants, Khoury et al 2013, and 
+The importance of this collection is increased by the fact that many of the seed taxa that were collected by the SOS program are defined as either Crop Wild Relatives or World Economic Plants. Crop Wild Relatives (CWR) are the genetic predecessors of modern crops and are found throughout the diverse ecological and biophysiological environments of the world. The variability in growing conditions and potential geographic isolation between stands has shown that WCRs contain a higher level of genetic diversity. The subsequent traits found within WCR are used to add to the resistance, quality, and breeding efficiency of modern crops. 
+- add a bit about the various economic use catergories define by GRIN 
+
 *get reference for the WEP dataset received from Daniel*.
-- expand upon these datasource a bit to explain why they are important 
+- expand upon these data source a bit to explain why they are important 
 
 
 ```{r caption="Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.", rows.print=15}
@@ -240,8 +249,8 @@ sosSummary2
 
 # Conservation 
 
-The Seeds of Success program provide the boots on the ground effort in the collection of seed resources and the program partners with the Agricultural Research Service of USDA to store, maintian, and distribute the seeds collected. The Pullman, Washinto
-ng section of the ARS is the group primarily responsable for the initial onboarding and entering of the seeds into the Genetic Resoruce Inventory Network(GRIN) as well as mainting the seeds in environments that support preservation.  
+The Seeds of Success program provide the boots on the ground effort in the collection of seed resources and the program partners with the Agricultural Research Service of USDA to store, maintain, and distribute the seeds collected. The Pullman, Washington
+ng section of the ARS is the group primarily responsible for the initial on boarding and entering of the seeds into the Genetic Resource Inventory Network(GRIN) as well as maintaining  the seeds in environments that support preservation.  
 
 ### stored within ARS system 
 ```{r caption="Summary of SOS and GRIN Relative to CWR and WEP", rows.print=15}
@@ -290,7 +299,7 @@ sosSummary2
 
 ### How much is at NLGRP for long term backup
 
-Once within the ARS system the quality of the seed collections are accessed and samples that are deemed benifical to preserve over an extended period of time are transfer to the National Laboratory for Genetic Resource Preservation in Fort Collins, Colorado. The NLRGP specialized in the long term storage of genetic resources. If a set of seeds is stored at NLGRP it can be assured that it is protect and preserved to the highest standard. The coordinating efforts to bring seeds into the long term storage is essential to the longevity of the genetic material store within the seeds. 
+Once within the ARS system the quality of the seed collections are accessed and samples that are deemed beneficial to preserve over an extended period of time are transfer to the National Laboratory for Genetic Resource Preservation in Fort Collins, Colorado. The NLRGP specialized in the long term storage of genetic resources. If a set of seeds is stored at NLGRP it can be assured that it is protect and preserved to the highest standard. The coordinating efforts to bring seeds into the long term storage is essential to the longevity of the genetic material store within the seeds. 
 
 ```{r}
 #filter based on the "is backuped" column.  
@@ -350,24 +359,33 @@ sosSummary2
 
 ### How much adopted by Curators, how much "orphaned" at W6 - need to pull from GRIN Global (examine "site") #Not sure how to answer this some at this time 
 
-The challenge of coodinating the preservation of these seeds is seen in part by how my samples become orphaned within the system. Orphaned seeds are those which do not fit into any of the existing collections. As a results seed curators need to assess how the seeds can best be intergrated and is it worth incorperating that sample. While this decission making process is occuring the seeds are not being backed up and are not grown out to plants to replenish the existing seed population. 
+The challenge of coordinating the preservation of these seeds is seen in part by how my samples become orphaned within the system. Orphaned seeds are those which do not fit into any of the existing collections. As a results seed curators need to assess how the seeds can best be integrated and is it worth incorporating that sample. While this decision making process is occurring the seeds are not being backed up and are not grown out to plants to replenish the existing seed population. 
 
 ```{r}
-#call in sosAccessions: summaries by maintaince site or owned by ***check with Colin or Renee on this one***
-# produce a table showing number of successions and proportion of total 
+# call in sosAccessions: summaries by maintaince site or owned by ***check with Colin or Renee on this one***
+# produce a table showing number of successions and proportion of total
+
 sosAccessions <- read.csv("H:\\SOS_Project\\analysisData\\sosAllAccessions.csv")
-sosAccessions <- tbl_df(sosAccessions)
-sosOwner <- select(sosAccessions, Accession.Prefix) 
-sosCount <- count(sosOwner)
-sosCount %>% arrange(desc(freq))
+names(sosAccessions)
+# create a count list based on the number of values within the tbl
+list2 <- rep(1,length(sosAccessions$Accession.ID)) # there is probably a better way to do this but i'm not sure how ar the mooment
+sosAccessions["count"] <- list2
+# subet columns needed.
+sosOwner <- sosAccessions %>%
+  group_by(Accession.Prefix)%>%
+  summarise(prefexSum = sum(count)) %>%
+  arrange(desc(prefexSum))
+# thus us not kniting for some reason 
+# %>%
+#   rename(Facility = Accession.Prefix, NumberOfAccessions = prefexSum)
 
-### Question for David Stout 
 
+sosOwner
 ```
 
 ### Viability/conservation issues (Annette) - proportion easy to germinate vs not, other storage issues
 
-Collection and storage are only part of the story. Germination and the ability to grow out the plant to collect new seeds is a large part of what the ARS supports. The troublesome fact about the SOS seeds is that these species have not often been collected and mainted in seed banks before the initiation of the SOS program. One of the side effects of that is it little is known about the conditions required to germinate the seeds. 
+Collection and storage are only part of the story. Germination and the ability to grow out the plant to collect new seeds is a large part of what the ARS supports. The troublesome fact about the SOS seeds is that these species have not often been collected and maintained in seed banks before the initiation of the SOS program. One of the side effects of that is it little is known about the conditions required to germinate the seeds. 
 ```{r}
 viability <- read.csv("H:\\SOS_Project\\analysisData\\generaAverageGermination.csv")
 viability <- tbl_df(viability)
@@ -406,7 +424,7 @@ hist(viability$percentViable,
 
 ### Report on distributions out of NPGS of materials from SOS, by year, by receiver, by species or taxonomic group
 
-The ARS systems store and distribute the seeds that are collected by SOS. Seeds are distributed for a number of reasons including, academic research studies and educational demostrations. Many of the distributions take place within the ARS when seeds are sent to and from various seed labs. The distribution of seeds is end user driven for the volume of seeds transfered flucates over time. 
+The ARS systems store and distribute the seeds that are collected by SOS. Seeds are distributed for a number of reasons including, academic research studies and educational demonstrations. Many of the distributions take place within the ARS when seeds are sent to and from various seed labs. The distribution of seeds is end user driven for the volume of seeds transferred fluctuates over time. 
 
 ```{r caption="Distribution of seeds over time", rows.print=15}
 activeOrders <- read.csv("H:\\SOS_Project\\analysisData\\sosActiveOrders.csv")
@@ -429,11 +447,50 @@ arrange(orderType, desc(freq)) %>% `colnames<-`(c("Reason for Distribution", "In
 ```
 
 ```{r}
+#read in feature 
 distribution <- read.csv("H:\\SOS_Project\\analysisData\\SOSOrdersTaxa.csv")
-reciever <- count(distribution$title)
-arrange(reciever, desc(freq)) %>% `colnames<-`(c("Entity Recieving Seeds", "Individual Shipments"))
+#summarize by genus and sum the total number of packets sent per Genus 
+genusSum <- distribution %>% 
+  group_by(genus_name)%>%
+  summarise(genusSum = sum(COUNT)) %>% 
+  arrange(desc(genusSum))
+
+# %>%
+#   rename(Genus = 'genus_name'  ,IndividualSeedsSent = 'genusSum')
+
+#genusSum$genus_name <- genusSum$Genus
+
+#calculate the total number of seeds sent 
+totalSeedsSent <- sum(distribution$COUNT)
+
+K13Data$genus_name <- K13Data$Genus
+names(K13Data)
+
+
+#Call in the WUP/CWR data, summarize by Genus, join to distribution data by genus 
+K13genus <- K13Data %>%
+  group_by(genus_name) %>%
+  summarise_()%>%
+  inner_join(distribution,by="genus_name")
+K13genus
+
+
+# calculated the total number of seeds sent 
+totalWUSSet <- sum(K13genus$COUNT)
+
+#define the unique number of genus and seeds sent to enitity groups 
+reciever <- distribution %>%
+  group_by(title) %>%
+  summarise(numberOfGenus = n_distinct(genus_name), numberOfSeeds = sum(COUNT)) %>%
+  arrange(desc(numberOfGenus))
+reciever
+# %>%
+#   rename(EntityRecievingSeeds = 'title'  ,NumberOfGenusDelivered = 'numberOfGenus', IndividualSeedsDelivered = 'numberOfSeeds')  
 
 ```
+There are a total of `totalSeedsSent` seeds that have been distributed by the ARS. Of that a `totalWUSSet`, are considered to be either Wild Utilized Plants or Crop Wild Relatives.
+
+
 
 ```{r}
 # call in data on the distribution of species 
@@ -482,7 +539,7 @@ How many are CWR and impacts
 
 # Discussion
 
-- W6 doesnt have the resources to manage seeds indefinitely
+- W6 doesn't have the resources to manage seeds indefinitely
 - Constraints / challenges to adopting more wild plants
 - Constraints with regard to getting materials into long term storage
 - Challenge of not having seed testing techniques/rules worked out for species
