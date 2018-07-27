@@ -65,3 +65,13 @@ Multiple of these can be used. they work as OR statements really
 ```r
 select(hflights, UniqueCarrier, ends_with("Num"), starts_with("Cancel"))
 ```
+
+7/27/2018
+
+**Mutate**
+calculates a new variable based on information already in a dataset ]
+mutate returns new dataframe that contains all the new variable
+you can add multiple columns at once using commas
+```r
+mutate(my_df, x = a + b, y = x + c)
+```
