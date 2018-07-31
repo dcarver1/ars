@@ -62,17 +62,31 @@ The Seeds of Success program was established in 2001 to facilitate the collectio
 ```{r, caption="Number of Collections per Family from the SOS program." }
 # histogram with added parameters
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
+glimpse(sosData)
 
-collectionYears <- sosData$COLL_YR
-p1 <- hist(collectionYears,
-  main="Accessions collected by SOS",
-  xlab="Collection Year",
-  xlim = c(2000,2018),
-  ylim = c(0,3500),
-  ylab="Number of Accession Collected",
-  border="white",
-  col="blue"
-)
+# collectionYears <- sosData$COLL_YR
+# p1 <- hist(collectionYears,
+#   main="Accessions collected by SOS",
+#   xlab="Collection Year",
+#   xlim = c(2000,2018),
+#   ylim = c(0,3500),
+#   ylab="Number of Accession Collected",
+#   border="white",
+#   col="blue"
+# )
+
+ggplot(sosData, aes(COLL_YR))+
+  geom_histogram(binwidth = 1, 
+                 col="white",
+                 fill="blue",
+                 alpha = 0.5) + 
+  labs(title = "Number of Collections")+
+  labs(x = "Collection Year", y= "Number of Accessions") + 
+  xlim(c(2000,2018))+
+  ylim(c(0,3500))+
+  scale_x_continuous(breaks = seq(2000,2018, 2))+
+  scale_y_continuous(breaks = seq(0,3500, 500))+
+  theme_minimal()
 
 ```
 
@@ -342,6 +356,30 @@ p2 <- hist(collectionYears2,
   border="white",
   col="dark green"
 )
+
+ggplot(sosunion2, aes(COLL_YR))+
+  geom_histogram(binwidth = 1, 
+                 col="white",
+                 fill="dark green",
+                 alpha = 1) + 
+  labs(title = "Accessions collected by SOS that are not in ARS or GRIN", 
+       x = "Collection Year",
+       y= "Number of Accession Collected",
+       caption = "") + 
+  xlim(c(2000,2018))+
+  ylim(c(0,3500))+
+  scale_x_continuous(breaks = seq(2000,2018, 2))+
+  scale_y_continuous(breaks = seq(0,3500, 500))+
+  theme_minimal()+
+  geom_histogram(data= sosData, 
+                 aes(sosData$COLL_YR),
+                 binwidth = 1,
+                 col="white",
+                 fill= "grey",
+                 alpha = 0.5)
+  
+
+#check out the site for more [information](https://stackoverflow.com/questions/6957549/overlaying-histograms-with-ggplot2-in-r)
 
 ```
 
