@@ -75,3 +75,35 @@ you can add multiple columns at once using commas
 ```r
 mutate(my_df, x = a + b, y = x + c)
 ```
+8/20/2018
+**Filter**
+provide a tbl  and a conditional statement
+?comparison opens a help page for R operators
+
+```r
+# hflights is already available in the workspace
+glimpse(hflights)
+# Select the flights that had JFK as their destination: c1
+c1 <- filter(hflights, Dest %in% "JFK")
+
+# Combine the Year, Month and DayofMonth variables to create a Date column: c2
+c2 <- mutate(c1, Date = paste(Year, Month ,DayofMonth, sep="-"))
+glimpse(c2)
+# Print out a selection of columns of c2
+select(c2, Date, DepTime, ArrTime, TailNum)
+```
+**Arrange**
+order rows based on the content of rows
+multiple rows can be sorted, the second works as the tie breaker
+
+```r
+# Arrange dtc so that cancellation reasons are grouped
+arrange(dtc, CancellationCode)
+
+# Arrange dtc according to carrier and departure delays
+arrange(dtc, UniqueCarrier, DepDelay)
+
+# Arrange flights by total delay (normal order).
+arrange(hflights, DepDelay + ArrDelay )
+
+```

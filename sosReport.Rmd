@@ -1,15 +1,16 @@
 ---
-title: 'Seeds of Success: Collection Diversity, Richness, and Conservation '
-author: "Colin Khoury, Stephanie Green, Daniel Carver"
+title: 'Seeds of Success: Diversity and impact of collections conserved in the USDA National Plant Germplasm System'
+author: "Daniel Carver, Colin Khoury, Stephanie Greene, (potentially additional authors from Pullman, BLM)"
 date: "June 22, 2018"
 output:
   html_document:
     code_folding: hide
     df_print: paged
     highlight: tango
-    number_sections: yes
     theme: yeti
     toc: yes
+    toc_depth: 2
+    number_sections: true
     toc_float:
       collapsed: no
       smooth_scroll: no
@@ -22,6 +23,8 @@ output:
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #import all necessary libraries 
 #install.packages("dplyr", "lemon", "ggplot2", "plyr",'tidyr' #Keep this commented out to knit: look into how to get around this. 
+#if(!require(installr)) { install.packages("installr"); require(installr)} #load / install+load installr
+#install.pandoc()
 library(dplyr)
 library(lemon)
 library(ggplot2)
@@ -32,17 +35,19 @@ library(tidyr)
 #install_version("rmarkdown",version=1.8)
 ```
 
+
+
 ```{r ref.label='lemon' ,echo=FALSE}
 #this allow me to define code chunks can call them at later times. Kinda tricky not so sure of the applicaiton just yet/. 
 ```
 
 
 
-# Goal 
+# Abstract {-}
 
 Summarize the relationship between the BLM Seeds Of Success(SOS) program and the USDA ARS division. These two organizations are leading the nation in collecting, conserving, and preserving the native plants present on public lands. 
 
-# Introduction{#Introduction}
+# Introduction 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 #import SOS data 
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
@@ -51,7 +56,7 @@ sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv"
 totalSamples <- nrow(sosData)
 ```
 
-### Why SOS program started, what was aims, timeline, etc
+## Why SOS program started, what was aims, timeline, etc
 The Seeds of Success program was established in 2001 to facilitate the collection of native seeds. To make use of the seeds collected, the SOS program partners with land management agencies to support the re-vegetation of areas, academic and professional partners to promote and advance scientific research, and the United States Department of Agriculture for the long term preservation of species genetic diversity.    
 
  - fill this out to capture aims
@@ -59,10 +64,9 @@ The Seeds of Success program was established in 2001 to facilitate the collectio
  - continue to add content to this as I learn more; ask Colin and Stephanie to add to this background 
 
 
-```{r, caption="Number of Collections per Family from the SOS program." }
+```{r, message=FALSE, warning=FALSE, echo=FALSE, caption="Number of Collections per Family from the SOS program." }
 # histogram with added parameters
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
-glimpse(sosData)
 
 # collectionYears <- sosData$COLL_YR
 # p1 <- hist(collectionYears,
@@ -91,17 +95,20 @@ ggplot(sosData, aes(COLL_YR))+
 ```
 
 
-### But- not well known how much diversity has been collected in total, and what its uses have been
+## But- not well known how much diversity has been collected in total, and what its uses have been
 Detailed collection methodologies mean that SOS accessions have information about the species collected, the region it was collected from, the land management agency where that collection occurred, and positional data in the form of latitude, longitude, and elevation. This data provides information about the seeds collected but does not tell us anything about what happened to the seeds after the collection occurs. The article is meant to create those connections and tell the full story of how these seeds are providing services to the landscape and understanding of the species. 
 
 
-### Therefore- article examining these issues
+## Therefore- article examining these issues
 This will be done by accessing how many of these collections represent economically useful and/or  crop wild relatives at both the national and international scale. The relationship between the SOS collections and the ARS collection will be examined to determine how many collections are store in long term storage and who is using the seeds outside of the ARS and for what purpose. 
 
 - this can be added to. It's the first time we talk about CWR and there need more of an introductions Specific the two datasets used 
 
+# Methods 
 
-### Total diversity collected (
+# Results 
+
+## Diversity
 - just charts for the momments. I want to generate a map for this section
 ```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #Determine the total number of unique families collect and the number of collection in each family 
@@ -129,7 +136,7 @@ uniqueVar<- dplyr::summarise(varSpecies,n_distinct(varSpecies$NAME))
 
 ## DEfeine row and column names 
 labelsRow1 <- c("SOS Collection")
-labelsCol1 <- c('All Accessions', "Total Number of Familes", "Total Number of Genus", "Total Number of Sub Species")
+labelsCol1 <- c('All Accessions', "Total Number of Familes", "Total Number of Genus", "Total Number of Species")
 
 #Initiate an empty dataframe 
 sosSummary <- data.frame()
@@ -164,9 +171,9 @@ families
 An accession is a collection of seeds from a single sampling location. There are enough seeds in each accession to split the collection for short term storage, long term preservation, and distribution. Out of the `r uniqueFam[1,]` familes collected half of the total accessions collected come from just 5 families. The commonality and number of species represented by the top 5 collected families may explain the observed relationship. 
 
 
-### How many are Crop Wild Relatives or Economic Plants
+## Crop wild relatives and other economic plants"
 
-The importance of this collection is increased by the fact that many of the seed taxa that were collected by the SOS program are defined as either Crop Wild Relatives or World Economic Plants. Crop Wild Relatives (CWR) are the genetic predecessors of modern crops and are found throughout the diverse ecological and bio physiological environments of the world. The variability in growing conditions and potential geographic isolation between stands has shown that WCRs contain a higher level of genetic diversity (*reference this*) . The subsequent traits found within WCR are used to add to the resistance, quality, and breeding efficiency of modern crops (*reference this*).
+The importance of this collection is increased by the fact that many of the seed taxa that were collected by the SOS program are defined as either Crop Wild Relatives or World Economic Plants. Crop Wild Relatives (CWR) are the genetic predecessors of modern crops and are found throughout the diverse ecological and bio physiological environments of the world. The variability in growing conditions and potential geographic isolation between stands has shown that CWRs contain a higher level of genetic diversity (*reference this*) . The subsequent traits found within CWR are used to add to the resistance, quality, and breeding efficiency of modern crops (*reference this*).
 
 - add a bit about the various economic use categories define by GRIN 
 
@@ -176,10 +183,10 @@ The importance of this collection is increased by the fact that many of the seed
 - expand upon the k13 data source a bit to explain why we are using it.  
 
 
-```{r caption="Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.", rows.print=15}
+```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE }
 
 ###
-# Create a summary chart showing the total number of accession, total taxa, # of WCR NA, # eco NA, # of economic WEP  
+# Create a summary chart showing the total number of accession, total taxa, # of CWR NA, # eco NA, # of economic WEP  
 # this may be added to also include the data about what's managed by the usda and what's at the NLGRP 
 #
 
@@ -190,16 +197,13 @@ The importance of this collection is increased by the fact that many of the seed
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
 # created a new column that has the same col name as the K13 data set. I will use the col to join on 
 sosData$Taxon <- gsub("ssp.","subsp.", sosData$NAME) 
-
 #detemine the total number of taxon in dataset 
 sosTotalUnique <- nrow(unique(sosData[1]))
 
 # read in the K13 data 
 K13Data <- read.csv("H:\\SOS_Project\\analysisData\\CWR_US_inventory_2013_7_10.csv")
-
 #detemine the total number of taxon in dataset 
 K13TotalUnique <- n_distinct(K13Data$Taxon)
-
 # join the data sets
 combinedData <- join(sosData, K13Data, by='Taxon', type='left', match='all')
 
@@ -209,40 +213,97 @@ trimCombinedData <- filter(combinedData, !is.na(Taxon_w_author))
 #subset all WIld Utilizes Species and calculater total number of species 
 wusSamples <- filter(trimCombinedData, Type== 'WUS')
 uniqueWUS <- n_distinct(wusSamples$Taxon)
+# percentage of SOS accession in this class
+percentWUS <- signif(100*(nrow(wusSamples) / totalSamples),3)
 
 #subset all Crop Wild RElatives and calculater total number of species 
 cwrSamples <- filter(trimCombinedData, Type== 'CWR')
 uniqueCWR <- n_distinct(cwrSamples$Taxon)
+#percent of sos in this class
+percentCWR <- signif(100*(nrow(cwrSamples) / totalSamples),3)
 
 ### 
 #Read in the WEP dataset 
 # read in the WEP data 
 WEPData <- read.csv("H:\\SOS_Project\\analysisData\\EconomicUseCategoriesOfSpecies.csv")
-
 ## Rename the name column to match the newly created column from the SOS data 
 colnames(WEPData)[2] <- "Taxon"
 
 #detemine the total number of taxon in dataset 
 WEPTotalUnique <- n_distinct(WEPData$Taxon)
-
 # join the data sets
 combinedData2 <- join(sosData, WEPData, by='Taxon', type='left', match='all')
 
+
+#Unique Join 
+### the WEP data has repeats of features if they have more then 1 economic use. I'm joining again here so the taxa are only represented once. 
+single <- WEPData %>% distinct(Taxon)
+
+combinedData2a <- inner_join(sosData, single, by='Taxon', type='left', match='all')
+
 #trim the data so that taxon that do not have values for the WEP specific data columns are dropped. 
 trimCombinedData2 <- filter(combinedData2, !is.na(economic_usage_code))
-
 #calculate total number of species from 
 uniqueWEP <- n_distinct(trimCombinedData2$Taxon)
 
+#percent of sos in this class
+percentWEP<- signif(100*(nrow(combinedData2a) / totalSamples),3)
+#calculate the total number of accession that are either or 
+
 ## DEfeine row and column names 
 labelsRow <- c("SOS Collection")
-labelsCol <- c('All Accession', "Total Number of Taxon", "Total Number of WUS from K13", "Total Number of CWR from K13", "Total Number of WEP")
+labelsCol <- c('All Accession', "Total Number of Taxon", "Unique Number of WUS Taxa from K13", "Percent of Accessions that are WUS", "Unique Number of CWR taxa from K13", "Percent of Accessions that are CWR", "Unique Number of taxa WEP" , "Percentage of Accessions that are WEP")
 
+#this is a bit sloppy but I'm gonig to role with it for the moment I wanted to show a table before showing the data from this section. The trouble is I'm pulling variables from this section of code. When I get time I should polish this up 
+```
+
+
+```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
+
+#Initiate an empty dataframe 
+allDataSummary <- data.frame()
+
+# create the first row of the dataframe 
+sosData <- c(uniqueFam, uniqueGen, uniqueSpe)
+# create K13 WEP/CWR 
+K13wus <- c( n_distinct(wusSamples$FAMILY), n_distinct(wusSamples$GENUS), n_distinct(wusSamples$SPECIES))
+K13cwr <- c( n_distinct(cwrSamples$FAMILY), n_distinct(cwrSamples$GENUS), n_distinct(cwrSamples$SPECIES))
+
+## create same for world Economic plants takes some more work 
+# remove duplicates and separate based on full name into genus and species
+wepSum <- WEPData %>% distinct(Taxon) %>% separate(Taxon, c("GENUS", "SPECIES"))
+# subset data exclude all features with x as species 
+wepSum1 <- filter(wepSum, SPECIES != "x")
+# preform the oppisite to pull all the avoids values out, needed a differtent method
+wepX <- filter(WEPData, grepl(" x ", Taxon))
+# seperate name then exclude xcolumn to construct a new dataframe 
+wepX1 <-  wepX %>% separate(Taxon, c("GENUS", "x", "SPECIES")) %>% select(GENUS, SPECIES)
+# combine the two datasets to get a complete listing of genus and species 
+WEPgs <- bind_rows(wepSum1, wepX1)
+# constuct a vector with the needed values 
+WEP <- c( NA, as.numeric(n_distinct(WEPgs$GENUS)), as.numeric(n_distinct(WEPgs$SPECIES)))
+
+
+
+#bind the two df together 
+dataSummary <- rbind(allDataSummary, sosData, K13wus, K13cwr, WEP)
+#define column names and row names 
+colnames(dataSummary) <- c( "Total Number of Familes", "Total Number of Genus", "Total Number of Species")
+rownames(dataSummary) <- c("SOS", "K13_WUS", "K13_CWR", "WEP")
+dataSummary
+## I dont think I want to lose the row data by arranging it
+#arrange(dataSummary, dataSummary$`Total Number of Genus`)
+```
+
+The above table illistrate the diversity of families, genus, and species represented with the various datasets. The SOS and K13 data sets reference plants found in **North America or US** the World Economic Plants is a world wide data set and hence has significantly more diversity. In the case of preservation it is important to understand the total diversity represented as well as the sample size of that diversity. We can test that by observing what proporition of the accessions collected by SOS are classified are a Wild Utilized Species, Crop Wild Relative, or a World Economic Plant. 
+
+
+```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE , caption="Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.", rows.print=15}
 #Initiate an empty dataframe 
 sosSummary2 <- data.frame()
 
 # create the first row of the dataframe 
-sosCollection <- c(totalSamples, sosTotalUnique, uniqueWUS, uniqueCWR, uniqueWEP)
+sosCollection <- c(totalSamples, sosTotalUnique, uniqueWUS, percentWUS, uniqueCWR, percentCWR, uniqueWEP, percentWEP)
 
 #bind the two df together 
 sosSummary2 <- rbind(sosSummary2, sosCollection)
@@ -251,9 +312,10 @@ colnames(sosSummary2) <- labelsCol
 rownames(sosSummary2) <- labelsRow
 sosSummary2
 
-
 ```
-This chart compared the SOS data against two data sets that have define Wild Utilized Species(WUS), Crop Wild Relatives(CWR), and World Economic Plants(WEP) at the taxa level. This illustrates that at least a 1/6 or of the taxa collected by SOS are considered to be useful plants outside of thier ecological value.  
+
+
+
 
 
 
@@ -342,7 +404,7 @@ sosUnion1
 **again this is exploratory** I did not generate the join between the ARS AND SOS data sets to produce these comparisons but the data set brings up some interesting questions on the process. 
 I bring this up again because it may be difficult to reproduce this dataset sence the individual who generated it has left the BLM 
 
-```{r}
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
 # filter based on collected by grin but not present 
 sosunion2 <- filter(sosUnion, sosUnion$RH_COMMENTS == ("IN SOS_ NOT IN ARS OR GRIN"))
 
@@ -356,7 +418,13 @@ p2 <- hist(collectionYears2,
   border="white",
   col="dark green"
 )
+```
+This is the original plot of the data 
 
+Below is the comparison against all the data collected by the 
+
+
+```{r ,message=FALSE, warning=FALSE, echo=FALSE, caption="The grey histogram shows the total number of accessions collected by SOS. The green histograms shows what propotions of the collection has not made it into the ARS system."}
 ggplot(sosunion2, aes(COLL_YR))+
   geom_histogram(binwidth = 1, 
                  col="white",
@@ -383,7 +451,7 @@ ggplot(sosunion2, aes(COLL_YR))+
 
 ```
 
-If you refer back to the [Introduction](# Introduction) you can see that the there is a higher proportion of seeds being collected in 2015 and 2016 that are not making it into the ARS system. This may reflect a backlog in process. 
+This graph illistrates the proportion of accession collected by the SOS program that have made it into the ARS system. As the grey and green bars become closer in height less of the collections are stored in the ARS system. The high proportion of samples not intergated into the ARS from the more recent years may represent a backlog in the intergration of the data into the ARS. 
 
 ### How much is at NLGRP for long term backup
 
@@ -476,7 +544,7 @@ uniqueGenus <- n_distinct(viability$Genus)
 percentGenus <- signif(100*(uniqueGenus/uniqueGen),4)
 ```
 
-An experiment was developed and performed by Annette *find her last name* of NLGRP. Annette tested the viability of seeds to germinate for `r uniqueGenus` unique genus. This accounts for `r percentGenus[1,]` percent of all the genus collected by the SOS program. The data generated by this study illustrates what to expect when working with these plants in the future. 
+An experiment was developed and performed by Annette Miller of NLGRP. Annette tested the viability of seeds to germinate for `r uniqueGenus` unique genus. This accounts for `r percentGenus[1,]` percent of all the genus collected by the SOS program. The data generated by this study illustrates what to expect when working with these plants in the future. 
 
 
 ```{r caption="Listing of Seed Viability by Genus", rows.print=10}
@@ -646,5 +714,3 @@ This graphic shows which location is receiving the greatest diversity of taxon
 - Constraints with regard to getting materials into long term storage
 - Challenge of not having seed testing techniques/rules worked out for species
 
-
-## Quarterly Results {.tabset .tabset-fade .tabset-pills}
