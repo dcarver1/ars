@@ -29,7 +29,7 @@ select(df, group, sum)
 You can call all specific columns
 
 all dplyr functions return a copy of a dataframe so the original data is preserved.
-
+h
 ```{r}
 select(df, var1, var2)
 #or
@@ -106,4 +106,114 @@ arrange(dtc, UniqueCarrier, DepDelay)
 # Arrange flights by total delay (normal order).
 arrange(hflights, DepDelay + ArrDelay )
 
+```
+
+8/21/2018
+**Summarise**
+This function takes a dateframe and calculates new values down the DF based on defined functions
+new data set with new variables and observations
+```r
+summarise(hflights, min_dist = min(Distance) ,max_dist = max(Distance))
+```
+dplyr has multiple built in functions
+first(x) - The first element of vector x.
+last(x) - The last element of vector x.
+nth(x, n) - The nth element of vector x.
+n() - The number of rows in the data.frame or group of observations that summarise() describes.
+n_distinct(x) - The number of unique values in vector x.
+
+You can do some complex nested functions within the summarise function
+
+```r
+# All American Airline flights
+aa <- filter(hflights, UniqueCarrier == "American")
+
+# Generate summarizing statistics for aa
+summarise(aa,
+          n_flights = n(),
+          n_canc = n_distinct(filter(aa,Cancelled == 1)),
+          avg_delay = mean(ArrDelay, na.rm = TRUE))
+```
+
+
+**pipe character**
+Super awesome function that can be used in dplyr because all standard function take in a tbl and return a tbl.
+
+Really nice syntax
+```r
+# Write the 'piped' version of the English sentences.
+hflights %>%
+        mutate(diff = TaxiOut - TaxiIn) %>%
+        filter(!is.na(diff)) %>%
+        summarise(avg = mean(diff))
+```
+
+**Group_by**
+super powerful when combined with summarise. You can organize and apply summary stats to each group
+
+```r
+# Make an ordered per-carrier summary of hflights
+hflights %>%
+   group_by(UniqueCarrier) %>%
+   summarise(p_canc = mean(Cancelled == 1) * 100,
+             avg_delay = mean(ArrDelay, na.rm = TRUE)) %>%
+   arrange(avg_delay, p_canc)
+```
+
+The rank() function can be used to order a vector of values and assign a numeric rank
+this is similar to arrange but reclassifies
+```r
+# Ordered overview of average arrival delays per carrier
+hflights %>%
+  filter(!is.na(ArrDelay) & ArrDelay > 0 )%>%
+  group_by(UniqueCarrier)%>%
+  summarise(avg = mean(ArrDelay)) %>%
+  mutate(rank = rank(avg)) %>%
+  arrange(rank)
+```
+
+some more complex functionality
+```r
+# How many airplanes only flew to one destination?
+hflights %>%
+  group_by(TailNum) %>%
+  summarise(ndest = n_distinct(Dest)) %>%
+  filter(ndest == 1) %>%
+  summarise(nplanes = n())
+
+# Find the most visited destination for each carrier
+hflights %>%
+  group_by(UniqueCarrier, Dest) %>%
+  summarise(n = n()) %>%
+  mutate(rank = rank(desc(n))) %>%
+  filter(rank == 1)
+```
+
+**DataBases**  
+you can connect to data tables and data based pretty easily with dplyr which is awesome!!!
+Dplyr will convert the function into the native language of the database
+
+It would take some getting use to but what a great reasource
+
+```r
+# Set up a connection to the mysql database
+my_db <- src_mysql(dbname = "dplyr",
+                   host = "courses.csrrinzqubik.us-east-1.rds.amazonaws.com",
+                   port = 3306,
+                   user = "student",
+                   password = "datacamp")
+
+# Reference a table within that source: nycflights
+nycflights <- tbl(my_db, "dplyr")
+
+# glimpse at nycflights
+glimpse(nycflights)
+
+# Ordered, grouped summary of nycflights
+nycflights %>%
+  group_by(carrier) %>%
+  summarise(
+  n_flights = n(),
+  avg_delay = mean(arr_delay)) %>%
+  arrange(avg_delay)
 ```
