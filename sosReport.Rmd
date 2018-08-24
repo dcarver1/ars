@@ -56,7 +56,7 @@ sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv"
 totalSamples <- nrow(sosData)
 ```
 
-## Why SOS program started, what was aims, timeline, etc
+
 The Seeds of Success program was established in 2001 to facilitate the collection of native seeds. To make use of the seeds collected, the SOS program partners with land management agencies to support the re-vegetation of areas, academic and professional partners to promote and advance scientific research, and the United States Department of Agriculture for the long term preservation of species genetic diversity.    
 
  - fill this out to capture aims
@@ -95,16 +95,20 @@ ggplot(sosData, aes(COLL_YR))+
 ```
 
 
-## But- not well known how much diversity has been collected in total, and what its uses have been
 Detailed collection methodologies mean that SOS accessions have information about the species collected, the region it was collected from, the land management agency where that collection occurred, and positional data in the form of latitude, longitude, and elevation. This data provides information about the seeds collected but does not tell us anything about what happened to the seeds after the collection occurs. The article is meant to create those connections and tell the full story of how these seeds are providing services to the landscape and understanding of the species. 
-
-
-## Therefore- article examining these issues
 This will be done by accessing how many of these collections represent economically useful and/or  crop wild relatives at both the national and international scale. The relationship between the SOS collections and the ARS collection will be examined to determine how many collections are store in long term storage and who is using the seeds outside of the ARS and for what purpose. 
 
 - this can be added to. It's the first time we talk about CWR and there need more of an introductions Specific the two datasets used 
 
 # Methods 
+- data aqusition 
+  - SOS BLM: Information regarding the SOS collection was provide as a csv file by the Seeds of Succes Program National Collection Curator in June of 2018. This dataset is updated as more field collecting occurs. All data from the years 2017 and earlier is assumed to be correct and complete. The data collected by the the SOS program contains a rich set of specific information regarding the plant from which seed is collected as well as the geography regiona and ecosystem that the plant was found with. **Is the blm data a public dataset? How can people access this data** 
+  - GRIN GLOBAL : The USDA's National Plant Germplasm System has utilised the Germplasm Resource Information Network(GRIN) to provide public  access to informing regarding the assession maintained by the USDA. The data is public avaiable throught the desktop software program, [GRIN-Global](https://www.grin-global.org/). This data can also be accessed through a web site hosted by Crop Trust, Biodiversity International, and the USDA that allows for the quering of the GRIN-global database. The website can be found [here](https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomysearch.aspx) All datasets containing information from on the USDA accession were retrived from the GRIN global databased and stored as csvs. 
+  - Pullman office: Before assessing the datasets a meeting of indiviudals involved with the management of the SOS accession was held to identify the primary questions, define the process of transfering the collections between the agencies, and understand the processing and management of the collections once they enter the USDA long term storage system. **should we reference some of the individuals from pullman here** 
+  
+- data processing 
+  - rmarkdown : The datasets were processed, joined, and query using the statistically programming language R. The report is compiled as an RMarkdown document to help with the reporducability of the content as the relationship between the two organizations continues to develop. **with this stay an in house document or will it be make public.** 
+
 
 # Results 
 
@@ -142,10 +146,10 @@ labelsCol1 <- c('All Accessions', "Total Number of Familes", "Total Number of Ge
 sosSummary <- data.frame()
 
 # create the first row of the dataframe 
-sosData <- c(totalSamples, uniqueFam, uniqueGen, uniqueSpe)
+sosDataSum <- c(totalSamples, uniqueFam, uniqueGen, uniqueSpe)
 
 #bind the two df together 
-sosSummary <- tbl_df(rbind(sosSummary, sosData))
+sosSummary <- tbl_df(rbind(sosSummary, sosDataSum))
 #define column names and row names 
 colnames(sosSummary) <- labelsCol1
 rownames(sosSummary) <- labelsRow1
@@ -182,6 +186,21 @@ The importance of this collection is increased by the fact that many of the seed
 
 - expand upon the k13 data source a bit to explain why we are using it.  
 
+```{r}
+#aycromn referecne dataframe 
+#acronymDF <- data.frame()
+
+# create the first column of the dataframe 
+abbrevNames <- c("SOS", "GRIN", "NLGRP", "WUS", "K13", "CWR", "WEP")
+#create the meaning of acronym 
+nameMeaninng <- c("Seeds of Success", "Germplasm Resource Information Network", "National Laboratory Genetic Resource Presevation", "Wild Utilize Species", "Khoury et al 2013", "Crop Wild Relative", "World Economic Plants")
+
+#define column names and row names
+acronymDF <-data_frame("Acronym" = abbrevNames, "Meaning" = nameMeaninng)
+acronymDF
+
+```
+
 
 ```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE }
 
@@ -195,67 +214,62 @@ The importance of this collection is increased by the fact that many of the seed
 
 #import SOS data 
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
+
 # created a new column that has the same col name as the K13 data set. I will use the col to join on 
 sosData$Taxon <- gsub("ssp.","subsp.", sosData$NAME) 
 #detemine the total number of taxon in dataset 
-sosTotalUnique <- nrow(unique(sosData[1]))
+sosTotalUnique <- sosData %>% 
+  dplyr::summarise( totalSpecies = n_distinct(NAME))
+sosTotalUnique <- sosTotalUnique[[1,1]]
+
 
 # read in the K13 data 
 K13Data <- read.csv("H:\\SOS_Project\\analysisData\\CWR_US_inventory_2013_7_10.csv")
 #detemine the total number of taxon in dataset 
-K13TotalUnique <- n_distinct(K13Data$Taxon)
-# join the data sets
-combinedData <- join(sosData, K13Data, by='Taxon', type='left', match='all')
+K13TotalUnique <- K13Data %>% n_distinct("Taxon")
+# join the data sets and trim the data so that taxon that do not have values for the K13 specific data columns are dropped.
+trimCombinedData <- join(sosData, K13Data, by='Taxon', type='left', match='all') %>%
+  filter(!is.na(Taxon_w_author))
 
-#trim the data so that taxon that do not have values for the K13 specific data columns are dropped. 
-trimCombinedData <- filter(combinedData, !is.na(Taxon_w_author))
+typeSum <- trimCombinedData %>%
+  group_by(Type) %>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3)) 
 
-#subset all WIld Utilizes Species and calculater total number of species 
-wusSamples <- filter(trimCombinedData, Type== 'WUS')
-uniqueWUS <- n_distinct(wusSamples$Taxon)
-# percentage of SOS accession in this class
-percentWUS <- signif(100*(nrow(wusSamples) / totalSamples),3)
-
-#subset all Crop Wild RElatives and calculater total number of species 
-cwrSamples <- filter(trimCombinedData, Type== 'CWR')
-uniqueCWR <- n_distinct(cwrSamples$Taxon)
-#percent of sos in this class
-percentCWR <- signif(100*(nrow(cwrSamples) / totalSamples),3)
 
 ### 
-#Read in the WEP dataset 
-# read in the WEP data 
-WEPData <- read.csv("H:\\SOS_Project\\analysisData\\EconomicUseCategoriesOfSpecies.csv")
-## Rename the name column to match the newly created column from the SOS data 
-colnames(WEPData)[2] <- "Taxon"
-
-#detemine the total number of taxon in dataset 
-WEPTotalUnique <- n_distinct(WEPData$Taxon)
-# join the data sets
-combinedData2 <- join(sosData, WEPData, by='Taxon', type='left', match='all')
-
+# read in the WEP data and Rename the name column to match the newly created column from the SOS data 
+WEPData <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\EconomicUseCategoriesOfSpecies.csv")) %>%
+  dplyr::rename(Taxon = name)
 
 #Unique Join 
 ### the WEP data has repeats of features if they have more then 1 economic use. I'm joining again here so the taxa are only represented once. 
-single <- WEPData %>% distinct(Taxon)
+single <- WEPData %>% 
+  distinct(Taxon)
 
-combinedData2a <- inner_join(sosData, single, by='Taxon', type='left', match='all')
+new1 <-left_join(single,WEPData, by="Taxon")
 
-#trim the data so that taxon that do not have values for the WEP specific data columns are dropped. 
-trimCombinedData2 <- filter(combinedData2, !is.na(economic_usage_code))
-#calculate total number of species from 
-uniqueWEP <- n_distinct(trimCombinedData2$Taxon)
 
-#percent of sos in this class
-percentWEP<- signif(100*(nrow(combinedData2a) / totalSamples),3)
-#calculate the total number of accession that are either or 
+combinedData2a <- inner_join(sosData, new1, by='Taxon', type='left', match='all') %>%
+  filter(!is.na(economic_usage_code)) %>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3)) %>%
+  mutate(Type = "wep")
 
-## DEfeine row and column names 
-labelsRow <- c("SOS Collection")
-labelsCol <- c('All Accession', "Total Number of Taxon", "Unique Number of WUS Taxa from K13", "Percent of Accessions that are WUS", "Unique Number of CWR taxa from K13", "Percent of Accessions that are CWR", "Unique Number of taxa WEP" , "Percentage of Accessions that are WEP")
+endDf <- bind_rows(typeSum, combinedData2a)
 
-#this is a bit sloppy but I'm gonig to role with it for the moment I wanted to show a table before showing the data from this section. The trouble is I'm pulling variables from this section of code. When I get time I should polish this up 
+
+#calculate total number of species from each dataset 
+uniqueWEP <- endDf[[3,2]]
+uniqueWUS <- endDf[[2,2]]
+uniqueCWR <- endDf[[1,2]]
+#percent of sos in this class per dataset 
+percentWEP<- endDf[[3,3]]
+percentWUS <-endDf[[2,3]]
+percentCWR <-endDf[[1,3]]
+
 ```
+
+
+
 
 
 ```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
@@ -264,10 +278,14 @@ labelsCol <- c('All Accession', "Total Number of Taxon", "Unique Number of WUS T
 allDataSummary <- data.frame()
 
 # create the first row of the dataframe 
-sosData <- c(uniqueFam, uniqueGen, uniqueSpe)
+sosData <- c( uniqueGen, uniqueSpe)
+
+wusSamples <- K13Data %>% filter(Type=="WUS")
+cwrSamples <-K13Data %>% filter(Type=="CWR")
+
 # create K13 WEP/CWR 
-K13wus <- c( n_distinct(wusSamples$FAMILY), n_distinct(wusSamples$GENUS), n_distinct(wusSamples$SPECIES))
-K13cwr <- c( n_distinct(cwrSamples$FAMILY), n_distinct(cwrSamples$GENUS), n_distinct(cwrSamples$SPECIES))
+K13wus <- c( n_distinct(wusSamples$Genus), n_distinct(wusSamples$Species))
+K13cwr <- c( n_distinct(cwrSamples$Genus), n_distinct(cwrSamples$Species))
 
 ## create same for world Economic plants takes some more work 
 # remove duplicates and separate based on full name into genus and species
@@ -281,18 +299,21 @@ wepX1 <-  wepX %>% separate(Taxon, c("GENUS", "x", "SPECIES")) %>% select(GENUS,
 # combine the two datasets to get a complete listing of genus and species 
 WEPgs <- bind_rows(wepSum1, wepX1)
 # constuct a vector with the needed values 
-WEP <- c( NA, as.numeric(n_distinct(WEPgs$GENUS)), as.numeric(n_distinct(WEPgs$SPECIES)))
+WEP <- c( as.numeric(n_distinct(WEPgs$GENUS)), as.numeric(n_distinct(WEPgs$SPECIES)))
 
 
 
 #bind the two df together 
 dataSummary <- rbind(allDataSummary, sosData, K13wus, K13cwr, WEP)
 #define column names and row names 
-colnames(dataSummary) <- c( "Total Number of Familes", "Total Number of Genus", "Total Number of Species")
+colnames(dataSummary) <- c(  "Total Number of Genus", "Total Number of Species")
 rownames(dataSummary) <- c("SOS", "K13_WUS", "K13_CWR", "WEP")
 dataSummary
 ## I dont think I want to lose the row data by arranging it
 #arrange(dataSummary, dataSummary$`Total Number of Genus`)
+
+
+
 ```
 
 The above table illistrate the diversity of families, genus, and species represented with the various datasets. The SOS and K13 data sets reference plants found in **North America or US** the World Economic Plants is a world wide data set and hence has significantly more diversity. In the case of preservation it is important to understand the total diversity represented as well as the sample size of that diversity. We can test that by observing what proporition of the accessions collected by SOS are classified are a Wild Utilized Species, Crop Wild Relative, or a World Economic Plant. 
@@ -307,10 +328,13 @@ sosCollection <- c(totalSamples, sosTotalUnique, uniqueWUS, percentWUS, uniqueCW
 
 #bind the two df together 
 sosSummary2 <- rbind(sosSummary2, sosCollection)
+
 #define column names and row names 
-colnames(sosSummary2) <- labelsCol
-rownames(sosSummary2) <- labelsRow
+rownames(sosSummary2) <- c("SOS Collection")
+colnames(sosSummary2) <- c('All Accession', "Total Taxon", "WUS Taxon", "Percent of Accessions that are WUS", "CWR taxon", "Percent of Accessions that are CWR", "WEP Taxon" , "Percentage of Accessions that are WEP")
+
 sosSummary2
+
 
 ```
 
@@ -319,57 +343,68 @@ sosSummary2
 
 
 
-# Conservation 
+## Conservation 
 
 The Seeds of Success program provides the boots on the ground effort in the collection of seed resources. The program partners with the Agricultural Research Service of the USDA to store, maintain, and distribute the seeds collected. The Pullman, Washington section of the ARS is the group responsible for the initial on boarding and entering of the seeds into the Genetic Resource Inventory Network (GRIN) as well as maintaining the seeds in environments that support preservation.  
 
+
+
+
 ### stored within ARS system 
-```{r caption="Summary of SOS and GRIN Relative to CWR and WEP", rows.print=15}
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE , caption="Summary of SOS and GRIN Relative to CWR and WEP", rows.print=15}
 # read in GRIN Accessions 
-grinData <- read.csv("H:\\SOS_Project\\analysisData\\sosAllAccessions.csv")
+grinData <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\sosAllAccessions.csv"))
 
 # calcualte the total number of features and the total number of taxon 
 totalSamplesGRIN <- nrow(grinData)# why would these two numbers be different? Question for Renee 
 totalTaxon <- dplyr::n_distinct(grinData$Taxon)
 
 # join the the GRIN data with the K13 Dataset 
-combinedData3 <- join(grinData, K13Data, by='Taxon', type='left', match='all')
+combinedData3 <- join(grinData, K13Data, by='Taxon', type='left', match='all') %>%
+  filter(!is.na(Taxon_w_author))
 
-#trim the data so that taxon that do not have values for the K13 specific data columns are dropped. 
-trimCombinedData3 <- filter(combinedData3, !is.na(Taxon_w_author))
+#group by WEP and CWR and derive number of taxon and percent of sos that are those taxa 
+typeSum <- combinedData3 %>%
+  group_by(Type) %>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3)) 
 
-#subset all WIld Utilizes Species and calculater total number of species 
-wusSamples3 <- filter(trimCombinedData3, Type== 'WUS')
-uniqueWUS3 <- n_distinct(wusSamples3$Taxon)
+#complete the process again for Wp Taxa 
+combinedData3a <- inner_join(grinData, new1, by='Taxon', type='left', match='all') %>%
+  filter(!is.na(economic_usage_code)) %>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3)) %>%
+  mutate(Type = "WEP")
 
-#subset all Crop Wild RElatives and calculater total number of species 
-cwrSamples3 <- filter(trimCombinedData3, Type== 'CWR')
-uniqueCWR3 <- n_distinct(cwrSamples3$Taxon)
+#generate a new df with all the values 
+endDf1 <- bind_rows(typeSum, combinedData3a)
 
-#### Repeat with the WEP DATAset 
-# join the grin data with the WEP data
-combinedData4 <- join(grinData, WEPData, by='Taxon', type='left', match='all')
+#calculate total number of species from each dataset 
+uniqueWEP1 <- endDf1[[3,2]]
+uniqueWUS1 <- endDf1[[2,2]]
+uniqueCWR1 <- endDf1[[1,2]]
+#percent of sos in this class per dataset 
+percentWEP1<- endDf1[[3,3]]
+percentWUS1 <-endDf1[[2,3]]
+percentCWR1 <-endDf1[[1,3]]
 
-#trim the data so that taxon that do not have values for the WEP specific data columns are dropped. 
-trimCombinedData4 <- filter(combinedData4, !is.na(economic_usage_code))
-
-
-#calculate total number of species from 
-uniqueWEP4 <- n_distinct(trimCombinedData4$Taxon)
 
 # create the first row of the dataframe 
-grinCollection <- c(totalSamplesGRIN, totalTaxon, uniqueWUS3, uniqueCWR3, uniqueWEP4)
+grinCollection <- c(totalSamplesGRIN, totalTaxon, uniqueWUS1, percentWUS1, uniqueCWR1, percentCWR1, uniqueWEP1, percentWEP1)
 
 #bind the two df together 
-sosSummary2 <- rbind(sosSummary2, grinCollection)
-rownames(sosSummary2)[2] <- "GRIN Collection"
-sosSummary2
+sosSummary3 <- rbind(sosSummary2, grinCollection)
+
+#define column names and row names 
+rownames(sosSummary3) <- c("SOS Collection", "GRIN Collection")
+
+sosSummary3
 
 ```
 
 The difference in the total number of accessions collected by SOS and the number of accessions recorded in  GRIN is significant. Part of this can be explained by a potential backlog of samples within the ARS and a lag in delivery time between collection and distribution. It generally takes a year from when the seeds are collect to when they are received by the ARS.
 
 ```{r}
+sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
+
 # filter based on year collected and get a count on the number of unique accessions
 sosPre2017 <- filter(sosData, COLL_YR < 2017) %>% n_distinct()
 percentAtARS = signif(100*(totalSamplesGRIN/sosPre2017),4)
@@ -461,56 +496,63 @@ Once within the ARS system the quality of the seed collections are accessed and 
 #filter based on the "is backuped" column.  
 backedUp <- dplyr::filter(grinData, Is.Backed.Up. == 'Y' )
 totaledBackedUp <-nrow(backedUp)
+
 #filter based on the backup location being NLGRP 
 nlgrpData <- dplyr::filter(backedUp, Backup.Location.1 == 'NSSL' )
 totalBackedUp <- nrow(nlgrpData)
+
 ## Example of the backed up features that are missing a backup location????
 #### does this mean an error in data entry, can we assume 
 MissingBackup <- count(backedUp$Backup.Location.1 )
 
+
 #define the total number of species present in backup
 totalTaxonNLGRP <- n_distinct(nlgrpData$Taxon)
 
-### apply simliar subsets based on the connection between K13 dataset
 # join the the GRIN data with the K13 Dataset 
-combinedData5 <- join(nlgrpData, K13Data, by='Taxon', type='left', match='all')
+combinedData4 <- join(nlgrpData, K13Data, by='Taxon', type='left', match='all') %>%
+  filter(!is.na(Taxon_w_author))
 
-#trim the data so that taxon that do not have values for the K13 specific data columns are dropped. 
-trimCombinedData5 <- filter(combinedData5, !is.na(Taxon_w_author))
+#group by WEP and CWR and derive number of taxon and percent of sos that are those taxa 
+typeSum4 <- combinedData4 %>%
+  group_by(Type) %>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3)) 
 
-#subset all WIld Utilizes Species and calculater total number of species 
-wusSamples5 <- filter(trimCombinedData5, Type== 'WUS')
-uniqueWUS5 <- n_distinct(wusSamples5$Taxon)
+#complete the process again for Wp Taxa 
+combinedData4a <- inner_join(nlgrpData, new1, by='Taxon', type='left', match='all') %>%
+  filter(!is.na(economic_usage_code)) %>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3)) %>%
+  mutate(Type = "WEP")
 
-#subset all Crop Wild RElatives and calculater total number of species 
-cwrSamples5 <- filter(trimCombinedData5, Type== 'CWR')
-uniqueCWR5 <- n_distinct(cwrSamples5$Taxon)
+#generate a new df with all the values 
+endDf2 <- bind_rows(typeSum4, combinedData4a)
 
+#calculate total number of species from each dataset 
+uniqueWEP2 <- endDf2[[3,2]]
+uniqueWUS2 <- endDf2[[2,2]]
+uniqueCWR2 <- endDf2[[1,2]]
+#percent of sos in this class per dataset 
+percentWEP2<- endDf2[[3,3]]
+percentWUS2 <-endDf2[[2,3]]
+percentCWR2 <-endDf2[[1,3]]
 
-#### Repeat with the WEP DATAset 
-# join the grin data with the WEP data
-combinedData6 <- join(nlgrpData, WEPData, by='Taxon', type='left', match='all')
-
-#trim the data so that taxon that do not have values for the WEP specific data columns are dropped. 
-trimCombinedData6 <- filter(combinedData6, !is.na(economic_usage_code))
-
-#calculate total number of species from 
-uniqueWEP6 <- n_distinct(trimCombinedData6$Taxon)
 
 # create the first row of the dataframe 
-nlgrpCollection <- c(totalBackedUp, totalTaxonNLGRP, uniqueWUS5, uniqueCWR5, uniqueWEP6)
+nlgrpCollection <- c(totalBackedUp, totalTaxonNLGRP, uniqueWUS2, percentWUS2, uniqueCWR2, percentCWR2, uniqueWEP2, percentWEP2)
 
 #bind the two df together 
-sosSummary2 <- rbind(sosSummary2, nlgrpCollection)
-rownames(sosSummary2)[3] <- "NLGRP Collection"
-sosSummary2
+sosSummary4 <- rbind(sosSummary3, nlgrpCollection)
 
+#define column names and row names 
+rownames(sosSummary4) <- c("SOS Collection", "GRIN Collection", "NLGRP Collection")
+
+sosSummary4
 
 ```
 
 
 
-### How much adopted by Curators, how much "orphaned" at W6 - need to pull from GRIN Global (examine "site") #Not sure how to answer this some at this time 
+## How much adopted by Curators, how much "orphaned" at W6 - need to pull from GRIN Global (examine "site") #Not sure how to answer this some at this time 
 
 The challenge of coordinating the preservation of these seeds is seen in part by how my samples become orphaned within the system. Orphaned seeds are those which do not fit into any of the existing collections. As a results seed curators need to assess how the seeds can best be integrated and is it worth incorporating that sample. While this decision making process is occurring the seeds are not being backed up and are not grown out to plants to replenish the existing seed population. 
 

@@ -59,3 +59,49 @@ ggplot(gapminder, aes(x=gdpPercap,y=lifeExp,color=continent, size=pop ))+
     scale_x_log10()+
     facet_wrap(~year)
 ```
+It's easy to take your summarized data and plot it
+```r
+# Create a scatter plot showing the change in medianLifeExp over time
+ggplot(by_year, aes(x=year,y=medianLifeExp,expand_limits(y=0)))+
+  geom_point()
+```
+
+**group_by**
+this works in order of feature feed into it.
+in this example continent then year. year is essential the tie breaker for the continent column.
+``` r
+by_year_continent <- gapminder %>%
+  group_by(continent, year)
+```
+
+**line plots**
+same structure as the scatter plots but new geom feature
+the expand_limits plot ensures that the line plots start at y=0
+```r
+ggplot(year_continent, aes(x = year, y = meanLifeExp, color = continent)) +
+  geom_line() +
+  expand_limits(y = 0)
+```
+
+**bar plot**
+
+```r
+ggplot(by_continent, aes(x = continent, y = meanLifeExp)) +
+  geom_col()
+```
+
+**histograms**
+distribution of a value within a single class
+```r
+ggplot(gapminder_2007, aes(x = lifeExp)) +
+  geom_histogram(binwidth = 5)+
+  scale_x_log10()
+```
+
+**boxplots** 
+distribution of value within a class
+
+```r
+ggplot(gapminder_2007, aes(x = continent, y = lifeExp)) +
+  geom_boxplot()
+```
