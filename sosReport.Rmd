@@ -1,16 +1,18 @@
 ---
-title: 'Seeds of Success: Diversity and impact of collections conserved in the USDA National Plant Germplasm System'
-author: "Daniel Carver, Colin Khoury, Stephanie Greene, (potentially additional authors from Pullman, BLM)"
+title: 'Seeds of Success - Diversity and impact of collections conserved in the USDA
+  National Plant Germplasm System'
+author: Daniel Carver, Colin Khoury, Stephanie Greene, (potentially additional authors
+  from Pullman, BLM)
 date: "June 22, 2018"
 output:
   html_document:
     code_folding: hide
     df_print: paged
     highlight: tango
+    number_sections: yes
     theme: yeti
     toc: yes
     toc_depth: 2
-    number_sections: true
     toc_float:
       collapsed: no
       smooth_scroll: no
@@ -25,35 +27,30 @@ output:
 #install.packages("dplyr", "lemon", "ggplot2", "plyr",'tidyr' #Keep this commented out to knit: look into how to get around this. 
 #if(!require(installr)) { install.packages("installr"); require(installr)} #load / install+load installr
 #install.pandoc()
+#install.packages('knitr')
 library(dplyr)
-library(lemon)
+#library(lemon)
 library(ggplot2)
 library(plyr)
 library(tidyr)
 #install.packages('devtools')
 #library(devtools)
 #install_version("rmarkdown",version=1.8)
+
 ```
-
-
-
-```{r ref.label='lemon' ,echo=FALSE}
-#this allow me to define code chunks can call them at later times. Kinda tricky not so sure of the applicaiton just yet/. 
-```
-
-
 
 # Abstract {-}
 
 Summarize the relationship between the BLM Seeds Of Success(SOS) program and the USDA ARS division. These two organizations are leading the nation in collecting, conserving, and preserving the native plants present on public lands. 
 
 # Introduction 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #import SOS data 
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
 
 #Find the total number of recorded entries 
 totalSamples <- nrow(sosData)
+
 ```
 
 
@@ -61,24 +58,11 @@ The Seeds of Success program was established in 2001 to facilitate the collectio
 
  - fill this out to capture aims
  
- - continue to add content to this as I learn more; ask Colin and Stephanie to add to this background 
+ - continue to add content to this as I learn more; ask Colin, Stephanie, and others to add to this background 
 
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE, caption="Number of Collections per Family from the SOS program." }
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE , caption="Number of Collections per Family from the SOS program." }
 # histogram with added parameters
-sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
-
-# collectionYears <- sosData$COLL_YR
-# p1 <- hist(collectionYears,
-#   main="Accessions collected by SOS",
-#   xlab="Collection Year",
-#   xlim = c(2000,2018),
-#   ylim = c(0,3500),
-#   ylab="Number of Accession Collected",
-#   border="white",
-#   col="blue"
-# )
-
 ggplot(sosData, aes(COLL_YR))+
   geom_histogram(binwidth = 1, 
                  col="white",
@@ -96,7 +80,7 @@ ggplot(sosData, aes(COLL_YR))+
 
 
 Detailed collection methodologies mean that SOS accessions have information about the species collected, the region it was collected from, the land management agency where that collection occurred, and positional data in the form of latitude, longitude, and elevation. This data provides information about the seeds collected but does not tell us anything about what happened to the seeds after the collection occurs. The article is meant to create those connections and tell the full story of how these seeds are providing services to the landscape and understanding of the species. 
-This will be done by accessing how many of these collections represent economically useful and/or  crop wild relatives at both the national and international scale. The relationship between the SOS collections and the ARS collection will be examined to determine how many collections are store in long term storage and who is using the seeds outside of the ARS and for what purpose. 
+This will be done by accessing how many of these collections represent economically useful and/or crop wild relatives at both the national and international scale. The relationship between the SOS collections and the ARS collection will be examined to determine how many collections are in long term storage and who is using the seeds outside of the ARS and for what purpose. 
 
 - this can be added to. It's the first time we talk about CWR and there need more of an introductions Specific the two datasets used 
 
@@ -107,14 +91,14 @@ This will be done by accessing how many of these collections represent economica
   - Pullman office: Before assessing the datasets a meeting of indiviudals involved with the management of the SOS accession was held to identify the primary questions, define the process of transfering the collections between the agencies, and understand the processing and management of the collections once they enter the USDA long term storage system. **should we reference some of the individuals from pullman here** 
   
 - data processing 
-  - rmarkdown : The datasets were processed, joined, and query using the statistically programming language R. The report is compiled as an RMarkdown document to help with the reporducability of the content as the relationship between the two organizations continues to develop. **with this stay an in house document or will it be make public.** 
+  - rmarkdown : The datasets were processed, joined, and query using the statistically programming language R. Specific libraries that were use include: plyr, tidyr, dplyr, and ggplot2.  The report is compiled as an RMarkdown document to help with the reproducability of the content as the relationship between the two organizations continues to develop. **will this stay an in house document or will it be make public.** 
 
 
 # Results 
 
 ## Diversity
-- just charts for the momments. I want to generate a map for this section
-```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
+The SOS program collects a divere
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #Determine the total number of unique families collect and the number of collection in each family 
 uniqueFam <- dplyr::summarise(sosData,n_distinct(sosData$FAMILY))
 uniqueFam1 <- dplyr::count(sosData,FAMILY) #keep this in hear incase we want to display it 
@@ -127,26 +111,18 @@ uniqueGen1 <- dplyr::count(sosData, GENUS)
 uniqueSpe <-  dplyr::summarise(sosData,n_distinct(sosData$SPECIES))
 uniqueSpe1 <- dplyr::count(sosData, SPECIES)
 
-
-## Determine the total number of unique SubSPECIES collect and the number of collection in each SubSPECIES 
-subSpecies <- sosData[grep("ssp." ,sosData$NAME),]# for some reason the ['colName'] structure does not seem
-# work with the grep function
-uniqueSub<- dplyr::summarise(subSpecies,n_distinct(subSpecies$NAME))
-
-## Determine the total number of unique varieties collected and the number of collections in each varieties 
-varSpecies <- sosData[grep("var." ,sosData$NAME),] # for some reason the ['colName'] structure does not seem
-# work with the grep function
-uniqueVar<- dplyr::summarise(varSpecies,n_distinct(varSpecies$NAME))
+uniqueTaxa <- summarise(sosData,n_distinct(sosData$NAME))
+uniqueTaxa1 <- dplyr::count(sosData, NAME)
 
 ## DEfeine row and column names 
 labelsRow1 <- c("SOS Collection")
-labelsCol1 <- c('All Accessions', "Total Number of Familes", "Total Number of Genus", "Total Number of Species")
+labelsCol1 <- c('All Accessions', "Total Number of Families", "Total Number of Genera", "Total Number of Taxa")
 
 #Initiate an empty dataframe 
 sosSummary <- data.frame()
 
 # create the first row of the dataframe 
-sosDataSum <- c(totalSamples, uniqueFam, uniqueGen, uniqueSpe)
+sosDataSum <- c(totalSamples, uniqueFam, uniqueGen, uniqueTaxa)
 
 #bind the two df together 
 sosSummary <- tbl_df(rbind(sosSummary, sosDataSum))
@@ -154,7 +130,6 @@ sosSummary <- tbl_df(rbind(sosSummary, sosDataSum))
 colnames(sosSummary) <- labelsCol1
 rownames(sosSummary) <- labelsRow1
 sosSummary
-
 ```
 
 
@@ -166,13 +141,16 @@ This Seeds of Success program has collected a total of `r totalSamples` seed sam
 - this area intesting numbers but some knowledge on how they relate to the total number of species present in the country might make the factiods stand out some more
 
 
-```{r , echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, caption="Number of Collections per Family from the SOS program.", rows.print=10}
+
+An accession is a collection of seeds from a single sampling location. There are enough seeds in each accession to split the collection for short term storage, long term preservation, and distribution. Out of the `r uniqueFam[1,]` familes collected half of the total accessions collected come from just 5 families. The commonality and number of species represented by the top 5 collected families may explain this observed relationship. 
+
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, caption="Number of Collections per Family from the SOS program.", rows.print=10}
 families <- dplyr::arrange(uniqueFam1, desc(n)) 
 colnames(families) <- c("Family", "Total Number of Accessions")
 families
 
 ```
-An accession is a collection of seeds from a single sampling location. There are enough seeds in each accession to split the collection for short term storage, long term preservation, and distribution. Out of the `r uniqueFam[1,]` familes collected half of the total accessions collected come from just 5 families. The commonality and number of species represented by the top 5 collected families may explain the observed relationship. 
+
 
 
 ## Crop wild relatives and other economic plants"
@@ -186,7 +164,12 @@ The importance of this collection is increased by the fact that many of the seed
 
 - expand upon the k13 data source a bit to explain why we are using it.  
 
-```{r , echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
+- add genus by accession - CWR WUS WEP top 20 or 50 chart/table 
+
+
+This study is using dataset complied by  Khoury et al 2013 and Wiersema and Leon 20?? to identify species that are considered CWR, WUS, or WEP. These dataset will be joined to the SOS dataset based on taxa name to identify how many of the SOS accession are considered CWR, WUS, and or WEP. The chart below is defining the primary acronyms that are used in the remainder of this document 
+
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #aycromn referecne dataframe 
 #acronymDF <- data.frame()
 
@@ -202,7 +185,9 @@ acronymDF
 ```
 
 
-```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE }
+
+
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 
 ###
 # Create a summary chart showing the total number of accession, total taxa, # of CWR NA, # eco NA, # of economic WEP  
@@ -211,24 +196,20 @@ acronymDF
 
 # Replace the name column of the sos data so that the "ssp." notation is replaced with "subsp." as defined
 # by the grin Data base 
-
 #import SOS data 
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
-
 # created a new column that has the same col name as the K13 data set. I will use the col to join on 
-sosData$Taxon <- gsub("ssp.","subsp.", sosData$NAME) 
-#detemine the total number of taxon in dataset 
-sosTotalUnique <- sosData %>% 
-  dplyr::summarise( totalSpecies = n_distinct(NAME))
-sosTotalUnique <- sosTotalUnique[[1,1]]
+sosData$Taxon <- sosData$NAME
 
+#detemine the total number of taxon in dataset 
+sosTotalUnique <- uniqueTaxa
 
 # read in the K13 data 
 K13Data <- read.csv("H:\\SOS_Project\\analysisData\\CWR_US_inventory_2013_7_10.csv")
 #detemine the total number of taxon in dataset 
 K13TotalUnique <- K13Data %>% n_distinct("Taxon")
 # join the data sets and trim the data so that taxon that do not have values for the K13 specific data columns are dropped.
-trimCombinedData <- join(sosData, K13Data, by='Taxon', type='left', match='all') %>%
+trimCombinedData <- left_join(sosData, K13Data, by='Taxon', type='left', match='all') %>%
   filter(!is.na(Taxon_w_author))
 
 typeSum <- trimCombinedData %>%
@@ -256,7 +237,6 @@ combinedData2a <- inner_join(sosData, new1, by='Taxon', type='left', match='all'
 
 endDf <- bind_rows(typeSum, combinedData2a)
 
-
 #calculate total number of species from each dataset 
 uniqueWEP <- endDf[[3,2]]
 uniqueWUS <- endDf[[2,2]]
@@ -268,11 +248,9 @@ percentCWR <-endDf[[1,3]]
 
 ```
 
+The table below illistrate the diversity of genus and taxa represented with the various datasets. The SOS and K13 data sets reference plants found in **North America or US** the World Economic Plants is a world wide data set and hence has significantly more diversity. In the case of preservation it is important to understand the total diversity represented as well as the sample size of that diversity. 
 
-
-
-
-```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 
 #Initiate an empty dataframe 
 allDataSummary <- data.frame()
@@ -282,10 +260,22 @@ sosData <- c( uniqueGen, uniqueSpe)
 
 wusSamples <- K13Data %>% filter(Type=="WUS")
 cwrSamples <-K13Data %>% filter(Type=="CWR")
-
+names(wusSamples)
 # create K13 WEP/CWR 
-K13wus <- c( n_distinct(wusSamples$Genus), n_distinct(wusSamples$Species))
-K13cwr <- c( n_distinct(cwrSamples$Genus), n_distinct(cwrSamples$Species))
+K13wus <- c( n_distinct(wusSamples$Genus), n_distinct(wusSamples$Taxon))
+K13cwr <- c( n_distinct(cwrSamples$Genus), n_distinct(cwrSamples$Taxon))
+
+### Just testing to relationship between 
+# cwrSamples %>%
+#   group_by(Genus) %>%
+#   dplyr::summarise(count = n()) %>%
+#   arrange(desc(count))
+# 
+# wusSamples %>%
+#   group_by(Genus) %>%
+#   dplyr::summarise(count = n()) %>%
+#   arrange(desc(count))
+#   
 
 ## create same for world Economic plants takes some more work 
 # remove duplicates and separate based on full name into genus and species
@@ -299,7 +289,7 @@ wepX1 <-  wepX %>% separate(Taxon, c("GENUS", "x", "SPECIES")) %>% select(GENUS,
 # combine the two datasets to get a complete listing of genus and species 
 WEPgs <- bind_rows(wepSum1, wepX1)
 # constuct a vector with the needed values 
-WEP <- c( as.numeric(n_distinct(WEPgs$GENUS)), as.numeric(n_distinct(WEPgs$SPECIES)))
+WEP <- c( as.numeric(n_distinct(WEPgs$GENUS)), as.numeric(n_distinct(WEPData$Taxon)))
 
 
 
@@ -307,16 +297,15 @@ WEP <- c( as.numeric(n_distinct(WEPgs$GENUS)), as.numeric(n_distinct(WEPgs$SPECI
 dataSummary <- rbind(allDataSummary, sosData, K13wus, K13cwr, WEP)
 #define column names and row names 
 colnames(dataSummary) <- c(  "Total Number of Genus", "Total Number of Species")
-rownames(dataSummary) <- c("SOS", "K13_WUS", "K13_CWR", "WEP")
+rownames(dataSummary) <- c("SOS", "WUS in K13", "CWR in K13", "WEP")
 dataSummary
 ## I dont think I want to lose the row data by arranging it
 #arrange(dataSummary, dataSummary$`Total Number of Genus`)
 
 
-
 ```
 
-The above table illistrate the diversity of families, genus, and species represented with the various datasets. The SOS and K13 data sets reference plants found in **North America or US** the World Economic Plants is a world wide data set and hence has significantly more diversity. In the case of preservation it is important to understand the total diversity represented as well as the sample size of that diversity. We can test that by observing what proporition of the accessions collected by SOS are classified are a Wild Utilized Species, Crop Wild Relative, or a World Economic Plant. 
+We can test that by observing what proporition of the accessions collected by SOS are classified are a Wild Utilized Species, Crop Wild Relative, or a World Economic Plant. The chart below shows the number of species that are found within the K13 and WEP databased and were collected by the SOS program as well as the proportion of the total SOS accessions. The high number of taxa collected and the low proportion of the accession imply that the SOS program is collection many of the WUS, CWR, and WEP species in low number of accessions. 
 
 
 ```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE , caption="Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.", rows.print=15}
@@ -331,13 +320,14 @@ sosSummary2 <- rbind(sosSummary2, sosCollection)
 
 #define column names and row names 
 rownames(sosSummary2) <- c("SOS Collection")
-colnames(sosSummary2) <- c('All Accession', "Total Taxon", "WUS Taxon", "Percent of Accessions that are WUS", "CWR taxon", "Percent of Accessions that are CWR", "WEP Taxon" , "Percentage of Accessions that are WEP")
+colnames(sosSummary2) <- c('Total Accessions', "Total Number Taxa", "Taxa that are WUS per K13", "Percent of SOS Accessions that are WUS per K13", "Taxa that are CWR per K13", "Percent of SOS Accessions that are CWR per K13", "Taxa that are WEP" , "Percentage of SOS Accessions that are WEP")
 
-sosSummary2
-
+sosSummary2t <- t(sosSummary2)
+sosSummary2t
+### look up column that the unique number of taxa is being called on should be full name 
+### get the reference paper for WEP 
 
 ```
-
 
 
 
@@ -346,8 +336,7 @@ sosSummary2
 ## Conservation 
 
 The Seeds of Success program provides the boots on the ground effort in the collection of seed resources. The program partners with the Agricultural Research Service of the USDA to store, maintain, and distribute the seeds collected. The Pullman, Washington section of the ARS is the group responsible for the initial on boarding and entering of the seeds into the Genetic Resource Inventory Network (GRIN) as well as maintaining the seeds in environments that support preservation.  
-
-
+Just as was shown above the table below shows the relationship between the SOS accession that have made it into the GRIN global database and the WUS,CWR, and WEP species. Not all SOS accession make it into the ARS and GRIN systems as a result the total taxa and percent of SOS accession that are representative of a useful plant.  
 
 
 ### stored within ARS system 
@@ -360,7 +349,7 @@ totalSamplesGRIN <- nrow(grinData)# why would these two numbers be different? Qu
 totalTaxon <- dplyr::n_distinct(grinData$Taxon)
 
 # join the the GRIN data with the K13 Dataset 
-combinedData3 <- join(grinData, K13Data, by='Taxon', type='left', match='all') %>%
+combinedData3 <- left_join(grinData, K13Data, by='Taxon', type='left', match='all') %>%
   filter(!is.na(Taxon_w_author))
 
 #group by WEP and CWR and derive number of taxon and percent of sos that are those taxa 
@@ -394,99 +383,85 @@ grinCollection <- c(totalSamplesGRIN, totalTaxon, uniqueWUS1, percentWUS1, uniqu
 sosSummary3 <- rbind(sosSummary2, grinCollection)
 
 #define column names and row names 
-rownames(sosSummary3) <- c("SOS Collection", "GRIN Collection")
+rownames(sosSummary3) <- c("SOS Collection", "SOS in GRIN Global")
 
-sosSummary3
-
+sosSummary3t <- t(sosSummary3)
+sosSummary3t
 ```
 
 The difference in the total number of accessions collected by SOS and the number of accessions recorded in  GRIN is significant. Part of this can be explained by a potential backlog of samples within the ARS and a lag in delivery time between collection and distribution. It generally takes a year from when the seeds are collect to when they are received by the ARS.
 
-```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
+```{r}
 sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
 
 # filter based on year collected and get a count on the number of unique accessions
-sosPre2017 <- filter(sosData, COLL_YR < 2017) %>% n_distinct()
+sosPre2017 <- sosData %>%
+  filter(COLL_YR < 2017) %>%
+  nrow()
+
 percentAtARS = signif(100*(totalSamplesGRIN/sosPre2017),4)
+
+
 ```
+
 For example, a total of `r sosPre2017` accessions were brought into the SOS collection before 2017. The ARS is still processing SOS data from 2017. Therefore, `r percentAtARS` percent of the samples collected by SOS have been brought into the ARS and GRIN Global system. 
 
-- I'm not sure given the data sets that I have I'll be able to join the two features. All the SOS ID are lost in the grin query.
+This graph illistrates the date that a accession was collected by the SOS program, when it was sent to ARS, and when it was backed up at NSSL. There is generally a lag time between the collection period and when ARS receives the accessions. The bar graph does show both the acutally collection time and the time at which the accessions made it to the ARS. The lag effect can be seen with between the SOS(green) and ARS received (grey) in 2018. No new SOS accessions have been addedbut the ARS is still receiveing accessions that were collected in previous years. A similar relationship can be seen between the receiving of Accessions at the ARS and the backing up of those accessions at the NLGRP (blue). While many samples were received in 2017 non of them have made it into long term back up at this point. 
 
-- this is an SOS-GRIN-UNION sheet that was send by the SOS, I'm just exploring here for a bit 
-
-Using a dataset generated by the BLM which joins all SOS data and all ARS data we were able to acess difference across the two data records. 
-
-```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
-# read in union data 
-sosUnion <- read.csv("H:\\SOS_Project\\analysisData\\SOS_ARSUNION_20180430.csv")
-#generate date showing presences comments 
-sosUnion1 <- count(sosUnion$RH_COMMENTS) %>%
-  dplyr::rename(Condition = x, NumberOfAccession = freq )
-#print tbl
-sosUnion1
-
-```
-
-- this is a union that was performed by the SOS program. I've not been able to reproduce the process via GRIN: probably could with help, but 
-
-**interesting points**
-
-1.  10,000 samples from SOS are not in GRIN or ARS. ~ 2000 of these were sampled in 2017 or later and that could explain why the two data sets are not connecting 
-
-2. 727 samples are entered into GRIN as SOS samples but are not present on BLM data
-
-**again this is exploratory** I did not generate the join between the ARS AND SOS data sets to produce these comparisons but the data set brings up some interesting questions on the process. 
-I bring this up again because it may be difficult to reproduce this dataset sence the individual who generated it has left the BLM 
-
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
-# filter based on collected by grin but not present 
-sosunion2 <- filter(sosUnion, sosUnion$RH_COMMENTS == ("IN SOS_ NOT IN ARS OR GRIN"))
-
-collectionYears2 <- sosunion2$COLL_YR
-p2 <- hist(collectionYears2,
-  main="Accessions collected by SOS that are not in ARS or GRIN ",
-  xlab="Collection Year",
-  xlim = c(2000,2018),
-  ylim = c(0,3500),
-  ylab="Number of Accession Collected",
-  border="white",
-  col="dark green"
-)
-```
-This is the original plot of the data 
-
-Below is the comparison against all the data collected by the 
 
 
 ```{r ,message=FALSE, warning=FALSE, echo=FALSE, caption="The grey histogram shows the total number of accessions collected by SOS. The green histograms shows what propotions of the collection has not made it into the ARS system."}
-ggplot(sosunion2, aes(COLL_YR))+
-  geom_histogram(binwidth = 1, 
-                 col="white",
-                 fill="dark green",
-                 alpha = 1) + 
-  labs(title = "Accessions collected by SOS that are not in ARS or GRIN", 
-       x = "Collection Year",
-       y= "Number of Accession Collected",
-       caption = "") + 
-  xlim(c(2000,2018))+
-  ylim(c(0,3500))+
-  scale_x_continuous(breaks = seq(2000,2018, 2))+
-  scale_y_continuous(breaks = seq(0,3500, 500))+
-  theme_minimal()+
-  geom_histogram(data= sosData, 
-                 aes(sosData$COLL_YR),
-                 binwidth = 1,
-                 col="white",
-                 fill= "grey",
-                 alpha = 0.5)
-  
+# # calculate the year the Accession was received 
+# grinDates <- grinData %>%
+#   separate(Received.Date, c("M", "D", "Y"))%>%
+#   mutate(year = as.numeric(Y))%>%
+#   mutate(count = as.numeric(1))
+# grinDates
+# #filter for accession that are backed up 
+# nsslDates <-grinDates %>% 
+#   filter(Backup.Location.1 == "NSSL")
+# 
+# 
+# # plot the three historgrams 
+# ggplot(sosData, aes(COLL_YR))+
+#   geom_histogram(binwidth = 1, 
+#                  col="white",
+#                  fill="dark green",
+#                  alpha = 1) + 
+#   labs(title = "Accessions collected by SOS that are not in ARS or GRIN", 
+#        x = "Collection Year",
+#        y= "Number of Accession Collected",
+#        caption = "") + 
+#   xlim(c(2000,2018))+
+#   ylim(c(0,3500))+
+#   scale_x_continuous(breaks = seq(2000,2018, 2))+
+#   scale_y_continuous(breaks = seq(0,3500, 500))+
+#   theme_minimal()+
+#   geom_histogram(data= grinDates, 
+#                  aes(grinDates$year),
+#                  binwidth = 1,
+#                  col="white",
+#                  fill= "grey",
+#                  alpha = 0.8) +
+#   geom_histogram(data= nsslDates, 
+#                  aes(nsslDates$year),
+#                  binwidth = 1,
+#                  col="white",
+#                  fill= "blue",
+#                  alpha = 0.5)
+# 
+
 
 #check out the site for more [information](https://stackoverflow.com/questions/6957549/overlaying-histograms-with-ggplot2-in-r)
 
+### Add the NLGRP data 
+### the ticky thing here is that the dates in GRIN reflect when the date was received 
+
 ```
 
-This graph illistrates the proportion of accession collected by the SOS program that have made it into the ARS system. As the grey and green bars become closer in height less of the collections are stored in the ARS system. The high proportion of samples not intergated into the ARS from the more recent years may represent a backlog in the intergration of the data into the ARS. 
+
+
+
 
 ### How much is at NLGRP for long term backup
 
@@ -498,19 +473,19 @@ backedUp <- dplyr::filter(grinData, Is.Backed.Up. == 'Y' )
 totaledBackedUp <-nrow(backedUp)
 
 #filter based on the backup location being NLGRP 
-nlgrpData <- dplyr::filter(backedUp, Backup.Location.1 == 'NSSL' )
+nlgrpData <- filter(backedUp, Backup.Location.1 == 'NSSL' )
 totalBackedUp <- nrow(nlgrpData)
 
 ## Example of the backed up features that are missing a backup location????
 #### does this mean an error in data entry, can we assume 
-MissingBackup <- count(backedUp$Backup.Location.1 )
+#MissingBackup <- (backedUp$Backup.Location.1 )
 
 
 #define the total number of species present in backup
 totalTaxonNLGRP <- n_distinct(nlgrpData$Taxon)
 
 # join the the GRIN data with the K13 Dataset 
-combinedData4 <- join(nlgrpData, K13Data, by='Taxon', type='left', match='all') %>%
+combinedData4 <- left_join(nlgrpData, K13Data, by='Taxon', type='left', match='all') %>%
   filter(!is.na(Taxon_w_author))
 
 #group by WEP and CWR and derive number of taxon and percent of sos that are those taxa 
@@ -546,9 +521,77 @@ sosSummary4 <- rbind(sosSummary3, nlgrpCollection)
 #define column names and row names 
 rownames(sosSummary4) <- c("SOS Collection", "GRIN Collection", "NLGRP Collection")
 
-sosSummary4
+sosSummary4t <- t(sosSummary4) %>% bind_cols(c("SOS Collection", "GRIN Collection", "NLGRP Collection"))
+
+tbl_df(sosSummary4t) 
+
 
 ```
+
+The line graph below shows the the number of accessions maintained by the SOS, GRIN, and ARS over time. 
+
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+# # ### attempt at a cumulative chart 
+library(dplyr)
+
+# calculate the year the Accession was received
+grinDates <- grinData %>%
+  separate(Received.Date, c("M", "D", "Y"))%>%
+  mutate(year = as.numeric(Y))%>%
+  mutate(count = as.numeric(1))
+
+#filter for accession that are backed up
+nsslDates <-grinDates %>%
+  filter(Backup.Location.1 == "NSSL")
+
+#create a count column for sos data
+sosCount <- sosData %>%
+  mutate(count = as.numeric(1))
+
+
+sosCuml <- sosCount%>%
+  group_by(COLL_YR) %>%
+  dplyr::summarise(total = n())%>%
+  mutate(dataset = 'sos') %>%
+  dplyr::rename(year = "COLL_YR") %>%
+  mutate(cumsum = cumsum(total))
+
+
+grinCuml <- grinDates %>%
+  group_by(year)%>%
+  dplyr::summarise(total = n())%>%
+  mutate(dataset = 'grin')%>%
+  mutate(cumsum = cumsum(total))
+
+
+arsCuml <-grinDates %>%
+  filter(Backup.Location.1 == "NSSL") %>%
+  group_by(year)%>%
+  dplyr::summarise(total = n()) %>%
+  mutate(dataset = 'ars')%>%
+  mutate(cumsum = cumsum(total))
+
+
+allCuml <- bind_rows(sosCuml, grinCuml, arsCuml)
+
+
+
+trend <- ggplot(allCuml, aes(x=year, y=cumsum, color= dataset)) +
+    labs(title = "Accumulation of Accessions Over Time ",
+       x = "Collection Year",
+       y= "Number of Accession Collected",
+       caption = "") +
+  xlim(c(2000,2018))+
+  scale_x_continuous(breaks = seq(2000,2018, 2))+
+  theme_minimal()+
+  geom_line()
+
+trend
+
+```
+
+
 
 
 
@@ -556,32 +599,27 @@ sosSummary4
 
 The challenge of coordinating the preservation of these seeds is seen in part by how my samples become orphaned within the system. Orphaned seeds are those which do not fit into any of the existing collections. As a results seed curators need to assess how the seeds can best be integrated and is it worth incorporating that sample. While this decision making process is occurring the seeds are not being backed up and are not grown out to plants to replenish the existing seed population. 
 
-```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
+```{r}
 # call in sosAccessions: summaries by maintaince site or owned by ***check with Colin or Renee on this one***
 # produce a table showing number of successions and proportion of total
 
-sosAccessions <- read.csv("H:\\SOS_Project\\analysisData\\sosAllAccessions.csv")
-
-
-# create a count list based on the number of values within the tbl
-sosAcc <- mutate(sosAccessions, count =1 )
 
 #group by location and derive number of taxon
-sosAccTaxa <- sosAccessions %>%
+sosAccTaxa <- grinData %>%
   group_by(Accession.Prefix) %>%
   dplyr::summarise(uniqueNumber = n_distinct(Taxon)) %>%
   dplyr::rename(Facility = "Accession.Prefix", UniqueTaxa = "uniqueNumber" )
 
-
+library(plyr)
 # subet columns needed.
-sosOwner <- count(sosAcc$Accession.Prefix)%>%
+sosOwner <- count(grinData$Accession.Prefix)%>%
   arrange(desc(freq))%>%
   dplyr::rename(Facility = x, NumberOfAccessions = freq)%>%
   mutate(FacilityName = c("Western Regional Plant Introduction Station, Washington", "Ornamental Plant Germplasm Center, Ohio", "National Animal Disease Center, Iowa",
                           "Plant Introduction Research, Iowa", "NSL unknown" , "Plant Genetic Resources Conservation Unit, Georgia", "SARU unknown Plants from alaska??", "Missing Data"))
 
 #join the two datasets 
-sosOwner2 <- join(sosOwner, sosAccTaxa, by='Facility', type='left', match='all') %>%
+sosOwner2 <- left_join(sosOwner, sosAccTaxa, by='Facility', type='left', match='all') %>%
   dplyr::rename(FacilityAcronym = "Facility") %>%
   select(FacilityName, FacilityAcronym, NumberOfAccessions, UniqueTaxa)
 
@@ -604,9 +642,6 @@ An experiment was developed and performed by Annette Miller of NLGRP. Annette te
 
 
 ```{r caption="Listing of Seed Viability by Genus", rows.print=10}
-library(dplyr)
-viability <- read.csv("H:\\SOS_Project\\analysisData\\generaAverageGermination.csv")
-viability <- tbl_df(viability)
 colnames(viability) <- c('Genus', 'percentViable' )
 arrange(viability, desc(percentViable))
 
@@ -618,9 +653,9 @@ arrange(viability, desc(percentViable))
 ```{r , echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, caption="Viability of Seeds Collected by the SOS progam."}
 # histogram with added parameters
 hist(viability$percentViable,
-  main="Seed Germentation Viability",
-  xlab="Proportion of Seeds that Germenated",
-  ylab="Number of Species",
+  main="Seed Germination Viability",
+  xlab="Proportion of Seeds that Germinated",
+  ylab="Number of Genus",
   col="light green",
   border="white", 
   las=1, #defien the orientation of the label 
@@ -640,7 +675,7 @@ activeOrders <- read.csv("H:\\SOS_Project\\analysisData\\sosActiveOrders.csv")
 date <- separate(activeOrders, Ordered.Date, into = c("month","day", "year"), sep = "/")
 # histogram with added parameters
 hist(as.numeric(date$year),
-  main="SOS Orders Over Time",
+  main="Distributions of SOS accessions over time by order",
   xlab="Year",
   ylab="Number of Orders",
   col="grey",
@@ -688,11 +723,10 @@ genusSum <- distribution %>%
   group_by(genus_name)%>%
   dplyr::summarise(genusSum = sum(COUNT))%>% 
   arrange(desc(genusSum))%>%
-  dplyr::rename(Genus = genus_name  ,IndividualSeedsSent = genusSum)
+  dplyr::rename(Genus = genus_name  ,IndividualSampleSent = genusSum)
 
 #calculate the total number of seeds sent 
 totalSeedsSent <- sum(distribution$COUNT)
-
 ```
 
 
@@ -719,12 +753,17 @@ reciever <- distribution %>%
   group_by(title) %>%
   dplyr::summarise(numberOfGenus = n_distinct(genus_name), numberOfSeeds = sum(COUNT)) %>%
   arrange(desc(numberOfGenus))%>%
-  dplyr::rename(EntityRecievingSeeds = 'title'  ,NumberOfGenusDelivered = 'numberOfGenus', IndividualSeedsDelivered = 'numberOfSeeds')  
+  dplyr::rename(EntityRecievingSeeds = 'title'  ,NumberOfGenusDistributed = 'numberOfGenus', SamplesDistributed = 'numberOfSeeds')  
 
 reciever
 
 ```
 There are a total of `r totalSeedsSent` seeds that have been distributed by the ARS. Of that `r totalWUSSet`, are considered to be either Wild Utilized Plants or Crop Wild Relatives. This is representing `r numberGenus` unique genus
+
+
+
+
+This chart shows the number of times an order was place for a specific accession. 
 
 ```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 # call in data on the distribution of species 
@@ -736,13 +775,18 @@ speciesOrdered <- mutate(speciesOrdered, Order.Request.ID = as.factor(order_requ
 speciesOr <- full_join(speciesOrdered, distinct(activeOrders), by="Order.Request.ID") %>%
   distinct()
 
+
 accessionsSent <- arrange(count(speciesOr$accession_number) , desc(freq)) %>% `colnames<-`(c("Accession", "Accessions Pulled From"))
 accessionsSent 
-
 
 ```
 This chart shows the number of times an order was place for a specific accession. 
 
+<br>
+<br>
+
+This chart shows the number of times a specific taxa was has been delivered. These deliveries could come from multiple accessions.
+ 
 ```{r,echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #totalSent -- not super relavent because it is the number of time indiviudal species were sent
 taxaSent1 <- speciesOr %>%
@@ -753,8 +797,10 @@ taxaSent1 <- speciesOr %>%
 taxaSent1 %>% arrange(desc(count)) %>% `colnames<-`(c("Taxon", "Total Delivered", "Total Packets??"))
 
 ```
-This chart shows the number of times a specific taxa was has been delivered. These deliveries could come from multiple accessions.
+<br>
+<br>
 
+This graphic shows which location is receiving the greatest diversity of taxon 
 
 ```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 # who is receiving deliveries 
@@ -766,27 +812,6 @@ resquestor1 <- speciesOr %>%
 
 
 resquestor1 %>% arrange(desc(count)) %>% `colnames<-`(c("Taxon", "Total Taxon", "Total Delivered", "Total Packets??"))
-
-```
-This graphic shows which location is receiving the greatest diversity of taxon 
-```{r}
-### come back to this at some point 
-
-# deliveryData <-read.csv("H:\\SOS_Project\\analysisData\\sosOrdersTotal.csv")
-# print(deliveryData)
-# 
-# # select all rows that were delivered to ARS locations 
-# ars <- filter(deliveryData, category_code == "UARS")
-# ars <- ars[,1:2]
-# labelsColumns <- c('Number of Deliveries', "Reason for Delivery" )
-# values2 <- c("Replenishment", "Germination", "Observation"
-#                               ,"Information only", "Transfer", "Backup"
-#                               ,"Distribution")
-# ars$order_type_code <- values2
-# 
-# colnames(ars) <- labelsColumns
-# colnames(ars)
-# ars<- ars[order(-ars$'Number of Deliveries'),]
 
 ```
 
