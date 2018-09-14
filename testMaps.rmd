@@ -26,26 +26,6 @@ sosWGS <- sosData %>%
   filter(GPS_DATUM=="WGS84") %>%
   na.omit()
 
-# 
-# shortWGS <- slice(sosWGS, 1:5)
-# shortWGS <- shortWGS %>% 
-#   mutate(lon = as.numeric(as.character(shortWGS$LONGITUDE_DECIMAL)), 
-#          lat = as.numeric(as.character(shortWGS$LATITUDE_DECIMAL)))
-
-# 
-# ###trying the process with ggplot
-# corvallis <- c(lon = -123.2620, lat = 44.5646)
-# 
-# # Add a maptype argument to get a satellite map
-# corvallis_map_sat <- get_map(corvallis, zoom = 3)
-# 
-# #point date set 
-# coords <- cbind(as.numeric(shortWGS$LONGITUDE_DECIMAL), as.numeric(shortWGS$LATITUDE_DECIMAL))
-# 
-# 
-# # Edit to display satellite map
-# ggmap(corvallis_map_sat) +
-#   geom_point(aes(lon, lat), data = shortWGS)
 
 ```
 
@@ -82,15 +62,17 @@ points <- SpatialPointsDataFrame(data = latLonWGS,
 
 library(gdalUtils)
 library(tmap)
-install.packages('maps')
+#install.packages('maps')
 library(maps)
-install.packages('usmap')
+#install.packages('usmap')
 library(usmap)
 library(tmaptools)
 
+
+
 ##this works 
 tmap_mode("view")
-# qtm(shp=points)
+qtm(shp=points)
 tm_shape(shp=points)+
   tm_dots(shp=points)
 
@@ -113,7 +95,7 @@ res <- over(points, shape)
 counts <- res %>% 
   group_by(name) %>%
   summarise(count = n())
-
+counts
 oo <- sp::merge(shape, count, by=name)
 
 str(shape2)

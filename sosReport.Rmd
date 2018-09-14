@@ -222,12 +222,12 @@ acronymDF
 # Replace the name column of the sos data so that the "ssp." notation is replaced with "subsp." as defined
 # by the grin Data base
 #import SOS data
-sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
+#sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
 # created a new column that has the same col name as the K13 data set. I will use the col to join on
 sosData$Taxon <- sosData$NAME
 
 #detemine the total number of taxon in dataset
-sosTotalUnique <- uniqueTaxa
+sosTotalUnique <- n_distinct(sosData$Taxon)
 
 # read in the K13 data
 K13Data <- read.csv("H:\\SOS_Project\\analysisData\\CWR_US_inventory_2013_7_10.csv")
@@ -242,20 +242,25 @@ typeSum <- trimCombinedData %>%
   dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3), uniqueGenus = n_distinct(GENUS))
 
 
-###
-# read in the WEP data and Rename the name column to match the newly created column from the SOS data
-WEPData <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\EconomicUseCategoriesOfSpecies.csv")) %>%
-  dplyr::rename(Taxon = name)
-
-#Unique Join
-### the WEP data has repeats of features if they have more then 1 economic use. I'm joining again here so the taxa are only represented once.
-single <- WEPData %>%
+### read in WEP location data and filter to united states 
+wepLocal <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\Distributions&NativityOfSpeciesWithEconomicUses.csv")) %>%
+  filter(country_code == 'USA') %>%
+  dplyr::rename(Taxon = name) %>% 
   distinct(Taxon)
 
-new1 <-left_join(single,WEPData, by="Taxon")
 
+###
+# read in the WEP data and Rename the name column to match the newly created column from the SOS data
+wepData1 <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\EconomicUseCategoriesOfSpecies.csv")) %>%
+  dplyr::rename(Taxon = name)
 
-combinedData2a <- inner_join(sosData, new1, by='Taxon', type='left', match='all') %>%
+#Unique Join for species in the USA 
+### the WEP data has repeats of features if they have more then 1 economic use. I'm joining again here so the taxa are only represented once.
+WEPData <-left_join(wepLocal,wepData1, by="Taxon")
+names(WEPData)
+
+# join with sos data 
+combinedData2a <- inner_join(sosData, WEPData, by='Taxon', type='left', match='all') %>%
   filter(!is.na(economic_usage_code)) %>%
   dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3),  uniqueGenus = n_distinct(GENUS)) %>%
   mutate(Type = "wep")
@@ -275,6 +280,7 @@ genusWEP <- endDf[[3,4]]
 genusWUS <- endDf[[2,4]]
 genusCWR <- endDf[[1,4]]
 
+
 ```
 
 The table below illustrates the diversity of genus and taxa represented with the various datasets. The SOS and K13 data sets reference plants found in **North America or US** the World Economic Plants is a world wide data set and hence has significantly more diversity. In the case of preservation it is important to understand the total diversity represented as well as the sample size of that diversity.
@@ -285,7 +291,7 @@ The table below illustrates the diversity of genus and taxa represented with the
 allDataSummary <- data.frame()
 
 # create the first row of the dataframe
-sosData <- c( uniqueGen, uniqueSpe)
+sosDataTotals <- c( uniqueGen, uniqueSpe)
 
 wusSamples <- K13Data %>% filter(Type=="WUS")
 cwrSamples <-K13Data %>% filter(Type=="CWR")
@@ -323,7 +329,8 @@ WEP <- c( as.numeric(n_distinct(WEPgs$GENUS)), as.numeric(n_distinct(WEPData$Tax
 
 
 #bind the two df together
-dataSummary <- rbind(allDataSummary, sosData, K13wus, K13cwr, WEP)
+dataSummary <- rbind(allDataSummary, sosDataTotals, K13wus, K13cwr, WEP)
+
 #define column names and row names
 colnames(dataSummary) <- c(  "Total Number of Genus", "Total Number of Species")
 rownames(dataSummary) <- c("SOS", "WUS in K13", "CWR in K13", "WEP")
@@ -342,8 +349,8 @@ We can test that by observing what proportion of the accessions collected by SOS
 sosSummary2 <- data.frame()
 
 # create the first row of the dataframe
-sosCollection <- c(totalSamples, sosTotalUnique, uniqueWUS, percentWUS, uniqueCWR, percentCWR, uniqueWEP, percentWEP)
-
+sosCollection <- c(totalSamples, sosTotalUnique,  uniqueWUS, percentWUS, uniqueCWR, percentCWR, uniqueWEP, percentWEP)
+sosCollection
 #bind the two df together
 sosSummary2 <- rbind(sosSummary2, sosCollection)
 
@@ -352,7 +359,7 @@ rownames(sosSummary2) <- c("SOS Collection")
 colnames(sosSummary2) <- c('Total Accessions', "Total Number Taxa", "Taxa that are WUS per K13", "Percent of SOS Accessions that are WUS per K13", "Taxa that are CWR per K13", "Percent of SOS Accessions that are CWR per K13", "Taxa that are WEP" , "Percentage of SOS Accessions that are WEP")
 
 sosSummary2t <- t(sosSummary2)
-
+sosSummary2t
 ### look up column that the unique number of taxa is being called on should be full name
 ### get the reference paper for WEP
 
@@ -447,11 +454,10 @@ sosSummary3
 The difference in the total number of accessions collected by SOS and the number of accessions recorded in  GRIN is significant. Part of this can be explained by a potential backlog of samples within the ARS and a lag in delivery time between collection and distribution. It generally takes a year from when the seeds are collect to when they are received by the ARS.
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE}
-sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
-
+names(sosData)
 # filter based on year collected and get a count on the number of unique accessions
 sosPre2017 <- sosData %>%
-  filter(COLL_YR < 2017) %>%
+  filter(COLL_YR < 2017)%>%
   nrow()
 
 percentAtARS = signif(100*(totalSamplesGRIN/sosPre2017),4)
