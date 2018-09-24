@@ -1,10 +1,14 @@
 ---
-title: 'Seeds of Success - Diversity and impact of collections conserved in the USDA
-  National Plant Germplasm System'
+title: Seeds of Success - Diversity and impact of collections conserved in the USDA
+  National Plant Germplasm System
 author: Daniel Carver, Colin Khoury, Stephanie Greene, (potentially additional authors
   from Pullman, BLM)
 date: "June 22, 2018"
 output:
+  word_document:
+    toc: yes
+  pdf_document:
+    toc: yes
   html_document:
     code_folding: hide
     df_print: paged
@@ -16,10 +20,6 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: no
-  pdf_document:
-    toc: yes
-  word_document:
-    toc: yes
 ---
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -44,15 +44,15 @@ library(tidyr)
 
 - this is a working document 
 
-- at this stage the majority of the effort of the authors has been placed into developing a series of graphic/tables that summarizes the relationship between the SOS and ARS by address 6 primary questions (See results). 
+- at this stage the majority of the effort of the authors has been placed into developing a series of graphic/tables that alllows an exploration of the data (see results). 
 
 - The text within the document is preliminary and is expected to undergo major revisions based in part on input from outside contributors, as such much of the written content is merely an outline of what is to be expected. 
 
-
+- (from Colin- we need to provide a report to BLM. But for the academic paper, I personally think we should collaborate with BLM to talk about use in general including for restoration. This would be a much stronger paper, because overall the CWR and other useful plants aren't that many)
 
 # Abstract {-}
 
-Summarize the relationship between the BLM Seeds Of Success (SOS) program and the USDA ARS division. These two organizations are leading the nation in collecting, conserving, and preserving the native plants present on public lands.
+Summarize the relationship between the BLM Seeds Of Success (SOS) program and the USDA ARS NPGS conservation efforts. These two organizations are collaborating on collecting, conserving, and making available for use a wide diversity of native plants occurring on public lands.
 
 # Introduction
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
@@ -66,12 +66,41 @@ totalSamples <- nrow(sosData)
 
 
 
-The Seeds of Success program was established in 2001 to facilitate the collection of native seeds. To make use of the seeds collected, the SOS program partners with land management agencies to support the re-vegetation of areas, academic and professional partners to promote and advance scientific research, and the United States Department of Agriculture for the long term preservation of species genetic diversity.
+The Seeds of Success (SOS) program was established in 2001 to facilitate the collection of native seeds. To make use of the collected materials, the program partners with land management agencies to support the re-vegetation of disturbed or degraded areas, academic and professional partners to promote and advance scientific research, and the United States Department of Agriculture (USDA) for the long term preservation of species genetic diversity.
+
+The Seeds of Success program provides the boots on the ground effort in the collection of native seed, particularly for restoration. The program partners with the Agricultural Research Service of the USDA to store, maintain, and distribute the seeds collected. The Pullman, Washington section of the ARS is the group responsible for the initial on boarding and entering of the seeds into the Genetic Resource Inventory Network (GRIN) as well as maintaining the seeds in environments that support preservation.
 
  - fill this out to capture aims
-
- - continue to add content to this as I learn more; ask Colin, Stephanie, and others to add to this background
  
+This article provides an overview of the diversity of plants collected by the SOS program. It then examines the conservation of this diversity within the USDA Agricultural Research Service National Plant Germplasm System (NPGS) and the distribution of samples from the NPGS to researchers. Particular focus is given to crop wild relatives which are useful as genetic resources for the improvement of cultivated plants, and other species which have been used as sources of food, medicine, forage, and other purposes. 
+
+
+# Methods
+
+- data acquisition
+  - SOS BLM: Information regarding the SOS collection was provided as a csv file by the Seeds of Success Program National Collection Curator in June of 2018. This dataset is continually updated as more field collecting occurs. All data from the years 2017 and earlier is assumed to be correct and complete. The data collected by the SOS program contains a rich set of specific information regarding the plant from which seed is collected as well as the geographic provenance and habitat that the plant was collected from. This dataset is made available by request only and can only be used with the express permission of the BLM SOS program. 
+  
+  - GRIN Global : The NPGS's Germplasm Resource Information Network(GRIN-Global) provides public access to informationa regardin accessions maintained by the System. The data is publicly available online. GRIN Global data for all SOS accessions were retrieved from the database by selecting all accessions that have an action_name_code of "SOS" and stored as csvs.
+  - USDA ARS Pullman office: Before assessing the datasets a meeting of individuals involved with the management of the SOS accession was held to identify the primary questions, define the process of transferring the accessions between the agencies, and understand the processing and management of the collections once they enter the NPGS. 
+  **should we reference some of the individuals from pullman here**
+
+- data processing
+  - rmarkdown : The datasets were processed, joined, and queried using the statistical programming language R. Specific libraries that were used include: plyr, tidyr, dplyr, and ggplot2.  The report is compiled as an RMarkdown document to help with the reproducibility of the content as the relationship between the two organizations continues to develop. 
+  **will this stay an in house document or will it be make public.**
+
+
+# Results
+
+The results are split into sections based on the primary questions we attempted to answer. We should probably highlight the questions earily in the document but for now ther are listed here.
+
+1.  How diverse is the SOS collection? 
+2.  How many of the SOS accessions can be identified as crop wild realtives (CWR), wild utilized species (WUS), and/or economically valuable plants (i.e. listed in GRIN World Economic Plants)?
+3.  What is the level of representation of SOS collections within the NPGS? 
+4.  Where are SOS accessions curated within the NPGS? 
+5.  What is the state of SOS collections in NPGS with regard to viability? 
+6.  Who requests SOS accessions from NPGS and for what purposes? 
+
+
 
 
 
@@ -91,38 +120,15 @@ ggplot(sosData, aes(COLL_YR))+
   theme_minimal()
 
 ```
+<br>
+<br>
 
 
-SOS accessions have information about the species collected, the region it was collected from, the land management agency where that collection occurred, and positional data in the form of latitude, longitude, and elevation. This data provides information about the seeds collected but does not tell us anything about what happened to the seeds after the collection occurs. The article is meant to create those connections and tell the full story of how these seeds are providing services to the landscape and understanding of the species.
-This will be done by accessing how many of these collections represent economically useful and/or crop wild relatives at both the national and international scale. The relationship between the SOS collections and the ARS collections will be examined to determine how many collections are in long term storage and who is using the seeds outside of the ARS and for what purpose. Understanding these relationship will highlight the successes, challenges, and future means of development between the SOS and ARS programs 
+The figure above illustrates the number of accessions collected by the SOS program over time. At this point in time the 2018 sample have not been added to the SOS databased and therefore are not represented on this figure. 
 
-- this can be added to. It's the first time we talk about CWR and there need more of an introductions Specific the two datasets used
-
-- background on both the organizations needs to be added based on the final audience 
-
-# Methods
-
-- data acquisition
-  - SOS BLM: Information regarding the SOS collection was provide as a csv file by the Seeds of Success Program National Collection Curator in June of 2018. This dataset is updated as more field collecting occurs. All data from the years 2017 and earlier is assumed to be correct and complete. The data collected by the SOS program contains a rich set of specific information regarding the plant from which seed is collected as well as the geography region and ecosystem that the plant was found with. **Is the blm data a public dataset? How can people access this data**
-  - GRIN GLOBAL : The USDA's National Plant Germplasm System has utilized the Germplasm Resource Information Network(GRIN) to provide public  access to informing regarding the accession maintained by the USDA. The data is public available through the desktop software program, [GRIN-Global](https://www.grin-global.org/). This data can also be accessed through a web site hosted by Crop Trust, Biodiversity International, and the USDA that allows for the querying of the GRIN-global database. The website can be found [here](https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomysearch.aspx) All datasets containing information from on the USDA accession were retrieved from the GRIN global databased and stored as csvs.
-  - Pullman office: Before assessing the datasets a meeting of individuals involved with the management of the SOS accession was held to identify the primary questions, define the process of transferring the collections between the agencies, and understand the processing and management of the collections once they enter the USDA long term storage system. **should we reference some of the individuals from pullman here**
-
-- data processing
-  - rmarkdown : The datasets were processed, joined, and query using the statistically programming language R. Specific libraries that were use include: plyr, tidyr, dplyr, and ggplot2.  The report is compiled as an RMarkdown document to help with the reproducibility of the content as the relationship between the two organizations continues to develop. **will this stay an in house document or will it be make public.**
-
-
-# Results
-
-The results are split into sections based on the primary questions we attempted to answer. We should probably highlight the questions earily in the document but for now ther are listed here. 
-1.  How diverse is the SOS collection 
-2.  How many of the SOS accessions are considered CWR, WUS, or WEP
-3.  How many of the SOS accessions are mainted on ARS systes (GRIN and backed up at NLGRP) how does this effect the diversity and usefullness of the collection. 
-4.  Within the ARS which locations are resposible for the SOS accessions 
-5.  How successful is the ARS in germinating the seeds provides by the SOS program 
-6.  Who is using the SOS accessions and what for 
 
 ## Diversity
-The SOS program collects a diverse
+
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #Determine the total number of unique families collect and the number of collection in each family
 uniqueFam <- dplyr::summarise(sosData,n_distinct(sosData$FAMILY))
@@ -136,6 +142,7 @@ uniqueGen1 <- dplyr::count(sosData, GENUS)
 uniqueSpe <-  dplyr::summarise(sosData,n_distinct(sosData$SPECIES))
 uniqueSpe1 <- dplyr::count(sosData, SPECIES)
 
+## Determine the total number of unique Taxa collect and the number of collection in each Taxa
 uniqueTaxa <- summarise(sosData,n_distinct(sosData$NAME))
 uniqueTaxa1 <- dplyr::count(sosData, NAME)
 
@@ -160,14 +167,26 @@ sosSummary
 
 
 
-This Seeds of Success program has collected a total of `r totalSamples` seed samples. Of which `r uniqueFam[1,]` plant families
-`r uniqueGen[1,]`  plant genus and `r uniqueSpe[1,]` unique sub species are represented.
+This Seeds of Success program since its inception has collected a total of `r totalSamples` accessions. These are comprised of `r uniqueTaxa[1,]` unique taxa from `r uniqueGen[1,]` genera from `r uniqueFam[1,]` plant families.
 
 - this are interesting numbers but some knowledge on how they relate to the total number of species present in the country might make the factoids stand out some more
+**CK- I agree. make summary stats for national level. Check out Flora of North America as a source.**
+
+The [Flora of North America Association](http://floranorthamerica.org/Outreach/science_outreach) provides a published reference source that provides a comrehesive and systematic account of the plant species in North American North of Mexico. 
+
+> Species descriptions are written and reviewed by experts from the systematic botanical community worldwide, based on original observations of living and herbarium specimens supplemented by a crucial review of the literature. Each treatment includes scientific and common names, taxonomic descriptions, identification keys, distribution maps, illustrations, summaries of habitat and geographic ranges, pertinent synonomy, chromosome numbers, phenology, ethnobotanical uses and toxicity, and other relevant biological information.
+[FNA Introduction](http://floranorthamerica.org/introduction)
+
+As of 2018, The FNA over has idenitified over 20,100 plant species that are native or naturalizes to North America north of Mexico, this includes both vascular and bryophytes. These species fall into 268 unique familes. This implies that the SOS program has collect seed from `r signif(100* (uniqueFam[1,] / 268),3)` percent of all unique familes and  approximately `r signif(100* (uniqueSpe[1,] / 20100),3) ` of all plant species native to the US and Canada.  
+
+*right now I'm using the value for the species that does not account for subspecices or var. This can be changed based on the answer to the question below. * 
+
+**it is not clear if the plant species count is based on Unique species or unique taxa. That is are sub species and varieties included?? Hoping that some one with a familiarity with this site would know**
 
 
+An accession is a sample of seeds from a single sampling location and in a single point in time. Collecting is performed, as possible, with the aim of harvesting enough seeds for short term storage, long term preservation, and for distribution. 
 
-An accession is a collection of seeds from a single sampling location. There are enough seeds in each accession to split the collection for short term storage, long term preservation, and distribution. Out of the `r uniqueFam[1,]` families collected half of the total accessions collected come from just 5 families. The commonality and number of species represented by the top 5 collected families may explain this observed relationship.
+Out of the `r uniqueFam[1,]` families collected half of the total accessions collected come from just 5 families. These are among the most widespread and diverse plant families in the USA. 
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, caption="Number of Collections per Family from the SOS program.", rows.print=10}
 families <- dplyr::arrange(uniqueFam1, desc(n))
@@ -175,24 +194,35 @@ colnames(families) <- c("Family", "Total Number of Accessions")
 families
 
 ```
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, caption="Number of Collections per Family from the SOS program.", rows.print=10}
+genera1 <- dplyr::arrange(uniqueGen1, desc(n))
+colnames(families) <- c("Genera", "Total Number of Accessions")
+genera1
+
+```
+
+This table shows the number of accession assocatied with the genera of all samples within the SOS data .
 
 
-
-## Crop wild relatives and other economic plants
-
-The importance of this collection is increased by the fact that many of the seed taxa that were collected by the SOS program are defined as either Crop Wild Relatives or World Economic Plants. Crop Wild Relatives (CWR) are the genetic predecessors of modern crops and are found throughout the diverse ecological and bio physiological environments of the world. The variability in growing conditions and potential geographic isolation between stands has shown that CWRs contain a higher level of genetic diversity (*reference this*) . The subsequent traits found within CWR are used to add to the resistance, quality, and breeding efficiency of modern crops (*reference this*).
-
-- add a bit about the various economic use categories define by GRIN
-
-- talk about the WEP data set; how it was developed and why we are using it
-*get reference for the WEP dataset received from Daniel*.
-
-- expand upon the k13 data source a bit to explain why we are using it.
-
-- add genus by accession - CWR WUS WEP top 20 or 50 chart/table
+- It would be good to know how collections are prioritized (for collecting) by SOS. Are they looking for certain species or its is rather random? 
+**DC I agree, this is probably best answered by a BLM representative** 
 
 
-This study is using dataset complied by  Khoury et al 2013 and Wiersema and Leon 20?? to identify species that are considered CWR, WUS, or WEP. These dataset will be joined to the SOS dataset based on taxa name to identify how many of the SOS accession are considered CWR, WUS, and or WEP. The chart below is defining the primary acronyms that are used in the remainder of this document
+## Crop wild relatives, wild utilized species, and economic plants
+
+- add some background on value of CWR **dc- todo**
+
+A recent inventory of U.S. crop wild relatives (Khoury et al. 2013) recognized 2500 taxa from 160 genera and 56 plant families. Of these, around 300 native species were prioritized as potentially highly useful relatives of important food crops. These include the wild cousins of crops that were domesticated by indigenous peoples in the United States, such as sunflower and squash, as well as more recent domesticates, such as blueberry, cranberry, raspberry, blackberry, and pecan. Other priority species include the northernmost relatives of Mesoamerican crops such as corn, bean, chili pepper, and cotton, as well as relatives of temperate crops first domesticated in Europe and Asia, such as onion, grape, apple, hops and walnut. If properly collected, conserved, and made accessible to crop scientists, these crop wild relatives will constitute an extremely diverse portfolio supporting present and future crop improvement efforts. 
+
+- expand upon the k13 data source a bit to explain why we are using it. **dc- todo**
+
+- add a bit about the various economic use categories defined by GRIN WEP and how the db was developed. Reference: Wiersema, J., León, B., 2013. World Economic Plants: A Standard Reference, Second ed. CRC Press. Taylor & Francis Group. Interactive database available online at chttps://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomysearcheco.aspx **dc- todo**
+
+
+- add genus by accession - CWR WUS WEP top 20 or 50 chart/table **dc- todo** 
+
+
+This study is using dataset complied by Khoury et al 2013 and Wiersema and Leon 2013 to identify species that are considered crop wild relatives (CWR) and/or wild utilized species (WUS) (Khoury et al. 2013), or economic plants (WEP). The chart below is defining the primary acronyms that are used in the remainder of this document
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #aycromn referecne dataframe
@@ -201,7 +231,7 @@ This study is using dataset complied by  Khoury et al 2013 and Wiersema and Leon
 # create the first column of the dataframe
 abbrevNames <- c("SOS", "GRIN", "NLGRP", "WUS", "K13", "CWR", "WEP")
 #create the meaning of acronym
-nameMeaninng <- c("Seeds of Success", "Germplasm Resource Information Network", "National Laboratory Genetic Resource Presevation", "Wild Utilize Species", "Khoury et al 2013", "Crop Wild Relative", "World Economic Plants")
+nameMeaninng <- c("Seeds of Success", "Germplasm Resource Information Network", "National Laboratory Genetic Resource Presevation", "Wild Utilized Species", "Khoury et al 2013", "Crop Wild Relative", "Economic Plant")
 
 #define column names and row names
 acronymDF <-data_frame("Acronym" = abbrevNames, "Meaning" = nameMeaninng)
@@ -213,7 +243,6 @@ acronymDF
 
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
-
 ###
 # Create a summary chart showing the total number of accession, total taxa, # of CWR NA, # eco NA, # of economic WEP
 # this may be added to also include the data about what's managed by the usda and what's at the NLGRP
@@ -257,7 +286,6 @@ wepData1 <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\EconomicUseCategorie
 #Unique Join for species in the USA 
 ### the WEP data has repeats of features if they have more then 1 economic use. I'm joining again here so the taxa are only represented once.
 WEPData <-left_join(wepLocal,wepData1, by="Taxon")
-names(WEPData)
 
 # join with sos data 
 combinedData2a <- inner_join(sosData, WEPData, by='Taxon', type='left', match='all') %>%
@@ -280,10 +308,9 @@ genusWEP <- endDf[[3,4]]
 genusWUS <- endDf[[2,4]]
 genusCWR <- endDf[[1,4]]
 
-
 ```
 
-The table below illustrates the diversity of genus and taxa represented with the various datasets. The SOS and K13 data sets reference plants found in **North America or US** the World Economic Plants is a world wide data set and hence has significantly more diversity. In the case of preservation it is important to understand the total diversity represented as well as the sample size of that diversity.
+The table below illustrates the total number of genera and taxa listed in the datasets. The SOS, K13, and WEP data sets reference plants found in the USA.
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 
@@ -299,18 +326,6 @@ cwrSamples <-K13Data %>% filter(Type=="CWR")
 # create K13 WEP/CWR
 K13wus <- c( n_distinct(wusSamples$Genus), n_distinct(wusSamples$Taxon))
 K13cwr <- c( n_distinct(cwrSamples$Genus), n_distinct(cwrSamples$Taxon))
-
-### Just testing to relationship between
-# cwrSamples %>%
-#   group_by(Genus) %>%
-#   dplyr::summarise(count = n()) %>%
-#   arrange(desc(count))
-#
-# wusSamples %>%
-#   group_by(Genus) %>%
-#   dplyr::summarise(count = n()) %>%
-#   arrange(desc(count))
-#
 
 ## create same for world Economic plants takes some more work
 # remove duplicates and separate based on full name into genus and species
@@ -329,19 +344,18 @@ WEP <- c( as.numeric(n_distinct(WEPgs$GENUS)), as.numeric(n_distinct(WEPData$Tax
 
 
 #bind the two df together
-dataSummary <- rbind(allDataSummary, sosDataTotals, K13wus, K13cwr, WEP)
+dataSummary <- rbind(allDataSummary, sosDataTotals, K13cwr, K13wus, WEP)
 
 #define column names and row names
-colnames(dataSummary) <- c(  "Total Number of Genus", "Total Number of Species")
-rownames(dataSummary) <- c("SOS", "WUS in K13", "CWR in K13", "WEP")
+colnames(dataSummary) <- c(  "Total Number of Genera", "Total Number of Species")
+rownames(dataSummary) <- c("SOS", "CWR in K13", "WUS in K13",  "WEP")
 dataSummary
 ## I dont think I want to lose the row data by arranging it
 #arrange(dataSummary, dataSummary$`Total Number of Genus`)
 
-
 ```
 
-We can test that by observing what proportion of the accessions collected by SOS are classified are a Wild Utilized Species, Crop Wild Relative, or a World Economic Plant. The chart below shows the number of species that are found within the K13 and WEP databased and were collected by the SOS program as well as the proportion of the total SOS accessions. The high number of taxa collected and the low proportion of the accession imply that the SOS program is collection many of the WUS, CWR, and WEP species in low number of accessions.
+The following table displays the number and proportion of SOS accessions that could be classified by Khoury et al. 2013 as CWR and/or WUS, or by Wiersema and Leon 2013 as a WEP.**CK - list CWR then WUS then WEP, always in that order. Also I think this table would be better horizontal rather than vertical**
 
 
 ```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE , caption="Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.", rows.print=15}
@@ -349,17 +363,17 @@ We can test that by observing what proportion of the accessions collected by SOS
 sosSummary2 <- data.frame()
 
 # create the first row of the dataframe
-sosCollection <- c(totalSamples, sosTotalUnique,  uniqueWUS, percentWUS, uniqueCWR, percentCWR, uniqueWEP, percentWEP)
-sosCollection
+sosCollection <- c(totalSamples, sosTotalUnique, uniqueWUS, percentWUS, uniqueCWR, percentCWR, uniqueWEP, percentWEP)
+
 #bind the two df together
 sosSummary2 <- rbind(sosSummary2, sosCollection)
 
 #define column names and row names
 rownames(sosSummary2) <- c("SOS Collection")
-colnames(sosSummary2) <- c('Total Accessions', "Total Number Taxa", "Taxa that are WUS per K13", "Percent of SOS Accessions that are WUS per K13", "Taxa that are CWR per K13", "Percent of SOS Accessions that are CWR per K13", "Taxa that are WEP" , "Percentage of SOS Accessions that are WEP")
+colnames(sosSummary2) <- c('Total Accessions', "Total Number of Taxa", "Taxa that are WUS per K13", "Percent of SOS Accessions that are WUS per K13", "Taxa that are CWR per K13", "Percent of SOS Accessions that are CWR per K13", "Taxa that are WEP" , "Percentage of SOS Accessions that are WEP")
 
 sosSummary2t <- t(sosSummary2)
-sosSummary2t
+
 ### look up column that the unique number of taxa is being called on should be full name
 ### get the reference paper for WEP
 
@@ -368,13 +382,13 @@ genusWUS <- endDf[[2,4]]
 genusCWR <- endDf[[1,4]]
 
 # create the first row of the dataframe
-sosCollection <- data.frame(totalSamples, sosTotalUnique, uniqueWUS, percentWUS, genusWUS, uniqueCWR, percentCWR, genusCWR, uniqueWEP, percentWEP, genusWEP)
+sosCollection <- data.frame(totalSamples, sosTotalUnique,  uniqueCWR, percentCWR, genusCWR, uniqueWUS, percentWUS, genusWUS, uniqueWEP, percentWEP, genusWEP)
 #bind the two df together
 sosSummary2 <- t(sosCollection)
 
 #define column names and row names
 colnames(sosSummary2) <- c("SOS Collection")
-labels<- t(data.frame('Total Accessions', "Total Number Taxa", "Taxa that are WUS per K13", "Percent of SOS Accessions that are WUS per K13", "Genus that are WUS per K13", "Taxa that are CWR per K13", "Percent of SOS Accessions that are CWR per K13", "Genus that are CWR per K13","Taxa that are WEP" , "Percentage of SOS Accessions that are WEP", "Genus that are WEP"))
+labels<- t(data.frame('Total Accessions', "Total Number of Taxa",  "Taxa that are CWR per K13", "Percent of SOS Accessions that are CWR per K13", "Genera that are CWR per K13", "Taxa that are WUS per K13", "Percent of SOS Accessions that are WUS per K13", "Genera that are WUS per K13","Taxa that are WEP" , "Percentage of SOS Accessions that are WEP", "Genera that are WEP"))
 
 sosSummary2t <- bind_cols(tbl_df(labels), tbl_df(sosSummary2)) %>%
   dplyr::rename( label = "V1" )
@@ -393,11 +407,17 @@ sosSummary2t
 
 ## Conservation
 
-The Seeds of Success program provides the boots on the ground effort in the collection of seed resources. The program partners with the Agricultural Research Service of the USDA to store, maintain, and distribute the seeds collected. The Pullman, Washington section of the ARS is the group responsible for the initial on boarding and entering of the seeds into the Genetic Resource Inventory Network (GRIN) as well as maintaining the seeds in environments that support preservation.
-Just as was shown above the table below shows the relationship between the SOS accession that have made it into the GRIN global database and the WUS,CWR, and WEP species. Not all SOS accession make it into the ARS and GRIN systems as a result the total taxa and percent of SOS accession that are representative of a useful plant.
+The following table displays the diversity of SOS accessions that are currently maintained within the NPGS.
 
 
 ### Accessions Stored Within the ARS System
+
+
+The difference in the total number of accessions collected by SOS and the number of accessions recorded in GRIN is significant. Part of this can be explained by a potential backlog of samples within the ARS and a lag in delivery time between collection and distribution. It generally takes a year from when the seeds are collect to when they are received by the ARS. There is a lagtime between collecting seed and entrance into the system due to the work of processing seed and associated data. Not all SOS accesions make it into the NPGS (why? insufficient seed?)
+
+
+This graph illustrates the date that an accession was collected by the SOS program, when it was sent to ARS, and when it was backed up at NSSL. There is generally a lag time between the collection period and when ARS receives the accessions. The bar graph does show both the actual collection time and the time at which the accessions made it to the ARS. The lag effect can be seen with between the SOS(green) and ARS received (grey) in 2018. No new SOS accessions have been added but the ARS is still receiving accessions that were collected in previous years. A similar relationship can be seen between the receiving of Accessions at the ARS and the backing up of those accessions at the NLGRP (blue). While many samples were received in 2017 none of them have made it into long term back up at this point.
+
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE , caption="Summary of SOS and GRIN Relative to CWR and WEP", rows.print=15}
 # read in GRIN Accessions
 grinData <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\sosAllAccessions.csv")) %>%
@@ -417,8 +437,8 @@ typeSum <- combinedData3 %>%
   group_by(Type) %>%
   dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3), uniqueGenus = n_distinct(genus))
 
-#complete the process again for Wp Taxa
-combinedData3a <- inner_join(grinData, new1, by='Taxon', type='left', match='all') %>%
+#complete the process again for WEP Taxa
+combinedData3a <- inner_join(grinData, WEPData, by='Taxon', type='left', match='all') %>%
   filter(!is.na(economic_usage_code))%>%
   dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3), uniqueGenus = n_distinct(genus)) %>%
   mutate(Type = "WEP")
@@ -447,27 +467,22 @@ grinCollection <- c(totalSamplesGRIN, totalTaxon, uniqueWUS1, percentWUS1, genus
 #bind the two df together
 sosSummary3 <- bind_cols(sosSummary2t, tbl_df(grinCollection)) %>%
   dplyr::rename('SOS in GRIN Global' = value)
-
-sosSummary3
+# decided against showing this table
+# sosSummary3
 ```
 
-The difference in the total number of accessions collected by SOS and the number of accessions recorded in  GRIN is significant. Part of this can be explained by a potential backlog of samples within the ARS and a lag in delivery time between collection and distribution. It generally takes a year from when the seeds are collect to when they are received by the ARS.
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE}
-names(sosData)
+sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
+
 # filter based on year collected and get a count on the number of unique accessions
 sosPre2017 <- sosData %>%
-  filter(COLL_YR < 2017)%>%
+  filter(COLL_YR < 2017) %>%
   nrow()
 
 percentAtARS = signif(100*(totalSamplesGRIN/sosPre2017),4)
 
 ```
-
-For example, a total of `r sosPre2017` accessions were brought into the SOS collection before 2017. The ARS is still processing SOS data from 2017. Therefore, `r percentAtARS` percent of the samples collected by SOS have been brought into the ARS and GRIN Global system.
-
-This graph illustrates the date that a accession was collected by the SOS program, when it was sent to ARS, and when it was backed up at NSSL. There is generally a lag time between the collection period and when ARS receives the accessions. The bar graph does show both the actually collection time and the time at which the accessions made it to the ARS. The lag effect can be seen with between the SOS(green) and ARS received (grey) in 2018. No new SOS accessions have been added but the ARS is still receiving accessions that were collected in previous years. A similar relationship can be seen between the receiving of Accessions at the ARS and the backing up of those accessions at the NLGRP (blue). While many samples were received in 2017 non of them have made it into long term back up at this point.
-
 
 
 ```{r ,message=FALSE, warning=FALSE, echo=FALSE, caption="The grey histogram shows the total number of accessions collected by SOS. The green histograms shows what proportions of the collection has not made it into the ARS system."}
@@ -525,68 +540,7 @@ This graph illustrates the date that a accession was collected by the SOS progra
 
 ### Accession Maintained at NLGRP for Long Term Backup
 
-Once within the ARS system the quality of the seed collections are accessed and samples that are deemed beneficial to preserve over an extended period of time are transfer to the National Laboratory for Genetic Resource Preservation in Fort Collins, Colorado. The NLRGP specializes in the long term storage of genetic resources. If a set of seeds is stored at NLGRP it can be assured that it is protect and preserved to the highest standard. The coordinating efforts to bring seeds into the long term storage is essential to the longevity of the genetic material store within the seeds.
-
-```{r , echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
-#filter based on the "is backuped" column.
-backedUp <- dplyr::filter(grinData, Is.Backed.Up. == 'Y' )
-totaledBackedUp <-nrow(backedUp)
-
-#filter based on the backup location being NLGRP
-nlgrpData <- filter(backedUp, Backup.Location.1 == 'NSSL' )
-totalBackedUp <- nrow(nlgrpData)
-
-## Example of the backed up features that are missing a backup location????
-#### does this mean an error in data entry, can we assume
-#MissingBackup <- (backedUp$Backup.Location.1 )
-
-
-#define the total number of species present in backup
-totalTaxonNLGRP <- n_distinct(nlgrpData$Taxon)
-
-# join the the GRIN data with the K13 Dataset
-combinedData4 <- left_join(nlgrpData, K13Data, by='Taxon', type='left', match='all') %>%
-  filter(!is.na(Taxon_w_author))
-
-#group by WEP and CWR and derive number of taxon and percent of sos that are those taxa
-typeSum4 <- combinedData4 %>%
-  group_by(Type) %>%
-  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3),uniqueGenus = n_distinct(genus))
-
-#complete the process again for Wp Taxa
-combinedData4a <- inner_join(nlgrpData, new1, by='Taxon', type='left', match='all') %>%
-  filter(!is.na(economic_usage_code)) %>%
-  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3),uniqueGenus = n_distinct(genus)) %>%
-  mutate(Type = "WEP")
-
-#generate a new df with all the values
-endDf2 <- bind_rows(typeSum4, combinedData4a)
-
-#calculate total number of species from each dataset
-uniqueWEP2 <- endDf2[[3,2]]
-uniqueWUS2 <- endDf2[[2,2]]
-uniqueCWR2 <- endDf2[[1,2]]
-#percent of sos in this class per dataset
-percentWEP2 <- endDf2[[3,3]]
-percentWUS2 <- endDf2[[2,3]]
-percentCWR2 <- endDf2[[1,3]]
-#total number of genus per dataset
-genusWEP2 <- endDf2[[3,4]]
-genusWUS2 <- endDf2[[2,4]]
-genusCWR2 <- endDf2[[1,4]]
-
-# create the first row of the dataframe
-nlgrpCollection <- c(totalBackedUp, totalTaxonNLGRP, uniqueWUS2, percentWUS2, genusWUS2, uniqueCWR2, percentCWR2, genusCWR2, uniqueWEP2, percentWEP2, genusWEP2)
-
-#bind the two df together
-sosSummary4 <- bind_cols(sosSummary3, tbl_df(nlgrpCollection)) %>%
-  dplyr::rename('SOS in NLGRP' = value)
-sosSummary4
-#define column names and row names
-
-```
-
-The line graph below shows the the number of accessions maintained by the SOS, GRIN, and ARS over time.
+Once within the NPGS, the quality of the seed collections are accessed and samples are transfered to the National Laboratory for Genetic Resource Preservation (NLGRP) in Fort Collins, Colorado for long term preservation in optimal conditions. The line graph below shows the the number of accessions maintained by the SOS, GRIN, and ARS over time. 
 
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE}
@@ -650,13 +604,74 @@ trend
 
 ```
 
-This illustrates that the rate of accumulation between the three groups flucuates a bit over time. The drop in number of samples incorperate into GRIN and NLGRP in the more resent years is due to the 
+This illustrates that the rate of accumulation between the three groups flucuates a bit over time. The drop in number of samples incorporated into GRIN and NLGRP in the more resent years is due in part to the time lag between data collecting, seed processing, and storage.
+
+```{r , echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
+#filter based on the "is backuped" column.
+backedUp <- dplyr::filter(grinData, Is.Backed.Up. == 'Y' )
+totaledBackedUp <-nrow(backedUp)
+
+#filter based on the backup location being NLGRP
+nlgrpData <- filter(backedUp, Backup.Location.1 == 'NSSL' )
+totalBackedUp <- nrow(nlgrpData)
+
+## Example of the backed up features that are missing a backup location????
+#### does this mean an error in data entry, can we assume
+#MissingBackup <- (backedUp$Backup.Location.1 )
+
+
+#define the total number of species present in backup
+totalTaxonNLGRP <- n_distinct(nlgrpData$Taxon)
+
+# join the the GRIN data with the K13 Dataset
+combinedData4 <- left_join(nlgrpData, K13Data, by='Taxon', type='left', match='all') %>%
+  filter(!is.na(Taxon_w_author))
+
+#group by WEP and CWR and derive number of taxon and percent of sos that are those taxa
+typeSum4 <- combinedData4 %>%
+  group_by(Type) %>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3),uniqueGenus = n_distinct(genus))
+
+#complete the process again for Wp Taxa
+combinedData4a <- inner_join(nlgrpData, WEPData, by='Taxon', type='left', match='all') %>%
+  filter(!is.na(economic_usage_code)) %>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3),uniqueGenus = n_distinct(genus)) %>%
+  mutate(Type = "WEP")
+
+#generate a new df with all the values
+endDf2 <- bind_rows(typeSum4, combinedData4a)
+
+#calculate total number of species from each dataset
+uniqueWEP2 <- endDf2[[3,2]]
+uniqueWUS2 <- endDf2[[2,2]]
+uniqueCWR2 <- endDf2[[1,2]]
+#percent of sos in this class per dataset
+percentWEP2 <- endDf2[[3,3]]
+percentWUS2 <- endDf2[[2,3]]
+percentCWR2 <- endDf2[[1,3]]
+#total number of genus per dataset
+genusWEP2 <- endDf2[[3,4]]
+genusWUS2 <- endDf2[[2,4]]
+genusCWR2 <- endDf2[[1,4]]
+
+# create the first row of the dataframe
+nlgrpCollection <- c(totalBackedUp, totalTaxonNLGRP, uniqueWUS2, percentWUS2, genusWUS2, uniqueCWR2, percentCWR2, genusCWR2, uniqueWEP2, percentWEP2, genusWEP2)
+
+#bind the two df together
+sosSummary4 <- bind_cols(sosSummary3, tbl_df(nlgrpCollection)) %>%
+  dplyr::rename('SOS in NLGRP' = value)
+sosSummary4
+#define column names and row names
+
+```
 
 
 
-## Where are Accession Maintained
 
-The challenge of coordinating the preservation of these seeds is seen in part by how my samples become orphaned within the system. Orphaned seeds are those which do not fit into any of the existing collections. As a results seed curators need to assess how the seeds can best be integrated and is it worth incorporating that sample. While this decision making process is occurring the seeds are not being backed up and are not grown out to plants to replenish the existing seed population.
+
+## Where are SOS accessions Maintained in the NPGS?
+
+The challenge of coordinating the preservation of these seeds is seen in part by how my samples become orphaned within the system, lacking a curator specialized in the pertinent genus or species. Orphaned accesions are those which do not fit into any of the existing collections. Orphaned accessions continue to be held at Pullman (W6) but without a formal curator. Note the Pullman quantities in the table include both curator and non curated accessions. 
 
 ```{r}
 # call in sosAccessions: summaries by maintaince site or owned by ***check with Colin or Renee on this one***
@@ -684,12 +699,12 @@ sosOwner2 <- left_join(sosOwner, sosAccTaxa, by='Facility', type='left', match='
 
 sosOwner2
 ```
-The majority of the SOS collection is maintained by the ARS in Pullman, Washington (W6). This is where the native plant collection is based. Accession that are maintained at other locations are there due to the request of other curators. The are accession that are very unlikely to be orphaned. It is different to determine from data alone how many of the accession at W6 an being actively store but not regenerated.
+The majority of the SOS collection is maintained by the ARS in Pullman, Washington (W6). This is where the native plant collection is based. Accession that are maintained at other locations are there due to the request of other curators. The are accessions that are very unlikely to be orphaned. It is difficult to determine from data alone how many of the accession at W6 an being actively stored but not regenerated.
 
 
 ## Viability of SOS seeds
 
-Collection and storage are only part of the story. Germination and the ability to grow out the plant to collect new seeds is a large part of what the ARS supports. The troublesome fact about the SOS seeds is that these species have not often been collected and maintained in seed banks before the initiation of the SOS program. Often little is known about the conditions required to germinate the seeds.
+Collection and storage are only part of the story. Germination and the ability to grow out the plant to collect new seeds is a large part of what the nPGS does. Often little is known about the conditions required to germinate the seeds.
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 viability <- read.csv("H:\\SOS_Project\\analysisData\\generaAverageGermination.csv")
 viability <- tbl_df(viability)
@@ -697,7 +712,7 @@ uniqueGenus <- n_distinct(viability$Genus)
 percentGenus <- signif(100*(uniqueGenus/uniqueGen),4)
 ```
 
-An experiment was developed and performed by Annette Miller of NLGRP. Annette tested the viability of seeds to germinate for `r uniqueGenus` unique genus. This accounts for `r percentGenus[1,]` percent of all the genus collected by the SOS program. The data generated by this study illustrates what to expect when working with these plants in the future. The table below shows that percentage of seeds that were tested that were successfully geminated. The histogram groups those
+An experiment was developed and performed by Annette Miller at the NLGRP. Annette tested the viability of seeds to germinate for `r uniqueGenus` unique genera. This accounts for `r percentGenus[1,]` percent of all the genera collected by the SOS program. The data generated by this study illustrates what to expect when working with these plants in the future. The table below shows that percentage of seeds that were tested that were successfully geminated. The histogram groups those into viability categories.
 
 
 ```{r caption="Listing of Seed Viability by Genus", rows.print=10}
@@ -714,7 +729,7 @@ arrange(viability, desc(percentViable))
 hist(viability$percentViable,
   main="Seed Germination Viability",
   xlab="Proportion of Seeds that Germinated",
-  ylab="Number of Genus",
+  ylab="Number of Genera",
   col="light green",
   border="white",
   las=1, #defien the orientation of the label
@@ -723,9 +738,9 @@ hist(viability$percentViable,
 
 ```
 
-This distribution shows that the majority of the species collected by the SOS can be germinated given the current level of understanding. Species that had a very low germination success rate will require more research to understand what are the necessary conditions to promote successful germination. Until those methods are understood it may not be possible to maintain the population.
+This distribution shows that the majority of the species collected by the SOS can be germinated given the current level of understanding. Species that had a very low germination success rate will require more research to understand what are the necessary conditions to promote successful germination. Until those methods are understood it may not be possible to maintain the population indefinitely.
 
-## Distribution of SOS Materials
+## Distribution of SOS Materials from the NPGS
 
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, caption="Distribution of seeds over time", rows.print=15}
@@ -745,14 +760,29 @@ hist(as.numeric(date$year),
 
 
 
-The ARS systems stores and distributes the seeds that are collected by SOS. Seeds are distributed for a number of reasons including academic research studies and educational demonstrations. Many of the distributions take place within the ARS when seeds are sent to and from various seed labs. The distribution of seeds is end user driven and a result the volume of seeds transferred fluctuates over time.
+The NPGS stores and distributes to researchers accesions that collected by SOS. Seeds are distributed for a number of reasons including academic research studies and educational demonstrations. Many of the distributions take place within the ARS when seeds are sent to and from various seed labs (CK - ???). The distribution of seeds is end user driven and a result the volume of seeds transferred fluctuates over time.
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE ,rows.print=5}
-orderType <- count(activeOrders$Intended.Use)
-arrange(orderType, desc(freq)) %>% `colnames<-`(c("Reason for Distribution", "Individual Shipments"))
+
+cleanOrders <- activeOrders %>%
+  filter(nchar(as.character(Order.Request.ID)) == 6) %>%
+  filter(nchar(as.character(Owner.Site)) <= 4 ) %>%
+  filter(nchar(as.character(Owner.Site)) >=2)
+
+# filter to remove remaining erronous entires 
+countOrder <- plyr::count(cleanOrders$Intended.Use)%>%
+  filter(freq > 10 )
+# Define the undefined column type 
+
+countOrder[1,1] <- NA
+
+arrange(countOrder, desc(freq)) %>% `colnames<-`(c("Reason for Distribution", "Individual Shipments"))
 ```
 
-It is unclear if the reason for distribution column within the grin global accession request process is a fill in the blank or drop down. There is a lot of variablility within the supplied answers. **Should requestors be able to enter their own reason for a request** 
+It is unclear if the reason for distribution column within the grin global accession request process is a fill in the blank or drop down. There is a lot of variablility within the supplied answers.
+**Should requestors be able to enter their own reason for a request** 
+**DC most of that was sloppy data coming in, I did a bit of filtering to remove the request that are not standardized.** 
+
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #
@@ -767,17 +797,17 @@ speciesOr2 <- activeOrders %>%
 ggplot(speciesOr2, aes(x=year,  y=number, color = Intended.Use)) +
   geom_point(size=3)+
   labs(x="Year", y="Number of Orders",color = "Intended Use", title = 'Orders for Intended Use Over Time')+
-  scale_color_manual(labels = c("undefined","education","home gardening", "other", "research") , values=c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00"))
+  scale_color_manual(labels = c("NA","education","home gardening", "other", "research") , values=c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00"))
 
 ```
 
-If we take a look at the deliveries over time we can see there is some distinct variability over time. The undefined variable is present because before 2015 the reason for distribution was not recorded.
+If we take a look at the deliveries over time we can see there is some distinct variability over time. The NA variable is present because before 2015 the reason for distribution was not recorded.
 
 
-
+**Need to ask renee to reproduce this dataset, something is wrong. there are more genera present in the distribution data then there are in NLGRP holdings** 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #read in feature
-distribution <- read.csv("H:\\SOS_Project\\analysisData\\SOSOrdersTaxa.csv")
+distribution <- read.csv("H:\\SOS_Project\\analysisData\\SOSOrdersTaxa.csv") 
 
 #summarize by genus and sum the total number of packets sent per Genus
 genusSum <- distribution %>%
@@ -803,32 +833,54 @@ K13genus <- K13Data %>%
   summarise_()%>%
   inner_join(distribution,by="genus_name")
 
+
 numberGenus <- n_distinct(K13genus$genus_name)
 
 # calculated the total number of seeds sent
 totalWUSSet <- sum(K13genus$COUNT)
+
+
+#Repeat for WUS features 
+WEPgenus <- WEPData %>%
+  separate(Taxon, c("genus_name", "species","other1", "other2")) %>%
+  group_by(genus_name) %>%
+  summarise_()%>%
+  inner_join(distribution,by="genus_name")
+
+numberGenusWEP <- n_distinct(WEPgenus$genus_name)
+
+
+
+# calculated the total number of seeds sent
+totalWEPSet <- sum(WEPgenus$COUNT)
+
+
 
 #define the unique number of genus and seeds sent to enitity groups
 reciever <- distribution %>%
   group_by(title) %>%
   dplyr::summarise(numberOfGenus = n_distinct(genus_name), numberOfSeeds = sum(COUNT)) %>%
   arrange(desc(numberOfGenus))%>%
-  dplyr::rename("Entity Recieving Seeds" = 'title'  ,"Number Of Genus Distributed" = 'numberOfGenus', "Samples Distributed" = 'numberOfSeeds')
+  dplyr::rename("Entity Receiving Seeds" = 'title'  ,"Number Of Genera Distributed" = 'numberOfGenus', "Samples Distributed" = 'numberOfSeeds')
 
 reciever
 
 ```
 
-Table illustrating the total number of seeds sent per genus. There has been a total of `r totalSeedsSent` seeds and or packets distributed by the ARS that were collected by the SOS program.
-**At the same time I'm a little wary of this data count. why would someone order a single seed. 2/3 of all order are under 10 seeds. Does that make sense** 
+Table illustrating the total number of samples sent, including per unique genus. There has been a total of `r totalSeedsSent` seeds and or packets distributed by the ARS that were collected by the SOS program. There are many more sample devilered then orders made because a single order request could contain mutlple samples. 
+
+**CK- these numbers dont align with the figure above** 
+
+**DC - the difference in numbers is due to the fact that a single order can contain multiple samples. There have been 4,018 order that contianed 18,078 unique samples. **
+
 This will be a good question for the other individuals more familiar with the delivery process.
 
-There are a total of `r totalSeedsSent` seeds that have been distributed by the ARS. Of that `r totalWUSSet`, are considered to be either Wild Utilized Plants or Crop Wild Relatives. This is representing `r numberGenus` unique genus
+There are a total of `r totalSeedsSent` samples that have been distributed by the NPGS. Of that `r totalWUSSet`, are considered to be either CWR or WUS and `r totalWEPSet` are consider to be WEP. This is representing `r numberGenus`  and `r numberGenusWEP` unique genera respectively.
 
 
 
 
-This chart shows the number of times an order was place for a specific accession.
+This chart shows the number of times an order was placed for a specific accession.
 
 ```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 # call in data on the distribution of species
@@ -863,7 +915,7 @@ taxaSent1 %>% arrange(desc(count)) %>% `colnames<-`(c("Taxon", "Total Delivered"
 <br>
 <br>
 
-This chart shows the number of times a specific taxa was has been delivered. These deliveries could come from multiple accessions.
+This chart shows the number of times a specific taxon was has been delivered. These deliveries could include multiple accessions.
 
 ```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 # who is receiving deliveries
@@ -878,8 +930,8 @@ resquestor1 %>% arrange(desc(count)) %>% `colnames<-`(c("Taxon", "Total Taxon", 
 
 ```
 
-This graphic shows which location is receiving the greatest diversity of taxon. 
-**again the question of the base unit is hear. It would seem that a packet is the smallest unit counted but I do not know** 
+This graphic shows which usert is receiving the greatest diversity of taxa. 
+**again the question of the base unit is here. It would seem that a packet is the smallest unit counted but I do not know** 
 
 
 
