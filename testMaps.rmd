@@ -1,143 +1,36 @@
 ---
 title: "testMap"
 output: html_document
+bibliography: testBib.bib
 ---
 
 ```{r setup, include=FALSE}
 ```
 
-```{r}
-# install.packages('tmap')
-# install.packages('gdalUtils')
-# install.packages('ggmap')
-# library(ggmap)
-library(raster)
-library(sf)
-library(dplyr)
-sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
+# Reference
+@Nobody06
+<!-- ```{r} -->
+<!-- # install.packages('tmap') -->
+<!-- # install.packages('gdalUtils') -->
+<!-- # install.packages('ggmap') -->
+<!-- # library(ggmap) -->
+<!-- library(raster) -->
+<!-- library(sf) -->
+<!-- library(dplyr) -->
+<!-- sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv") -->
 
 
-datumCount <- sosData %>%
-  group_by(GPS_DATUM) %>%
-  summarise(count = n())
-  
-
-sosWGS <- sosData %>%
-  filter(GPS_DATUM=="WGS84") %>%
-  na.omit()
+<!-- datumCount <- sosData %>% -->
+<!--   group_by(GPS_DATUM) %>% -->
+<!--   summarise(count = n()) -->
 
 
-```
+<!-- sosWGS <- sosData %>% -->
+<!--   filter(GPS_DATUM=="WGS84") %>% -->
+<!--   na.omit() -->
 
 
-
-
-
-
-
-
-```{r}
-nrow(sosWGS)
-
-names(sosWGS)
-
-latLonWGS <- sosWGS %>% 
-  mutate(lon = as.numeric(as.character(sosWGS$LONGITUDE_DECIMAL)), 
-         lat = as.numeric(as.character(sosWGS$LATITUDE_DECIMAL))) %>%
-  filter(!is.na(lon)) %>%
-  filter(!is.na(lat))
-
-coords <- cbind(latLonWGS$lon, latLonWGS$lat)
-nrow(coords)
-
-points <- SpatialPointsDataFrame(data = latLonWGS,
-                        coords = cbind(latLonWGS$lon, latLonWGS$lat),
-                        proj4string = CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
-
-
-```
-
-
-```{r}
-
-library(gdalUtils)
-library(tmap)
-#install.packages('maps')
-library(maps)
-#install.packages('usmap')
-library(usmap)
-library(tmaptools)
-
-
-
-##this works 
-tmap_mode("view")
-qtm(shp=points)
-tm_shape(shp=points)+
-  tm_dots(shp=points)
-
-
-
-
-"H:\ne_110m_admin_1_states_provinces_lines\ne_110m_admin_1_states_provinces_lines.shp"
-
-
-shape <- read_shape("H:\\states\\ne_110m_admin_1_states_provinces.shp")
-shape
-shape <- as(shape, "Spatial")
-str(shape, max.level = 2)
-plot(shape)
-
-shape@name <- shape@data$name
-
-
-res <- over(points, shape)
-counts <- res %>% 
-  group_by(name) %>%
-  summarise(count = n())
-counts
-oo <- sp::merge(shape, count, by=name)
-
-str(shape2)
-class(shape2)
-plot(shape2)
-View(shape2)
-```
-
-states <- us_map(regions = "states")
-names(states)
-glimpse(states)
-coords1 <- states %>%
-  select(long, lat)
-names(coords)
-
-Polygon1 <- Polygons(srl=list(
-        Polygon(coords=coords1)
-      ), ID='state')
-str(Polygon1)
-
-
-SpatialPolygons(
-    Srl=list(
-      Polygons(srl=list(
-        Polygon(coords=coords1)
-      ), ID="state")
-    )
-  )
-
-plot(SpatialPolygons)
-
-
-spdf <- SpatialPolygonsDataFrame(
-  SpatialPolygons(
-    Srl=list(
-      Polygons(srl=list(
-        Polygon(coords=coords1)
-      ), ID="state")
-    )
-  ),
-  data= states
-)
+<!-- ``` -->
 
 
 
@@ -146,23 +39,133 @@ spdf <- SpatialPolygonsDataFrame(
 
 
 
-df <- data.frame(lon=c(119.4,119.4,119.4,119.5,119.5), 
-             lat=c(-5.192,-5.192,-5.187,-5.187,-5.191))
+<!-- ```{r} -->
+<!-- nrow(sosWGS) -->
 
-require(sp)
-spdf <- SpatialPolygonsDataFrame(
-  SpatialPolygons(
-    Srl=list(
-      Polygons(srl=list(
-        Polygon(coords=df)
-      ), ID=1)
-    )
-  ),
-  data=data.frame(a=1)
-)
+<!-- names(sosWGS) -->
 
-plot(spdf)   
+<!-- latLonWGS <- sosWGS %>%  -->
+<!--   mutate(lon = as.numeric(as.character(sosWGS$LONGITUDE_DECIMAL)),  -->
+<!--          lat = as.numeric(as.character(sosWGS$LATITUDE_DECIMAL))) %>% -->
+<!--   filter(!is.na(lon)) %>% -->
+<!--   filter(!is.na(lat)) -->
+
+<!-- coords <- cbind(latLonWGS$lon, latLonWGS$lat) -->
+<!-- nrow(coords) -->
+
+<!-- points <- SpatialPointsDataFrame(data = latLonWGS, -->
+<!--                         coords = cbind(latLonWGS$lon, latLonWGS$lat), -->
+<!--                         proj4string = CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")) -->
+
+
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+
+<!-- library(gdalUtils) -->
+<!-- library(tmap) -->
+<!-- #install.packages('maps') -->
+<!-- library(maps) -->
+<!-- #install.packages('usmap') -->
+<!-- library(usmap) -->
+<!-- library(tmaptools) -->
 
 
 
-```
+<!-- ##this works  -->
+<!-- tmap_mode("view") -->
+<!-- qtm(shp=points) -->
+<!-- tm_shape(shp=points)+ -->
+<!--   tm_dots(shp=points) -->
+
+
+
+
+<!-- "H:\ne_110m_admin_1_states_provinces_lines\ne_110m_admin_1_states_provinces_lines.shp" -->
+
+
+<!-- shape <- read_shape("H:\\states\\ne_110m_admin_1_states_provinces.shp") -->
+<!-- shape -->
+<!-- shape <- as(shape, "Spatial") -->
+<!-- str(shape, max.level = 2) -->
+<!-- plot(shape) -->
+
+<!-- shape@name <- shape@data$name -->
+
+
+<!-- res <- over(points, shape) -->
+<!-- counts <- res %>%  -->
+<!--   group_by(name) %>% -->
+<!--   summarise(count = n()) -->
+<!-- counts -->
+<!-- oo <- sp::merge(shape, count, by=name) -->
+
+<!-- str(shape2) -->
+<!-- class(shape2) -->
+<!-- plot(shape2) -->
+<!-- View(shape2) -->
+<!-- ``` -->
+
+<!-- states <- us_map(regions = "states") -->
+<!-- names(states) -->
+<!-- glimpse(states) -->
+<!-- coords1 <- states %>% -->
+<!--   select(long, lat) -->
+<!-- names(coords) -->
+
+<!-- Polygon1 <- Polygons(srl=list( -->
+<!--         Polygon(coords=coords1) -->
+<!--       ), ID='state') -->
+<!-- str(Polygon1) -->
+
+
+<!-- SpatialPolygons( -->
+<!--     Srl=list( -->
+<!--       Polygons(srl=list( -->
+<!--         Polygon(coords=coords1) -->
+<!--       ), ID="state") -->
+<!--     ) -->
+<!--   ) -->
+
+<!-- plot(SpatialPolygons) -->
+
+
+<!-- spdf <- SpatialPolygonsDataFrame( -->
+<!--   SpatialPolygons( -->
+<!--     Srl=list( -->
+<!--       Polygons(srl=list( -->
+<!--         Polygon(coords=coords1) -->
+<!--       ), ID="state") -->
+<!--     ) -->
+<!--   ), -->
+<!--   data= states -->
+<!-- ) -->
+
+
+
+
+
+
+
+
+<!-- df <- data.frame(lon=c(119.4,119.4,119.4,119.5,119.5),  -->
+<!--              lat=c(-5.192,-5.192,-5.187,-5.187,-5.191)) -->
+
+<!-- require(sp) -->
+<!-- spdf <- SpatialPolygonsDataFrame( -->
+<!--   SpatialPolygons( -->
+<!--     Srl=list( -->
+<!--       Polygons(srl=list( -->
+<!--         Polygon(coords=df) -->
+<!--       ), ID=1) -->
+<!--     ) -->
+<!--   ), -->
+<!--   data=data.frame(a=1) -->
+<!-- ) -->
+
+<!-- plot(spdf)    -->
+
+
+
+<!-- ``` -->
