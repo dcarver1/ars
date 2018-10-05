@@ -15,3 +15,37 @@ SOS orders:
 Confirm of SOS is collecting only BLM land or other lands? federal lands? 
 
 add a quick map of distribution of hellianthus HELIANTHUS annuus 
+
+## Lisa Burke: 2015 transistion order form  Taxonomy and curators 
+
+## Include text on most collected and most distrubted taxa  
+
+## add table by taxon similar to the CWR,WUS,WEP 
+
+## in K13 - priorety field -P1A how many of those were collected at the Taxon level 
+
+
+```{r}
+#install.packages("shiny")
+#install.packages("DT")
+library(DT)
+library(shiny)
+
+DT::datatable(iris)
+
+
+
+ui <- basicPage(
+  h2("The mtcars data"),
+  DT::dataTableOutput("mytable")
+)
+
+server <- function(input, output) {
+  output$mytable = DT::renderDataTable({
+    mtcars
+  })
+}
+  
+shinyApp(ui, server)
+
+```
