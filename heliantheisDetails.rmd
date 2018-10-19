@@ -1,0 +1,116 @@
+---
+title: "heliAnnusSpecifics"
+output: html_document
+---
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#import all necessary libraries
+if (!require('dplyr')) install.packages('dplyr')
+if (!require('ggplot2')) install.packages('ggplot2')
+if (!require('plyr')) install.packages('plyr')
+if (!require('tidyr')) install.packages('tidyr')
+if (!require('tm')) install.packages('tm')
+if (!require('SnowballC')) install.packages('SnowballC')
+if (!require('wordcloud')) install.packages('wordcloud')
+if (!require('DT')) install.packages('DT')
+if (!require('sp')) install.packages('sp')
+if (!require('tmap')) install.packages('tmap')
+if (!require('gdalUtils')) install.packages('gdalUtils')
+if (!require('raster')) install.packages('raster')
+
+
+library(raster)
+library(gdalUtils)
+library(tmap)
+library(rgdal)
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(plyr)
+library(tidyr)
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(DT)
+library(sp)
+#install.packages('devtools')
+#library(devtools)
+#install_version("rmarkdown",version=1.8)
+
+```
+
+
+
+
+Examing a specific specis more closely 
+HELIANTHUS annuus is a crop wild relative of the commercially farmed sunflower. 
+
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
+### exploration of detail account of a single species. Need a map here 
+sosFull <- read.csv("H:\\SOS_Project\\analysisData\\fullSOSreport_20180614.csv")
+
+heli <- sosFull %>%
+  filter(NAME == "Helianthus annuus")
+
+```
+
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
+
+### building frame work for a network analysis between geographic region and plant associations 
+heli2 <- heli %>%
+  dplyr::select(PHYTOREGION_FULL, ASSOCIATED_TAXA_FULL) %>%
+  separate(ASSOCIATED_TAXA_FULL, c("sp1","sp2","sp3","sp4","sp5","sp6","sp7","sp8","sp9","sp10","sp11","sp12","sp13","sp14","sp15","sp16"), sep=":") %>%
+  arrange(PHYTOREGION_FULL)
+
+DT::datatable(heli2)
+
+counts <- ddply(heli2, .(heli2$sp1, heli2$sp2), nrow)
+names(counts) <- c("y", "m", "Freq")
+counts
+###
+# 1. take a column of names 
+# 2. split names because on ":"
+# 3. for each row, select all names and add them to a list 
+# 4. generate frequency from list 
+# 5. generate word cloud from that frequency. 
+```
+
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
+### contect for building up a word cloud 
+
+#convert notes class to character
+heli$plantAssoc <- as.character(heli$ASSOCIATED_TAXA_FULL)
+
+# create a corpus??? , convert to lower case, Remove punctuation, convert to plain text and remove stopwords, preform stemming 
+text1 <- Corpus(VectorSource(heli$plantAssoc))%>%
+  tm_map(content_transformer(tolower)) %>%
+  tm_map(removeWords, stopwords('english')) %>%
+  tm_map( removeWords, c("will", "etc", "like", "see", "also"))%>%
+  tm_map(stemDocument) #this line is a touch one... It changes alot of the words and I had to manuel correct some I probably missed a few 
+
+
+heliFreq <- TermDocumentMatrix(text1)
+m1 <- as.matrix(heliFreq)
+v1 <- sort(rowSums(m1),decreasing=TRUE)
+d1 <- data.frame(word = names(v1),freq=v1)
+
+
+wordcloud(words = d1$word, freq = d1$freq, min.freq = 1,
+          max.words=150, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+
+```
+
+Building a map of point locations 
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
+xy <- heli %>% 
+  mutate(x=as.numeric(as.character(heli$LONGITUDE_DECIMAL)), 
+         y = as.numeric(as.character(heli$LATITUDE_DECIMAL)))%>%
+  dplyr::select(x,y)
+  
+
+spatialData <- sp::SpatialPointsDataFrame(coords = xy, data = heli , proj4string = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
+
+tmap_mode("view")
+qtm(shp=spatialData, fill="blue")
+```

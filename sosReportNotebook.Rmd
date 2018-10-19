@@ -19,6 +19,7 @@ output:
       smooth_scroll: no
 ---
 
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #import all necessary libraries
 if (!require('dplyr')) install.packages('dplyr')
@@ -63,11 +64,30 @@ Summarize the relationship between the BLM Seeds Of Success (SOS) program and th
 
 # Introduction
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
-#import SOS data
-sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
+base_path <- "C:/Users/Daniel.Carver/Documents/newH/SOS_Project"
 
+#import SOS data
+sosData <- read.csv(paste0(base_path, "/analysisData/SOSdata_20180614_forARS.csv")) 
 #Find the total number of recorded entries
 totalSamples <- nrow(sosData)
+
+
+##import K13 data
+K13Data <- read.csv(paste0(base_path, "/analysisData/CWR_US_inventory_2013_7_10.csv"))
+
+  
+#import WEP data
+wepData <- read.csv(paste0(base_path, "/analysisData/Distributions&NativityOfSpeciesWithEconomicUses.csv"))
+wepUse <- read.csv(paste0(base_path, "/analysisData/EconomicUseCategoriesOfSpecies.csv"))
+
+#import distribution data GRIN 
+allGrin <- read.csv(paste0(base_path, "/analysisData/sosAllAccessions.csv"))
+newOrders <- read.csv(paste0(base_path, "/analysisData/allSOSOrders20181015.csv"))
+
+
+#import germination data 
+viability <- read.csv(paste0(base_path, "/analysisData/generaAverageGermination.csv"))
+
 
 ```
 
@@ -77,8 +97,6 @@ The Seeds of Success (SOS) program was established in 2001 to facilitate the col
 
 The Seeds of Success program provides the boots on the ground effort in the collection of native seed, particularly for restoration. The program partners with the Agricultural Research Service of the USDA to store, maintain, and distribute the seeds collected. The Pullman, Washington section of the ARS is the group responsible for the initial on boarding and entering of the seeds into the Genetic Resource Inventory Network (GRIN) as well as maintaining the seeds in environments that support preservation.
 
- - fill this out to capture aims
-
 This article provides an overview of the diversity of plants collected by the SOS program. It then examines the conservation of this diversity within the USDA Agricultural Research Service National Plant Germplasm System (NPGS) and the distribution of samples from the NPGS to researchers. Particular focus is given to crop wild relatives which are useful as genetic resources for the improvement of cultivated plants, and other species which have been used as sources of food, medicine, forage, and other purposes.
 
 
@@ -86,19 +104,13 @@ This article provides an overview of the diversity of plants collected by the SO
 
 - data acquisition
   - SOS BLM: Information regarding the SOS collection was provided as a csv file by the Seeds of Success Program National Collection Curator in June of 2018. This dataset is continually updated as more field collecting occurs. All data from the years 2017 and earlier is assumed to be correct and complete. The data collected by the SOS program contains a rich set of specific information regarding the plant from which seed is collected as well as the geographic provenance and habitat that the plant was collected from. This dataset is made available by request only and can only be used with the express permission of the BLM SOS program.
-  **todo**
-  - add information about the K13
-  - add informaiton about WEP: slimmed to included plants found in the US
 
   - GRIN Global : The NPGS's Germplasm Resource Information Network(GRIN-Global) provides public access to informationa regardin accessions maintained by the System. The data is publicly available online. GRIN Global data for all SOS accessions were retrieved from the database by selecting all accessions that have an action_name_code of "SOS" and stored as csvs.
   - USDA ARS Pullman office: Before assessing the datasets a meeting of individuals involved with the management of the SOS accession was held to identify the primary questions, define the process of transferring the accessions between the agencies, and understand the processing and management of the collections once they enter the NPGS.
-  **should we reference some of the individuals from pullman here**
-
 
 
 - data processing
   - rmarkdown : The datasets were processed, joined, and queried using the statistical programming language R. Specific libraries that were used include: plyr, tidyr, dplyr, and ggplot2.  The report is compiled as an RMarkdown document to help with the reproducibility of the content as the relationship between the two organizations continues to develop.
-  **will this stay an in house document or will it be make public.**
 
 
 # Results
@@ -185,8 +197,7 @@ sosSummary
 
 This Seeds of Success program since its inception has collected a total of `r totalSamples` accessions. These are comprised of `r uniqueTaxa[1,]` unique taxa from `r uniqueGen[1,]` genera from `r uniqueFam[1,]` plant families.
 
-- this are interesting numbers but some knowledge on how they relate to the total number of species present in the country might make the factoids stand out some more
-**CK- I agree. make summary stats for national level. Check out Flora of North America as a source.**
+
 
 The [Flora of North America Association](http://floranorthamerica.org/Outreach/science_outreach) provides a published reference source that provides a comrehesive and systematic account of the plant species in North American North of Mexico.
 
@@ -194,11 +205,6 @@ The [Flora of North America Association](http://floranorthamerica.org/Outreach/s
 [FNA Introduction](http://floranorthamerica.org/introduction)
 
 As of 2018, The FNA over has idenitified over 20,100 plant species that are native or naturalizes to North America north of Mexico, this includes both vascular and bryophytes. These species fall into 268 unique familes. This implies that the SOS program has collect seed from `r signif(100* (uniqueFam[1,] / 268),3)` percent of all unique familes and  approximately `r signif(100* (uniqueSpe[1,] / 20100),3) ` of all plant species native to the US and Canada.  
-
-*right now I'm using the value for the species that does not account for subspecices or var. This can be changed based on the answer to the question below. *
-
-**it is not clear if the plant species count is based on Unique species or unique taxa. That is are sub species and varieties included?? Hoping that some one with a familiarity with this site would know**
-
 
 An accession is a sample of seeds from a single sampling location and in a single point in time. Collecting is performed, as possible, with the aim of harvesting enough seeds for short term storage, long term preservation, and for distribution.
 
@@ -223,14 +229,18 @@ DT::datatable(genera1)
 
 This table shows the number of accession assocatied with the genera of all samples within the SOS data .
 
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, caption="Number of Collections per Family from the SOS program.", rows.print=10}
+taxa1 <- dplyr::arrange(uniqueTaxa1, desc(n))
+colnames(taxa1) <- c("Taxa", "Total Number of Accessions")
+DT::datatable(taxa1)
 
-- It would be good to know how collections are prioritized (for collecting) by SOS. Are they looking for certain species or its is rather random?
-**DC I agree, this is probably best answered by a BLM representative**
+```
+
+
 
 
 ## Crop wild relatives, wild utilized species, and economic plants
 
-- add some background on value of CWR **dc- todo**
 
 Crop wild relatives are define in Maxted et al 2006 as
 
@@ -243,19 +253,12 @@ This defination is most commonly applied to species that support are food and ag
 
 A recent inventory of U.S. crop wild relatives (Khoury et al. 2013) recognized 2500 taxa from 160 genera and 56 plant families. Of these, around 300 native species were prioritized as potentially highly useful relatives of important food crops. These include the wild cousins of crops that were domesticated by indigenous peoples in the United States, such as sunflower and squash, as well as more recent domesticates, such as blueberry, cranberry, raspberry, blackberry, and pecan. Other priority species include the northernmost relatives of Mesoamerican crops such as corn, bean, chili pepper, and cotton, as well as relatives of temperate crops first domesticated in Europe and Asia, such as onion, grape, apple, hops and walnut. If properly collected, conserved, and made accessible to crop scientists, these crop wild relatives will constitute an extremely diverse portfolio supporting present and future crop improvement efforts.
 
-- expand upon the k13 data source a bit to explain why we are using it. **dc- todo**
+
 We utilized the K13 dataset because is was generated to be the "a primary step in the the process toward a national stategy for the conservation of CWRs". The data sets makes an important distinstion between CWR and Wild Utilized Species(WUS. CWR are considered to be species that can directly be used for crop breeding. WUS are define by those that can be used for food, forage, medicine, herb, ornamental, and/or environmental restoration purposes. This extra level of distinction provides an import distinction regarding the intented use of the species. This dataset also provides a priority ranking system while allows for the identificantion of which species could have the greatest potential of crop genetic research. These details make this an ideal dataset for the interpretation of the true effect the SOS collections are having on the preservation of genetic resources.   
 
-- add a bit about the various economic use categories defined by GRIN WEP and how the db was developed. Reference: Wiersema, J., Le�n, B., 2013. World Economic Plants: A Standard Reference, Second ed. CRC Press. Taylor & Francis Group. Interactive database available online at chttps://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomysearcheco.aspx **dc- todo**
 
 The World Econmic Plants dataset is derived from the second edition of World Economic Plants: A Standard Reference (Wiersema, J., Le�n, B., 2013.). This book is acts as a catalog of economic plants, maintaing a standard scientific names, common names, economic impacts, and geographic distribution. The book contains 312 families and 3,585 genera. Economic impacts are split into 16 primary classes and 113 subclasses. It is important to not that of the 16 primary classes 3 are mostly negitive in there ecomonic impacts. These economic classes have been incorperate by the [GRIN economic plant database](https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomysearcheco.aspx).
 
-
-
-- add genus by accession - CWR WUS WEP top 20 or 50 chart/table **dc- todo**
- + what does this look like
- + joined dataset, but not unique
- + arrange them, select name, just show name
 
 This study is using dataset complied by Khoury et al 2013 and Wiersema and Leon 2013 to identify species that are considered crop wild relatives (CWR) and/or wild utilized species (WUS) (Khoury et al. 2013), or economic plants (WEP). The chart below is defining the primary acronyms that are used in the remainder of this document
 
@@ -286,47 +289,43 @@ acronymDF
 # Replace the name column of the sos data so that the "ssp." notation is replaced with "subsp." as defined
 # by the grin Data base
 #import SOS data
-#sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
 # created a new column that has the same col name as the K13 data set. I will use the col to join on
 sosData$Taxon <- sosData$NAME
 
 #detemine the total number of taxon in dataset
 sosTotalUnique <- n_distinct(sosData$Taxon)
 
-# read in the K13 data
-K13Data <- read.csv("H:\\SOS_Project\\analysisData\\CWR_US_inventory_2013_7_10.csv")
 #detemine the total number of taxon in dataset
 K13TotalUnique <- K13Data %>% n_distinct("Taxon")
 
 # join the data sets and trim the data so that taxon that do not have values for the K13 specific data columns are dropped.
-trimCombinedData <- left_join(sosData, K13Data, by='Taxon', type='left', match='all')%>%
-  filter(!is.na(Taxon_w_author))
+trimCombinedData <- inner_join(sosData, K13Data, by='Taxon', type='left', match='all')
 
 typeSum <- trimCombinedData %>%
   group_by(Type) %>%
-  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3), uniqueGenus = n_distinct(GENUS))
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / sosTotalUnique),3), totalAccession = n())
 
 
 ### read in WEP location data and filter to united states
-wepLocal <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\Distributions&NativityOfSpeciesWithEconomicUses.csv")) %>%
+wepLocal <- wepData %>%
   filter(country_code == 'USA') %>%
   dplyr::rename(Taxon = name) %>%
   distinct(Taxon)
 
-
 ###
 # read in the WEP data and Rename the name column to match the newly created column from the SOS data
-wepData1 <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\EconomicUseCategoriesOfSpecies.csv")) %>%
+wepData1 <- wepUse %>%
   dplyr::rename(Taxon = name)
+
 
 #Unique Join for species in the USA
 ### the WEP data has repeats of features if they have more then 1 economic use. I'm joining again here so the taxa are only represented once.
-WEPData <-left_join(wepLocal,wepData1, by="Taxon")
+
+wepJoin <- inner_join(sosData, wepLocal, by='Taxon')
 
 # join with sos data
-combinedData2a <- inner_join(sosData, WEPData, by='Taxon', type='left', match='all') %>%
-  filter(!is.na(economic_usage_code)) %>%
-  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3),  uniqueGenus = n_distinct(GENUS)) %>%
+combinedData2a <-  wepJoin %>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / sosTotalUnique),3),  totalAccession = n())%>%
   mutate(Type = "wep")
 
 endDf <- bind_rows(typeSum, combinedData2a)
@@ -340,68 +339,51 @@ percentWEP<- endDf[[3,3]]
 percentWUS <-endDf[[2,3]]
 percentCWR <-endDf[[1,3]]
 #total number of genus per dataset
-genusWEP <- endDf[[3,4]]
-genusWUS <- endDf[[2,4]]
-genusCWR <- endDf[[1,4]]
-
+accessionWEP <- endDf[[3,4]]
+accessionWUS <- endDf[[2,4]]
+accessionCWR <- endDf[[1,4]]
 
 ```
 
 ```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
-### attempt to make a join between sos and the
-### change all feature to upper case
-K13genusCWR <- K13Data %>%
-  filter(Type == "CWR") %>%
-  distinct(Genus) %>%
-  lapply(toupper) %>%
-  as.data.frame()
 
-### change all feature to upper case
-K13genusWUS <- K13Data %>%
-  filter(Type == "WUS") %>%
-  distinct(Genus) %>%
-  lapply(toupper) %>%
-  as.data.frame()
+# join the CWR data set with SOS by taxa, arrange in desc order, show only the top 20
+sosCWRgenus <- trimCombinedData %>%
+  filter(Type == "CWR")%>% 
+  group_by(NAME) %>%
+  dplyr::add_count() %>%
+  select(c("NAME", "n"))%>%
+  arrange(desc(n))%>%
+  distinct() %>%
+  dplyr::rename(CWR = "NAME", NumberOfAccession = "n")
+sosCWRgenus20 <- sosCWRgenus[1:20,]
 
-## read in WEP data with Genus and apply  the upper function for the join
-wepLocalGenus <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\Distributions&NativityOfSpeciesWithEconomicUses.csv")) %>%
-  filter(country_code == 'USA') %>%
-  separate(name, c('Genus','species'))%>%
-  distinct(Genus)%>%  
-  lapply(toupper) %>%
-  as.data.frame()
+# join the WUS data set with SOS by taxa, arrange in desc order, show only the top 20
+sosWUSgenus <- trimCombinedData %>% 
+  filter(Type == "WUS")%>% 
+  group_by(NAME) %>%
+  dplyr::add_count() %>%
+  select(c("NAME", "n"))%>%
+  arrange(desc(n))%>%
+  distinct()%>%
+  dplyr::rename(WUS = "NAME", NumberOfAccession = "n")
+sosWUSgenus20 <- sosWUSgenus[1:20,]
 
-# genrate a count of hope many assessions are associated with each species
-sosGeneraCount <- sosData %>%
-  dplyr::rename(Genus = GENUS)%>%
-  group_by(Genus) %>%
-  dplyr::summarise(count = n())
 
-# join the CWR data set with SOS by genus, arrange in desc order, show only the top 20
-sosCWRgenus <- right_join(sosGeneraCount,K13genusCWR, by="Genus" )%>%
-  arrange(desc(count)) %>%
-  slice(1:20) %>%
-  select(Genus) %>%
-  dplyr::rename(CWR = Genus)
+# join the WEP data set with SOS by taxa, arrange in desc order, show only the top 20
+sosWEPgenus <- wepJoin %>%
+  group_by(NAME) %>%
+  dplyr::add_count() %>%
+  select(c("NAME", "n"))%>%
+  arrange(desc(n))%>%
+  distinct()%>%
+  dplyr::rename(WEP = "NAME", NumberOfAccession = "n")
+sosWEPgenus20 <- sosWEPgenus[1:20,]
 
-# join the WUS data set with SOS by genus, arrange in desc order, show only the top 20
-sosWUSgenus <- right_join(sosGeneraCount,K13genusWUS, by="Genus" )%>%
-  arrange(desc(count)) %>%
-  slice(1:20) %>%
-  select(Genus) %>%
-  dplyr::rename(WUS = Genus)
 
-# join the WEP data set with SOS by genus, arrange in desc order, show only the top 20
-sosWEPgenus <- right_join(sosGeneraCount,wepLocalGenus, by="Genus" )%>%
-  arrange(desc(count)) %>%
-  slice(1:20) %>%
-  select(Genus) %>%
-  dplyr::rename(WEP = Genus)
+top20 <-  cbind(sosCWRgenus20, sosWUSgenus20,  sosWEPgenus20)
 
-top20 <-  cbind(sosCWRgenus, sosWUSgenus,  sosWEPgenus)
-
-(top20)     
-
+top20
 ```
 The above table shows the top twenty genera collected by the SOS that are considered CWR, WUS, or WEP
 
@@ -409,86 +391,79 @@ The above table shows the top twenty genera collected by the SOS that are consid
 
 
 
-
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
-
-#Initiate an empty dataframe
-allDataSummary <- data.frame()
-
-# create the first row of the dataframe
-sosDataTotals <- c( uniqueGen, uniqueSpe)
-
-#filter based on the type for WUS and CWR
-wusSamples <- K13Data %>% filter(Type=="WUS")
-cwrSamples <-K13Data %>% filter(Type=="CWR")
-
-# create K13 WEP/CWR
-K13wus <- c( n_distinct(wusSamples$Genus), n_distinct(wusSamples$Taxon))
-K13cwr <- c( n_distinct(cwrSamples$Genus), n_distinct(cwrSamples$Taxon))
-
-## create same for world Economic plants takes some more work
-# remove duplicates and separate based on full name into genus and species
-wepSum <- WEPData %>% distinct(Taxon) %>% separate(Taxon, c("GENUS", "SPECIES"))
-# subset data exclude all features with x as species
-wepSum1 <- filter(wepSum, SPECIES != "x")
-# preform the oppisite to pull all the avoids values out, needed a differtent method
-wepX <- filter(WEPData, grepl(" x ", Taxon))
-# seperate name then exclude xcolumn to construct a new dataframe
-wepX1 <-  wepX %>% separate(Taxon, c("GENUS", "x", "SPECIES")) %>% select(GENUS, SPECIES)
-# combine the two datasets to get a complete listing of genus and species
-WEPgs <- bind_rows(wepSum1, wepX1)
-# constuct a vector with the needed values
-WEP <- c( as.numeric(n_distinct(WEPgs$GENUS)), as.numeric(n_distinct(WEPData$Taxon)))
-
-
-
-#bind the two df together
-dataSummary <- rbind(allDataSummary, sosDataTotals, K13cwr, K13wus, WEP)
-
-#define column names and row names
-colnames(dataSummary) <- c(  "Total Number of Genera", "Total Number of Taxon")
-rownames(dataSummary) <- c("SOS", "CWR in K13", "WUS in K13",  "WEP")
-(dataSummary)
-## I dont think I want to lose the row data by arranging it
-#arrange(dataSummary, dataSummary$`Total Number of Genus`)
+# 
+# #Initiate an empty dataframe
+# allDataSummary <- data.frame()
+# 
+# # create the first row of the dataframe
+# sosDataTotals <- c( uniqueGen, uniqueSpe)
+# 
+# #filter based on the type for WUS and CWR
+# wusSamples <- K13Data %>% filter(Type=="WUS")
+# cwrSamples <-K13Data %>% filter(Type=="CWR")
+# 
+# # create K13 WEP/CWR
+# K13wus <- c( n_distinct(wusSamples$Genus), n_distinct(wusSamples$Taxon))
+# K13cwr <- c( n_distinct(cwrSamples$Genus), n_distinct(cwrSamples$Taxon))
+# 
+# ## create same for world Economic plants takes some more work
+# # remove duplicates and separate based on full name into genus and species
+# wepSum <- WEPData %>% distinct(Taxon) %>% separate(Taxon, c("GENUS", "SPECIES"))
+# # subset data exclude all features with x as species
+# wepSum1 <- filter(wepSum, SPECIES != "x")
+# # preform the oppisite to pull all the avoids values out, needed a differtent method
+# wepX <- filter(WEPData, grepl(" x ", Taxon))
+# # seperate name then exclude xcolumn to construct a new dataframe
+# wepX1 <-  wepX %>% separate(Taxon, c("GENUS", "x", "SPECIES")) %>% select(GENUS, SPECIES)
+# # combine the two datasets to get a complete listing of genus and species
+# WEPgs <- bind_rows(wepSum1, wepX1)
+# # constuct a vector with the needed values
+# WEP <- c( as.numeric(n_distinct(WEPgs$GENUS)), as.numeric(n_distinct(WEPData$Taxon)))
+# 
+# 
+# 
+# #bind the two df together
+# dataSummary <- rbind(allDataSummary, sosDataTotals, K13cwr, K13wus, WEP)
+# 
+# #define column names and row names
+# colnames(dataSummary) <- c(  "Total Number of Genera", "Total Number of Taxon")
+# rownames(dataSummary) <- c("SOS", "CWR in K13", "WUS in K13",  "WEP")
+# (dataSummary)
+# ## I dont think I want to lose the row data by arranging it
+# #arrange(dataSummary, dataSummary$`Total Number of Genus`)
 
 ```
 
 The table above illustrates the total number of genera and taxa listed in the datasets. The SOS, K13, and WEP data sets reference plants found in the USA.
-**DC it's still very interesting to me that the number of genera nd taxa between the CWR and WUS can very so much... **
+
 
 
 ```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE , caption="Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.", rows.print=15}
-#Initiate an empty dataframe
-sosSummary2 <- data.frame()
+# #Initiate an empty dataframe
+# sosSummary2 <- data.frame()
+# 
+# # create the first row of the dataframe
+# sosCollection <- c(totalSamples, sosTotalUnique, uniqueWUS, percentWUS, uniqueCWR, percentCWR, uniqueWEP, percentWEP)
+# 
+# #bind the two df together
+# sosSummary2 <- rbind(sosSummary2, sosCollection)
+# 
+# #define column names and row names
+# rownames(sosSummary2) <- c("SOS Collection")
+# colnames(sosSummary2) <- c('Total Accessions', "Total Number of Taxa", "Taxa that are WUS per K13", "Percent of SOS Accessions that are WUS per K13", "Taxa that are CWR per K13", "Percent of SOS Accessions that are CWR per K13", "Taxa that are WEP" , "Percentage of SOS Accessions that are WEP")
+# 
+# sosSummary2t <- t(sosSummary2)
+
 
 # create the first row of the dataframe
-sosCollection <- c(totalSamples, sosTotalUnique, uniqueWUS, percentWUS, uniqueCWR, percentCWR, uniqueWEP, percentWEP)
-
-#bind the two df together
-sosSummary2 <- rbind(sosSummary2, sosCollection)
-
-#define column names and row names
-rownames(sosSummary2) <- c("SOS Collection")
-colnames(sosSummary2) <- c('Total Accessions', "Total Number of Taxa", "Taxa that are WUS per K13", "Percent of SOS Accessions that are WUS per K13", "Taxa that are CWR per K13", "Percent of SOS Accessions that are CWR per K13", "Taxa that are WEP" , "Percentage of SOS Accessions that are WEP")
-
-sosSummary2t <- t(sosSummary2)
-
-### look up column that the unique number of taxa is being called on should be full name
-### get the reference paper for WEP
-
-genusWEP <- endDf[[3,4]]
-genusWUS <- endDf[[2,4]]
-genusCWR <- endDf[[1,4]]
-
-# create the first row of the dataframe
-sosCollection <- data.frame(totalSamples, sosTotalUnique,  uniqueCWR, percentCWR, genusCWR, uniqueWUS, percentWUS, genusWUS, uniqueWEP, percentWEP, genusWEP)
+sosCollection <- data.frame(totalSamples, sosTotalUnique,  uniqueCWR, percentCWR, accessionCWR, uniqueWUS, percentWUS, accessionWUS, uniqueWEP, percentWEP, accessionWEP)
 #bind the two df together
 sosSummary2 <- t(sosCollection)
 
 #define column names and row names
 colnames(sosSummary2) <- c("SOS Collection")
-labels<- t(data.frame('Total Accessions', "Total Number of Taxa",  "Taxa that are CWR per K13", "Percent of SOS Accessions that are CWR per K13", "Genera that are CWR per K13", "Taxa that are WUS per K13", "Percent of SOS Accessions that are WUS per K13", "Genera that are WUS per K13","Taxa that are WEP" , "Percentage of SOS Accessions that are WEP", "Genera that are WEP"))
+labels<- t(data.frame('Total Accessions', "Total Number of Taxa",  "Taxa that are CWR per K13", "Percent of SOS Accessions that are CWR per K13", "Accessions that are CWR per K13", "Taxa that are WUS per K13", "Percent of SOS Accessions that are WUS per K13", "Accessions that are WUS per K13","Taxa that are WEP" , "Percentage of SOS Accessions that are WEP", "Accessions that are WEP"))
 
 sosSummary2t <- bind_cols(tbl_df(labels), tbl_df(sosSummary2)) %>%
   dplyr::rename( label = "V1" )
@@ -498,13 +473,22 @@ sosSummary2t <- bind_cols(tbl_df(labels), tbl_df(sosSummary2)) %>%
 
 (sosSummary2t)
 
-
 ```
 
-The above table displays the number and proportion of SOS accessions that could be classified by Khoury et al. 2013 as CWR and/or WUS, or by Wiersema and Leon 2013 as a WEP.**CK - list CWR then WUS then WEP, always in that order. Also I think this table would be better horizontal rather than vertical**
+The above table displays the number and proportion of SOS accessions that could be classified by Khoury et al. 2013 as CWR and/or WUS, or by Wiersema and Leon 2013 as a WEP.
 
-
-
+```{r}
+###
+# specifics for CWR priority 1a 
+##
+cwr1a <- trimCombinedData %>%
+  filter(Type == "CWR", Priority_specific2 == "Priority (1)A") %>%
+  group_by(NAME) %>%
+  dplyr::summarise(TotalAccession = n()) %>%
+  select(c("NAME", "TotalAccession"))%>%
+  arrange(desc(TotalAccession))
+cwr1a
+```
 
 
 ## Conservation
@@ -523,7 +507,7 @@ This graph illustrates the date that an accession was collected by the SOS progr
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE , caption="Summary of SOS and GRIN Relative to CWR and WEP", rows.print=15}
 
 # read in GRIN Accessions
-grinData <- tbl_df(read.csv("H:\\SOS_Project\\analysisData\\sosAllAccessions.csv")) %>%
+grinData <- allGrin %>%
   mutate(NewTaxon = Taxon) %>%
   separate(NewTaxon, c("genus", "species", "other1", "Other2", "other3"))
 
@@ -532,20 +516,17 @@ totalSamplesGRIN <- nrow(grinData)# why would these two numbers be different? Qu
 totalTaxon <- dplyr::n_distinct(grinData$Taxon)
 
 # join the the GRIN data with the K13 Dataset
-combinedData3 <- left_join(grinData, K13Data, by='Taxon', type='left', match='all') %>%
-  filter(!is.na(Taxon_w_author))
+combinedData3 <- inner_join(grinData, K13Data, by='Taxon') 
 
 #group by WEP and CWR and derive number of taxon and percent of sos that are those taxa
 typeSum <- combinedData3 %>%
   group_by(Type) %>%
-  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3), uniqueGenus = n_distinct(genus))
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / sosTotalUnique),3), totalAccession = n())
 
 #complete the process again for WEP Taxa
-combinedData3a <- inner_join(grinData, WEPData, by='Taxon', type='left', match='all') %>%
-  filter(!is.na(economic_usage_code))%>%
-  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3), uniqueGenus = n_distinct(genus)) %>%
+combinedData3a <- inner_join(grinData, wepLocal, by='Taxon') %>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / sosTotalUnique),3), totalAccession = n()) %>%
   mutate(Type = "WEP")
-
 
 #generate a new df with all the values
 endDf1 <- bind_rows(typeSum, combinedData3a)
@@ -571,12 +552,11 @@ grinCollection <- c(totalSamplesGRIN, totalTaxon, uniqueCWR1, percentCWR1, genus
 sosSummary3 <- bind_cols(sosSummary2t, tbl_df(grinCollection)) %>%
   dplyr::rename('SOS in GRIN Global' = value)
 # decided against showing this table
-# sosSummary3
+sosSummary3
 ```
 
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE}
-sosData <- read.csv("H:\\SOS_Project\\analysisData\\SOSdata_20180614_forARS.csv")
 
 # filter based on year collected and get a count on the number of unique accessions
 sosPre2017 <- sosData %>%
@@ -656,7 +636,7 @@ trend
 
 ```
 
-This illustrates that the rate of accumulation between the three groups flucuates a bit over time. The drop in number of samples incorporated into GRIN and NLGRP in the more resent years is due in part to the time lag between data collecting, seed processing, and storage.
+This illustrates that the rate of accumulation between the three groups fluctuates a bit over time. The drop in number of samples incorporated into GRIN and NLGRP in the more resent years is due in part to the time lag between data collecting, seed processing, and storage. It should also be noted that individual collection must have at least 10,000 un utilized seeds in order to be sent to the USDa for long term storage and distibution. SOS collections are gather with specific resporation porjects in mind at the district level. As a result often the seed gather is actively used for revegetation purposes. This is likely the most significant factor in the difference in samples collected and samples stored.  
 
 ```{r , echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
 #filter based on the "is backuped" column.
@@ -667,6 +647,7 @@ totaledBackedUp <-nrow(backedUp)
 nlgrpData <- filter(backedUp, Backup.Location.1 == 'NSSL' )
 totalBackedUp <- nrow(nlgrpData)
 
+
 ## Example of the backed up features that are missing a backup location????
 #### does this mean an error in data entry, can we assume
 #MissingBackup <- (backedUp$Backup.Location.1 )
@@ -674,21 +655,21 @@ totalBackedUp <- nrow(nlgrpData)
 
 #define the total number of species present in backup
 totalTaxonNLGRP <- n_distinct(nlgrpData$Taxon)
-
+totalTaxonNLGRP
 # join the the GRIN data with the K13 Dataset
-combinedData4 <- left_join(nlgrpData, K13Data, by='Taxon', type='left', match='all') %>%
-  filter(!is.na(Taxon_w_author))
+combinedData4 <- inner_join(nlgrpData, K13Data, by='Taxon') 
 
 #group by WEP and CWR and derive number of taxon and percent of sos that are those taxa
 typeSum4 <- combinedData4 %>%
   group_by(Type) %>%
-  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3),uniqueGenus = n_distinct(genus))
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / sosTotalUnique),3), totalAccession = n())
+
 
 #complete the process again for Wp Taxa
-combinedData4a <- inner_join(nlgrpData, WEPData, by='Taxon', type='left', match='all') %>%
-  filter(!is.na(economic_usage_code)) %>%
-  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / totalSamples),3),uniqueGenus = n_distinct(genus)) %>%
+combinedData4a <- inner_join(nlgrpData, wepLocal, by='Taxon')%>%
+  dplyr::summarise(uniqueNumber = n_distinct(Taxon), percentType = signif(100*(n_distinct(Taxon) / sosTotalUnique),3),totalAccession = n()) %>%
   mutate(Type = "WEP")
+
 
 #generate a new df with all the values
 endDf2 <- bind_rows(typeSum4, combinedData4a)
@@ -703,19 +684,22 @@ percentWEP2 <- endDf2[[3,3]]
 percentWUS2 <- endDf2[[2,3]]
 percentCWR2 <- endDf2[[1,3]]
 #total number of genus per dataset
-genusWEP2 <- endDf2[[3,4]]
-genusWUS2 <- endDf2[[2,4]]
-genusCWR2 <- endDf2[[1,4]]
+accessionWEP2 <- endDf2[[3,4]]
+accessionWUS2 <- endDf2[[2,4]]
+accessionCWR2 <- endDf2[[1,4]]
 
 # create the first row of the dataframe
-nlgrpCollection <- c(totalBackedUp, totalTaxonNLGRP, uniqueCWR2, percentCWR2, genusCWR2, uniqueWUS2, percentWUS2, genusWUS2,  uniqueWEP2, percentWEP2, genusWEP2)
+nlgrpCollection <- c(totalBackedUp, totalTaxonNLGRP, uniqueCWR2, percentCWR2, accessionCWR2, uniqueWUS2, percentWUS2, accessionWUS2,  uniqueWEP2, percentWEP2, accessionWEP2)
 
 #bind the two df together
 sosSummary4 <- bind_cols(sosSummary3, tbl_df(nlgrpCollection)) %>%
   dplyr::rename('SOS in NLGRP' = value)
 
+sosSummary4
 #define column names and row names
-endDf2
+
+
+
 ```
 
 
@@ -745,7 +729,7 @@ sosOwner <- count(grinData$Maintenance.Site)%>%
 
 ####
 # need to fix this a bit
-#### 
+####
 
   # mutate(FacilityName = c("Western Regional Plant Introduction Station, Washington", "Ornamental Plant Germplasm Center, Ohio", "National Animal Disease Center, Iowa",
   #                         "Plant Introduction Research, Iowa", "NSL unknown" , "Plant Genetic Resources Conservation Unit, Georgia", "SARU unknown Plants from alaska??", "Missing Data"))
@@ -766,7 +750,6 @@ The majority of the SOS collection is maintained by the ARS in Pullman, Washingt
 
 Collection and storage are only part of the story. Germination and the ability to grow out the plant to collect new seeds is a large part of what the nPGS does. Often little is known about the conditions required to germinate the seeds.
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
-viability <- read.csv("H:\\SOS_Project\\analysisData\\generaAverageGermination.csv")
 viability <- tbl_df(viability)
 uniqueGenus <- n_distinct(viability$Genus)
 percentGenus <- signif(100*(uniqueGenus/uniqueGen),4)
@@ -787,8 +770,8 @@ DT::datatable(arrange(viability, desc(Percent_of_Viable_Sample)))
 ```{r , echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, caption="Viability of Seeds Collected by the SOS progam."}
 # histogram with added parameters
 hist(viability$Percent_of_Viable_Sample,
-  main="Seed Germination Viability",
-  xlab="Proportion of Seeds that Germinated",
+  main="Seed Lot Viability",
+  xlab="Proportion of Seeds that were living",
   ylab="Number of Genera",
   col="light green",
   border="white",
@@ -798,106 +781,119 @@ hist(viability$Percent_of_Viable_Sample,
 
 ```
 
+
 This distribution shows that the majority of the species collected by the SOS can be germinated given the current level of understanding. Species that had a very low germination success rate will require more research to understand what are the necessary conditions to promote successful germination. Until those methods are understood it may not be possible to maintain the population indefinitely.
 
 ## Distribution of SOS Materials from the NPGS
 
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, caption="Distribution of seeds over time", rows.print=15}
-activeOrders <- read.csv("H:\\SOS_Project\\analysisData\\sosActiveOrders.csv")
-date <- separate(activeOrders, Ordered.Date, into = c("month","day", "year"), sep = "/")
+
+##
+# Eliminate the bar chart here and replace with three bar graphs of orders taxa and accession per year. 
+# an accumulation per year of the line graph either one with all three or line on the bar graph  
+# 
+##
+
+date <- newOrders %>%
+  separate(completed_date,into=c("date", "time"), sep = ":")%>%
+  separate(date, into = c("month","day", "year"), sep = "/")%>%
+  subset(select = -c(time)) %>%
+  filter(!is.na(year))
+
+date$year <- substr(date$year, 0,4)
+
 # histogram with added parameters
 hist(as.numeric(date$year),
-  main="Distributions of SOS accessions over time by order",
+  main="Distributions of SOS accessions over time by Packet",
   xlab="Year",
-  ylab="Number of Orders",
-  col="grey",
+  ylab="Number of Packets",
+  col="light blue",
   border="white",
+  ylim = c(0,2500),
   las=1 #defines the orientation of the label
 )
 
 ```
 
+This is a graph of the total number of samples delivered. Each record is assocaited with approximately 100 seeds. While this represents a good description of the total number of seeds sent the chart below splits this data to examine the unique number of order request, the number of taxons order, and the number of accessions ordered per year. 
+```{r }
+### need to remake a bargraph with a cumulative growth 
+### this will take some work 
 
+uniqueOrders <- date %>%
+  select(year, order_request_id)%>%
+  distinct() %>%
+  group_by(year) %>%
+  dplyr::summarise(count = n()) %>%
+  mutate(use = "UniqueOrders") %>%
+  dplyr::select(year,count,use)
+
+uniqueTaxon <- date %>%
+  select(year, Taxon) %>%
+  distinct() %>%
+  group_by(year) %>%
+  dplyr::summarise(count = n()) %>%
+  mutate(use = "UniqueTaxon") %>%
+  select(year,count,use)
+
+
+uniqueAccession <- date %>%
+  select(year, accession_number) %>%
+  distinct()  %>%
+  group_by(year) %>%
+  dplyr::summarise(count = n()) %>%
+  mutate(use = "UniqueAccession") %>%
+  select(year,count,use)
+
+uniquePacket <- date %>%
+  select(year) %>%
+  group_by(year) %>%
+  dplyr::summarise(count = n()) %>%
+  mutate(use = "UniquePacket") %>%
+  select(year,count,use)
+
+allGroups <- rbind(uniqueOrders, uniqueTaxon,uniqueAccession ,uniquePacket)
+
+ggplot(allGroups, aes(x=year,  y=count, color = use)) +
+  geom_point(size=3)+
+  labs(x="Year", y="Number of Features", title = 'Features Delivered Over Time') +
+  scale_color_manual(labels = c("Unique Accession","Unique Orders", "Unique Packets","Unique Taxa") , values=c("#1b9e77","#d95f02","#7570b3", "#0000b3"))
+
+
+```
 
 The NPGS stores and distributes to researchers accesions that collected by SOS. Seeds are distributed for a number of reasons including academic research studies and educational demonstrations. Many of the distributions take place within the ARS when seeds are sent to and from various seed labs (CK - ???). The distribution of seeds is end user driven and a result the volume of seeds transferred fluctuates over time.
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE ,rows.print=5}
 
-cleanOrders <- activeOrders %>%
-  filter(nchar(as.character(Order.Request.ID)) == 6) %>%
-  filter(nchar(as.character(Owner.Site)) <= 4 ) %>%
-  filter(nchar(as.character(Owner.Site)) >=2)
-
-# filter to remove remaining erronous entires
-countOrder <- plyr::count(cleanOrders$Intended.Use)%>%
-  filter(freq > 10 )
+# produce the frequency of the primary intented use values 
+countOrder <- plyr::count(date$intended_use_code)
 # Define the undefined column type
 
 countOrder[1,1] <- NA
 
-arrange(countOrder, desc(freq)) %>% `colnames<-`(c("Reason for Distribution", "Individual Shipments"))
+arrange(countOrder, desc(freq)) %>% `colnames<-`(c("Reason for Distribution", "Individual Packets"))
 ```
 
 
 It is unclear if the reason for distribution column within the grin global accession request process is a fill in the blank or drop down. There is a lot of variablility within the supplied answers.
-**Should requestors be able to enter their own reason for a request**
-**DC most of that was sloppy data coming in, I did a bit of filtering to remove the request that are not standardized.**
+
 <br>
 <br>
 
-```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE ,rows.print=5}
-####
-## need to do alot of work on this section here
-##  four columns to dig into more
-## 1. order type : View options and select all that are refer to seeds being sent outside of the ARS system   
-## 2. intended use : Primary selection; show more then 5 classes if possible
-## 3. intended use notes : seperate the columns based on "." then remerge full statements into the Research use column  
-## 4. Notes : develop a key word serach based on the intended uses  drop down values. not sure how far this will get us...
-####
-
-
-## 1. order type : View options and select all that are refer to seeds being sent outside of the ARS system   
-#thin the dataframe to only columns were asking questions off
-subsetOrder <- cleanOrders %>%
-  select("Order.Request.ID", "Order.Type","Intended.Use","Intended.Use.Note","Item.Count","Ordered.Date","Completed.Date" , "Note" )
-
-#identify the unique order types to select the ones associated with non ars distribution
-uniqueOrderTypes <- unique(subsetOrder$Order.Type)
-
-# from the list we beleive that distribution, non-research, non-educational, and Web order are the only column that send seed outside of the ARS
-nonARS <- subsetOrder %>%
-  filter(subsetOrder$Order.Type %in% c("Distribution", "Non-research, non-educational", "Web Order" )) %>%
-  filter(!is.na(Completed.Date))
-
-## 2. intended use : Primary selection; show more then 5 classes if possible
-
-#identify the unique order types to select the ones associated with non ars distribution
-uniqueUseTypes <- count(nonARS$Intended.Use)
-
-# There are really only 5 classes for why a sample would be sent out
-
-## 3. intended use notes : seperate the columns based on "Research use notes" then remerge full statements into the Research use column  
-# first split
-intendedUse2 <- nonARS %>%
-  separate(Intended.Use.Note, c("Secondary_Class", "Research_use"), "Research use notes")%>%
-  separate( Ordered.Date, into = c("month","day", "year"),sep = "/")%>%
-  subset(nchar(as.character(year)) <= 4)
-
-```
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
-#
-speciesOr2 <- activeOrders %>%
-  filter(Order.Type %in% c("Distribution", "Non-research, non-educational", "Web Order" )) %>% #added based on the results above. It did not seem to change much
-  filter(Intended.Use %in% c('Education' , "Research", "Other", "Home Gardening", ""))%>%
-  separate( Ordered.Date, into = c("month","day", "year"),sep = "/")%>%
-  subset(nchar(as.character(year)) <= 4)%>%
-  group_by(Intended.Use, year)%>%
+
+### rows are not orders replace this assumption with orders. 
+ordesDF <- date[!duplicated(date$order_request_id),]
+# organize data by intended us to plot 
+speciesOr2 <- ordesDF %>%
+  group_by(intended_use_code, year)%>%
   dplyr::summarise(number =n())
 
-
-ggplot(speciesOr2, aes(x=year,  y=number, color = Intended.Use)) +
+# plot data 
+ggplot(speciesOr2, aes(x=year,  y=number, color = intended_use_code)) +
   geom_point(size=3)+
   labs(x="Year", y="Number of Orders",color = "Intended Use", title = 'Orders for Intended Use Over Time')+
   scale_color_manual(labels = c("NA","education","home gardening", "other", "research") , values=c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00"))
@@ -915,10 +911,18 @@ If we take a look at the deliveries over time we can see there is some distinct 
 # filter by primary group then secondary. Graph for both education and other.
 # home gardening and other are both fill in the blank. Provide a table of rank occurance for each
 ###
+
+# split the untended use notes column into secondary class and naritive 
+intendedUse2 <- date %>%
+  separate(intended_use_note, c("Secondary_Class", "Research_use"), "Research use notes")
+
+intendedUse2 <- intendedUse2[!duplicated(intendedUse2$order_request_id),]
+
+# list of all possible secondary uses for reserach 
 researchUses <- c("Botanical/taxonomic investigations. ","Genetic studies. ","Entomological investigations. ","Plant Pathological investigations. ", "Chemistry. ", "Varietal Development. ", "Bioremediation. ", "Weed Science. ", "Historical, cultural and anthropological research. ")
 
 research <- intendedUse2 %>%
-  filter(Intended.Use %in% c( "Research")) %>%
+  filter(intended_use_code %in% c( "RESEARCH")) %>%
   filter(Secondary_Class %in% researchUses) %>%
   group_by(Secondary_Class, year)%>%
   dplyr::summarise(number =n())
@@ -927,7 +931,6 @@ ggplot(research, aes(x=year,  y=number, color = Secondary_Class)) +
   geom_point(size=3)+
   labs(x="Year", y="Number of Orders",color = "Secondary_Class", title = 'Orders for Research Over Time')+
   scale_color_manual(labels = unique(research$Secondary_Class), values=c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"))
-
 
 ```
 <br>
@@ -942,11 +945,11 @@ educationUses <- c("Public education, demonstrations. ", "Class instruction. ")
 
 #filter for only educational uses and summaries by use and year
 education <- intendedUse2 %>%
-  filter(Intended.Use %in% c( "Education")) %>%
+  filter(intended_use_code %in% c( "EDUCATION")) %>%
   filter(Secondary_Class %in% educationUses) %>%
   group_by(Secondary_Class, year)%>%
-  dplyr::summarise(number =n())
-
+  dplyr::summarise(number =n()) %>%
+  filter(!is.na(year))
 
 education2 <- education %>%
   spread(Secondary_Class, year)
@@ -962,19 +965,19 @@ The Education catergory has 2 distinct secondary classes. Their relative abunden
 <br>
 <br>
 
-The other and home gardening class do not have a standardize secondary class. Similarily all orders occur before 2015 do not have any standarized classifacation. Users requestiong orders would fill out the need for the order in a notes column on the request form. This notes column was combined with the class columns for orders after 2015. In order to pull some generalized information from this notes columb we employed some text mininng techniques to find commonly used words. 
+The other and home gardening class do not have a standardize secondary class. Similarily all orders occur before 2015 do not have any standarized classifacation. Users requestiong orders would fill out the need for the order in a notes column on the request form. This notes column was combined with the class columns for orders after 2015. In order to pull some generalized information from this notes columb we employed some text mininng techniques to find commonly used words.
 
 
 ```{r,  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15 }
 #convert notes class to character
 intendedUse2$qualData <- paste(intendedUse2$Research_use, as.character(intendedUse2$Note), sep="___")
 
-# create a corpus??? , convert to lower case, Remove punctuation, convert to plain text and remove stopwords, preform stemming 
+# create a corpus??? , convert to lower case, Remove punctuation, convert to plain text and remove stopwords, preform stemming
 textCorpus <- Corpus(VectorSource(intendedUse2$qualData))%>%
   tm_map(content_transformer(tolower)) %>%
   tm_map(removeWords, stopwords('english')) %>%
   tm_map( removeWords, c("will", "etc", "like", "see", "also"))%>%
-  tm_map(stemDocument) #this line is a touch one... It changes alot of the words and I had to manuel correct some I probably missed a few 
+  tm_map(stemDocument) #this line is a touch one... It changes alot of the words and I had to manuel correct some I probably missed a few
 
 dtm <- TermDocumentMatrix(textCorpus)
 m <- as.matrix(dtm)
@@ -987,51 +990,51 @@ commonWords <- d %>%
 
 #### do not rerun
 ##write.csv(commonWords, "commonWords2018.csv")
-## I complete multiple manual alterations to this document in Excel. could pull it off in R 
-#### 
+## I complete multiple manual alterations to this document in Excel. could pull it off in R
+####
 
-# read in the clean CSV of work frequency 
+# read in the clean CSV of work frequency
 trimList <- read.csv("commonWords1.csv") %>%
   filter(process %in% c(0,1)) %>%
-  arrange(desc(Number.of.Occurances))# removes undescroptive common words 
+  arrange(desc(Number.of.Occurances)) %>%
+  select(-c("X"))# removes undescroptive common words
 
-# print the full list for viewing 
 DT::datatable(trimList)
-
 ```
-The table above illustate all words that have occur over 30 times in the written notes of the orders. Notes are not required for orders and while it can be assumed that the number of times a word appears is positively related to the number of orders it appear in not efforts were made to not count words repeated used in a single order. 
+The table above illustate all words that have occur over 30 times in the written notes of the orders. Notes are not required for orders and while it can be assumed that the number of times a word appears is positively related to the number of orders it appear in not efforts were made to not count words repeated used in a single order.
 The full list of words contians information about what was to be done with the order and details about the order itself( what species). To distiguish between the tool we accessed if the word was associated with a process or not. In the table above 1 indicates the world is related to a process, 0 does not. We generated specific word clounds based on these two groups.  
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
 
 set.seed(1234)
-# generate a word cloud for all words relatibe to process 
-processWords <- trimList %>% 
+# generate a word cloud for all words relatibe to process
+processWords <- trimList %>%
   filter(process == 1) %>%
   select(c("Word","Number.of.Occurances"))
 colnames(processWords) <- c("Word", "Number of Occurances")
 
 wordcloud(words = processWords$Word, freq = processWords$`Number of Occurances`, min.freq = 1,
-          max.words=150, random.order=FALSE, rot.per=0.35, 
+          max.words=150, random.order=FALSE, rot.per=0.35,
           colors=brewer.pal(8, "Dark2"))
 ```
 <br>
 <br>
 
  word cloud displaying all the process related words
- 
+
+
  <br>
  <br>
- 
+
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
 
-# generate a word cloud for all words not related to a process 
-otherWords <- trimList %>% 
+# generate a word cloud for all words not related to a process
+otherWords <- trimList %>%
   filter(process == 0) %>%
   select(c("Word","Number.of.Occurances"))
 colnames(otherWords) <- c("Word", "Number of Occurances")
 
 wordcloud(words = otherWords$Word, freq = otherWords$`Number of Occurances`, min.freq = 1,
-          max.words=150, random.order=FALSE, rot.per=0.35, 
+          max.words=150, random.order=FALSE, rot.per=0.35,
           colors=brewer.pal(8, "Paired"))
 
 ```
@@ -1043,35 +1046,37 @@ A word cloud displaying all non process related words.
 
 
 ```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=5  }
-#print a table of all Orders rancked by primary, second order type and containing merge notes layers 
-allText <- intendedUse2 %>%
-  select("Intended.Use", "Secondary_Class","qualData" )
-  
+#print a table of all Orders rancked by primary, second order type and containing merge notes layers
+
+nonDupUse <- intendedUse2[!duplicated(intendedUse2$order_request_id),]
+
+allText <- nonDupUse %>%
+  select("intended_use_code", "Secondary_Class","qualData" )
 DT::datatable(allText)
 ```
 <br>
 <br>
+This table contains a complete listing of all the user inputs regarding what they attended to use the seeds for. 
 
 
 
-### Everything Below here many need so reworking of the datasets 
-
-**Need to ask renee to reproduce this dataset, something is wrong. there are more genera present in the distribution data then there are in NLGRP holdings**
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
-#read in feature
-distribution <- read.csv("H:\\SOS_Project\\analysisData\\SOSOrdersTaxa.csv")
 
-#summarize by genus and sum the total number of packets sent per Genus
-genusSum <- distribution %>%
+# reproducing with new dataset 
+genus <-date %>%
+  mutate(taxa = Taxon) %>%
+  tidyr::separate(taxa, into=c("genus_name", "species", "var_SSP", "subUnit"))
+
+
+genusSum <- genus %>%
   group_by(genus_name)%>%
-  dplyr::summarise(genusSum = sum(COUNT))%>%
+  dplyr::summarise(genusSum = n())%>%
   arrange(desc(genusSum))%>%
-  dplyr::rename(Genus = genus_name  ,IndividualSampleSent = genusSum)
+  dplyr::rename(Genus = genus_name, "Individual Samples Sent" = genusSum)
+
 
 #calculate the total number of seeds sent
-totalSeedsSent <- sum(distribution$COUNT)
-
-print("data came from SOSOrdersTaxa.csv")
+totalSeedsSent <- sum(genusSum$`Individual Samples Sent`)
 
 ```
 
@@ -1087,7 +1092,7 @@ K13Data$genus_name <- K13Data$Genus
 K13genus <- K13Data %>%
   group_by(genus_name) %>%
   summarise_()%>%
-  inner_join(distribution,by="genus_name")
+  inner_join(genus,by="genus_name")
 
 
 numberGenus <- n_distinct(K13genus$genus_name)
@@ -1097,63 +1102,37 @@ totalWUSSet <- sum(K13genus$COUNT)
 
 
 #Repeat for WUS features
-WEPgenus <- WEPData %>%
+WEPgenus <- wepLocal %>%
   separate(Taxon, c("genus_name", "species","other1", "other2")) %>%
   group_by(genus_name) %>%
   summarise_()%>%
-  inner_join(distribution,by="genus_name")
+  inner_join(genus,by="genus_name")
 
 numberGenusWEP <- n_distinct(WEPgenus$genus_name)
-
 
 
 # calculated the total number of seeds sent
 totalWEPSet <- sum(WEPgenus$COUNT)
 
-
-
 #define the unique number of genus and seeds sent to enitity groups
-reciever <- distribution %>%
-  group_by(title) %>%
-  dplyr::summarise(numberOfGenus = n_distinct(genus_name), numberOfSeeds = sum(COUNT)) %>%
+reciever <- genus %>%
+  group_by(To.Whom) %>%
+  dplyr::summarise(numberOfGenus = n_distinct(genus_name), numberOfSeeds = n()) %>%
   arrange(desc(numberOfGenus))%>%
-  dplyr::rename("Entity Receiving Seeds" = 'title'  ,"Number Of Genera Distributed" = 'numberOfGenus', "Samples Distributed" = 'numberOfSeeds')
+  dplyr::rename("Entity Receiving Seeds" = 'To.Whom'  ,"Number Of Genera Received" = 'numberOfGenus', "Samples Distributed" = 'numberOfSeeds')
 
-reciever
+DT::datatable(reciever)
 
-print( "data is from SOSOrdersTaxa.csv")
 ```
 <br>
 <br>
 Table illustrating the total number of samples sent, including per unique genus. There has been a total of `r totalSeedsSent` seeds and or packets distributed by the ARS that were collected by the SOS program. There are many more sample devilered then orders made because a single order request could contain mutlple samples.
 
-**CK- these numbers dont align with the figure above**
-
-**DC - the difference in numbers is due to the fact that a single order can contain multiple samples. There have been 4,018 order that contianed 18,078 unique samples. **
-
-This will be a good question for the other individuals more familiar with the delivery process.
 
 There are a total of `r totalSeedsSent` samples that have been distributed by the NPGS. Of that `r totalWUSSet`, are considered to be either CWR or WUS and `r totalWEPSet` are consider to be WEP. This is representing `r numberGenus`  and `r numberGenusWEP` unique genera respectively.
 <br>
 <br>
-This chart shows the number of times an order was placed for a specific accession.
 
-```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
-# call in data on the distribution of species
-speciesOrdered <- distinct(read.csv("H:\\SOS_Project\\analysisData\\sosOrderItems.csv"))
-speciesOrdered <- mutate(speciesOrdered, Order.Request.ID = as.factor(order_request_id))
-
-View(speciesOrdered)
-# one to main join with activeOrders based on "Order.Request.ID"
-speciesOr <- full_join(speciesOrdered, distinct(activeOrders), by="Order.Request.ID") %>%
-  distinct()
-
-
-accessionsSent <- arrange(count(speciesOr$accession_number) , desc(freq)) %>% `colnames<-`(c("Accession", "Accessions Pulled From"))
-DT::datatable(accessionsSent)
-
-print("data is from sosOrderItems.csv")
-```
 This chart shows the number of times an order was place for a specific accession.
 
 <br>
@@ -1161,37 +1140,35 @@ This chart shows the number of times an order was place for a specific accession
 
 ```{r,echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 #totalSent -- not super relavent because it is the number of time indiviudal species were sent
-taxaSent1 <- speciesOr %>%
-  filter(!is.na(as.numeric(as.character(speciesOr$Item.Count))))%>%
-  group_by(Taxon)%>%
-  dplyr::summarise( count = n(), sum = max(as.numeric(Item.Count)))%>%
-  arrange(desc(count))
-DT::datatable(taxaSent1 %>% arrange(desc(count)) %>% `colnames<-`(c("Taxon", "Total Delivered", "Total Packets")))
+totalSent <- date %>%
+  group_by(Taxon) %>%
+  dplyr::summarise(sum = n(), accession = n_distinct(accession_number)) %>%
+  arrange(desc(sum)) %>%
+  `colnames<-`(c("Taxon", "Total Packets Delivered", "Total Accessions Pulled From"))
 
-print("data is from sosOrderItems.csv")
+DT::datatable(totalSent)
 ```
 <br>
 <br>
 
-This chart shows the number of times a specific taxon was has been delivered. These deliveries could include multiple accessions.
+This chart shows the number of times a specific taxon  has been delivered. These deliveries could include multiple accessions.
 <br>
 <br>
 ```{r, echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 # who is receiving deliveries
-resquestor1 <- speciesOr %>%
-  filter(!is.na(as.numeric(as.character(speciesOr$Item.Count))))%>%
-  group_by(Requestor)%>%
-  dplyr::summarise( taxa = n_distinct(Taxon), count = n(), sum = max(as.numeric(Item.Count)))%>%
-  arrange(desc(count))
+requestor <- date %>%
+  group_by(category_code) %>%
+  filter(!is.na(quantity_shipped))%>%
+  dplyr::summarise(taxa = n_distinct(Taxon), count = n_distinct(order_request_id), sum = n()) %>%
+  arrange(desc(sum))%>%
+  `colnames<-`(c("Category Code", "Total Unique Taxon Received", "Total Orders", "Total Packets"))
+  
 
+DT::datatable(requestor)
 
-DT::datatable(resquestor1 %>% arrange(desc(count)) %>% `colnames<-`(c("Taxon", "Total Taxon", "Total Delivered", "Total Packets")))
-
-print("data is from sosOrderItems.csv")
 ```
 
 This graphic shows which usert is receiving the greatest diversity of taxa.
-**again the question of the base unit is here. It would seem that a packet is the smallest unit counted but I do not know**
 
 
 
@@ -1201,7 +1178,7 @@ This graphic shows which usert is receiving the greatest diversity of taxa.
 - there is a lot of room for narrative and exploration of these results. Collaboration with individuals more involved in the processing of these accession need to be pulled in to provide opinions and highlight significance of results per each section
 
 
-*work on adding the reference into the text when appropriate.* 
+*work on adding the reference into the text when appropriate.*
 @maxted_towards_2006
 
 @khoury_inventory_2013
