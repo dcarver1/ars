@@ -46,8 +46,11 @@ Examing a specific specis more closely
 HELIANTHUS annuus is a crop wild relative of the commercially farmed sunflower. 
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
+base_path <- "C:/Users/Daniel.Carver/Documents/newH/SOS_Project"
+
+
 ### exploration of detail account of a single species. Need a map here 
-sosFull <- read.csv("H:\\SOS_Project\\analysisData\\fullSOSreport_20180614.csv")
+sosFull <- read.csv(paste0(base_path, "/analysisData/fullSOSreport_20180614.csv"))
 
 heli <- sosFull %>%
   filter(NAME == "Helianthus annuus")

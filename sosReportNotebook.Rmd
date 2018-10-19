@@ -236,7 +236,7 @@ DT::datatable(taxa1)
 
 ```
 
-
+Table listing the number of collection for each speices. Most collected species are listed first. 
 
 
 ## Crop wild relatives, wild utilized species, and economic plants
@@ -435,9 +435,6 @@ The above table shows the top twenty genera collected by the SOS that are consid
 
 ```
 
-The table above illustrates the total number of genera and taxa listed in the datasets. The SOS, K13, and WEP data sets reference plants found in the USA.
-
-
 
 ```{r  echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE , caption="Summary of the SOS collection relative to Econmically Useful and Wild Crop Relatives.", rows.print=15}
 # #Initiate an empty dataframe
@@ -485,10 +482,18 @@ cwr1a <- trimCombinedData %>%
   filter(Type == "CWR", Priority_specific2 == "Priority (1)A") %>%
   group_by(NAME) %>%
   dplyr::summarise(TotalAccession = n()) %>%
-  select(c("NAME", "TotalAccession"))%>%
+  dplyr::select(c("NAME", "TotalAccession"))%>%
   arrange(desc(TotalAccession))
 cwr1a
+
+totalP1A <- nrow(cwr1a)
 ```
+
+This is a listing all all the Prioriety 1 A crop wild relatives. There are apporixmately 250 of these species in the United States. A P1A crop wild relative is a native species that is closely related to an important food crop. The SOS program has collected `r totalP1A` of theses P1A species.
+
+
+
+
 
 
 ## Conservation
@@ -554,7 +559,7 @@ sosSummary3 <- bind_cols(sosSummary2t, tbl_df(grinCollection)) %>%
 # decided against showing this table
 sosSummary3
 ```
-
+Not all SOS collection make into GRIN as a result the proportion of the collection that is a CWR, WUS, or WEP decrease as well. 
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -702,7 +707,7 @@ sosSummary4
 
 ```
 
-
+Samples at NLGRP represent the most protected accessions. Most of the data that makes into the GRIN global system makes it in the backup system at NLGRP. 
 
 
 
@@ -763,7 +768,7 @@ colnames(viability) <- c('Genus', 'Percent_of_Viable_Sample' )
 DT::datatable(arrange(viability, desc(Percent_of_Viable_Sample)))
 
 ```
-
+The table shows the proportion of seeds received that were alive on arrival at NLGRP. 
 
 
 
@@ -863,6 +868,7 @@ ggplot(allGroups, aes(x=year,  y=count, color = use)) +
 
 ```
 
+**Working on changing this to show total growth over time rather then discrete years**
 The NPGS stores and distributes to researchers accesions that collected by SOS. Seeds are distributed for a number of reasons including academic research studies and educational demonstrations. Many of the distributions take place within the ARS when seeds are sent to and from various seed labs (CK - ???). The distribution of seeds is end user driven and a result the volume of seeds transferred fluctuates over time.
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE ,rows.print=5}
@@ -876,8 +882,7 @@ countOrder[1,1] <- NA
 arrange(countOrder, desc(freq)) %>% `colnames<-`(c("Reason for Distribution", "Individual Packets"))
 ```
 
-
-It is unclear if the reason for distribution column within the grin global accession request process is a fill in the blank or drop down. There is a lot of variablility within the supplied answers.
+Primary reason for distibution was incorperated into the ordering process in 2015. There are four drop down options. 
 
 <br>
 <br>
@@ -901,6 +906,7 @@ ggplot(speciesOr2, aes(x=year,  y=number, color = intended_use_code)) +
 ```
 <br>
 <br>
+**Working on changing this to show total growth over time rather then discrete years**
 If we take a look at the deliveries over time we can see there is some distinct variability over time. The NA variable is present because before 2015 the reason for distribution was not recorded.
 <br>
 <br>
@@ -935,6 +941,7 @@ ggplot(research, aes(x=year,  y=number, color = Secondary_Class)) +
 ```
 <br>
 <br>
+**Working on changing this to show total growth over time rather then discrete years**
 The research catergory has 9 distinct secondary classes. Their relative abundence is illistrated by the graph above.
 <br>
 <br>
@@ -961,6 +968,7 @@ ggplot(education, aes(x=year,  y=number, color = Secondary_Class)) +
 ```
 <br>
 <br>
+**Working on changing this to show total growth over time rather then discrete years**
 The Education catergory has 2 distinct secondary classes. Their relative abundence is illistrated by the graph above.
 <br>
 <br>
@@ -1126,14 +1134,16 @@ DT::datatable(reciever)
 ```
 <br>
 <br>
-Table illustrating the total number of samples sent, including per unique genus. There has been a total of `r totalSeedsSent` seeds and or packets distributed by the ARS that were collected by the SOS program. There are many more sample devilered then orders made because a single order request could contain mutlple samples.
+**working on the Entiry receiving seeds, not sure how specic it should be** 
+This table shows the locations that are receiving the most SOS seeds. The number of unique genera delivered and the number of packets distributed are both shown. 
 
 
+
+**incorrect numbers at the moment, please ignore for now**
 There are a total of `r totalSeedsSent` samples that have been distributed by the NPGS. Of that `r totalWUSSet`, are considered to be either CWR or WUS and `r totalWEPSet` are consider to be WEP. This is representing `r numberGenus`  and `r numberGenusWEP` unique genera respectively.
 <br>
 <br>
 
-This chart shows the number of times an order was place for a specific accession.
 
 <br>
 <br>
@@ -1168,7 +1178,7 @@ DT::datatable(requestor)
 
 ```
 
-This graphic shows which usert is receiving the greatest diversity of taxa.
+This graphic shows which user group is receiving the greatest diversity of taxa.
 
 
 
@@ -1178,7 +1188,67 @@ This graphic shows which usert is receiving the greatest diversity of taxa.
 - there is a lot of room for narrative and exploration of these results. Collaboration with individuals more involved in the processing of these accession need to be pulled in to provide opinions and highlight significance of results per each section
 
 
+# Extras (just ideas really)
+The SOS data contains a wealth of information regarding the environment surrounding the collection sites. Depending on the interest and direction of this document, there are alot of interesting routes this data can lead. 
+
+One idea we tossed around a bit it showcasing a specific species in more detail. For example Heliantheis Annus is the most collected P1A CWR. This could entail a map of collection site or a showcase of the plants that are present around this species. 
+
+
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
+### exploration of detail account of a single species. Need a map here 
+sosFull <- read.csv(paste0(base_path, "/analysisData/fullSOSreport_20180614.csv"))
+
+heli <- sosFull %>%
+  filter(NAME == "Helianthus annuus") %>%
+  mutate(phyto = PHYTOREGION_FULL)%>%
+  separate(phyto,c("phytoShort","phytoExtra"), sep ="(Omernik)" )
+```
+
+The table show all the species associated with the the collection site. 
+
+
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
+
+### building frame work for a network analysis between geographic region and plant associations 
+heli2 <- heli %>%
+  dplyr::select(PHYTOREGION_FULL, ASSOCIATED_TAXA_FULL) %>%
+  separate(ASSOCIATED_TAXA_FULL, c("sp1","sp2","sp3","sp4","sp5","sp6","sp7","sp8","sp9","sp10","sp11","sp12","sp13","sp14","sp15","sp16"), sep=":") %>%
+  arrange(PHYTOREGION_FULL)
+
+DT::datatable(heli2)
+```
+
+The table shows all the species associated with the the collection site. It can be filtered to show varied phytoregion. I think this is very interesting for understanding potential genetic diversity across the landscape.  
+
+
+```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE, rows.print=15}
+library(gdalUtils)
+library(tmap)
+library(rgdal)
+library(knitr)
+library(tm)
+library(sp)
+xy <- heli %>% 
+  mutate(x=as.numeric(as.character(heli$LONGITUDE_DECIMAL)), 
+         y = as.numeric(as.character(heli$LATITUDE_DECIMAL)))%>%
+  dplyr::select(x,y)
+  
+
+spatialData <- sp::SpatialPointsDataFrame(coords = xy, data = heli , proj4string = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
+
+tmap_mode("view")
+qtm(shp = spatialData,dots.col = "phytoShort" , title = "Helianthesis Annus Collects by Phytoregion")
+```
+**use arrows to move around the map... A little odd sorry** 
+Very basic map, but could offer some opportunity to highlight collection within a specific regions (sagebrush habitat), Recent burned areas. 
+Again just lots and lots of possabilities. 
+
+
+
+
+
 *work on adding the reference into the text when appropriate.*
+
 @maxted_towards_2006
 
 @khoury_inventory_2013
