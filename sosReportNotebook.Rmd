@@ -598,7 +598,6 @@ nsslDates <-grinDates %>%
 sosCount <- sosData %>%
   mutate(count = as.numeric(1))
 
-
 sosCuml <- sosCount%>%
   group_by(COLL_YR) %>%
   dplyr::summarise(total = n())%>%
@@ -826,13 +825,27 @@ This is a graph of the total number of samples delivered. Each record is assocai
 ### need to remake a bargraph with a cumulative growth 
 ### this will take some work 
 
+#create a count column for sos data
+sosCount <- sosData %>%
+  mutate(count = as.numeric(1))
+
+sosCuml <- sosCount%>%
+  group_by(COLL_YR) %>%
+  dplyr::summarise(total = n())%>%
+  mutate(dataset = 'SOS') %>%
+  dplyr::rename(year = "COLL_YR") %>%
+  mutate(cumsum = cumsum(total))
+
+
 uniqueOrders <- date %>%
   select(year, order_request_id)%>%
   distinct() %>%
   group_by(year) %>%
   dplyr::summarise(count = n()) %>%
   mutate(use = "UniqueOrders") %>%
-  dplyr::select(year,count,use)
+  dplyr::select(year,count,use) %>%
+  mutate(cumsum = cumsum(count)) 
+
 
 uniqueTaxon <- date %>%
   select(year, Taxon) %>%
@@ -840,7 +853,8 @@ uniqueTaxon <- date %>%
   group_by(year) %>%
   dplyr::summarise(count = n()) %>%
   mutate(use = "UniqueTaxon") %>%
-  select(year,count,use)
+  select(year,count,use) %>%
+  mutate(cumsum = cumsum(count)) 
 
 
 uniqueAccession <- date %>%
@@ -849,18 +863,20 @@ uniqueAccession <- date %>%
   group_by(year) %>%
   dplyr::summarise(count = n()) %>%
   mutate(use = "UniqueAccession") %>%
-  select(year,count,use)
+  select(year,count,use)  %>%
+  mutate(cumsum = cumsum(count)) 
 
 uniquePacket <- date %>%
   select(year) %>%
   group_by(year) %>%
   dplyr::summarise(count = n()) %>%
   mutate(use = "UniquePacket") %>%
-  select(year,count,use)
+  select(year,count,use)  %>%
+  mutate(cumsum = cumsum(count))
 
 allGroups <- rbind(uniqueOrders, uniqueTaxon,uniqueAccession ,uniquePacket)
-
-ggplot(allGroups, aes(x=year,  y=count, color = use)) +
+allGroups
+ggplot(allGroups, aes(x=year,  y=cumsum, color = use, alpha=0.8)) +
   geom_point(size=3)+
   labs(x="Year", y="Number of Features", title = 'Features Delivered Over Time') +
   scale_color_manual(labels = c("Unique Accession","Unique Orders", "Unique Packets","Unique Taxa") , values=c("#1b9e77","#d95f02","#7570b3", "#0000b3"))
@@ -868,7 +884,7 @@ ggplot(allGroups, aes(x=year,  y=count, color = use)) +
 
 ```
 
-**Working on changing this to show total growth over time rather then discrete years**
+
 The NPGS stores and distributes to researchers accesions that collected by SOS. Seeds are distributed for a number of reasons including academic research studies and educational demonstrations. Many of the distributions take place within the ARS when seeds are sent to and from various seed labs (CK - ???). The distribution of seeds is end user driven and a result the volume of seeds transferred fluctuates over time.
 
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE ,rows.print=5}
@@ -891,14 +907,38 @@ Primary reason for distibution was incorperated into the ordering process in 201
 ```{r echo=FALSE, tidy=TRUE, message=FALSE, warning=FALSE}
 
 ### rows are not orders replace this assumption with orders. 
-ordesDF <- date[!duplicated(date$order_request_id),]
-# organize data by intended us to plot 
-speciesOr2 <- ordesDF %>%
-  group_by(intended_use_code, year)%>%
-  dplyr::summarise(number =n())
+ordersDF <- date[!duplicated(date$order_request_id),]
+
+
+#define function to produce unique DF for use use code 
+cumulativeFun <- function(dataFrame, useCode) {
+  # creates a cumulative count of the orders based on use code
+  #returns a datatable 
+  df1 <- dataFrame %>%
+  filter(dataFrame$intended_use_code == useCode )%>% 
+  group_by(year)%>%
+  dplyr::summarise(number =n()) %>%
+  mutate(cumsum = cumsum(number))%>%
+  mutate(use = useCode) 
+
+  return(df1)
+}
+
+#list of unique uses 
+uses <- unique(ordersDF$intended_use_code)
+
+# initalize empty DF 
+speciesOr2 <- data.frame()
+
+# itorate trough use list to apply function and build a complete dataframe 
+for(use in uses){
+  df1 <- cumulativeFun(ordersDF, use)
+  speciesOr2 <- bind_rows(speciesOr2,df1)
+}
+
 
 # plot data 
-ggplot(speciesOr2, aes(x=year,  y=number, color = intended_use_code)) +
+ggplot(speciesOr2, aes(x=year,  y=cumsum, color = use)) +
   geom_point(size=3)+
   labs(x="Year", y="Number of Orders",color = "Intended Use", title = 'Orders for Intended Use Over Time')+
   scale_color_manual(labels = c("NA","education","home gardening", "other", "research") , values=c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00"))
@@ -906,7 +946,7 @@ ggplot(speciesOr2, aes(x=year,  y=number, color = intended_use_code)) +
 ```
 <br>
 <br>
-**Working on changing this to show total growth over time rather then discrete years**
+
 If we take a look at the deliveries over time we can see there is some distinct variability over time. The NA variable is present because before 2015 the reason for distribution was not recorded.
 <br>
 <br>
@@ -919,29 +959,52 @@ If we take a look at the deliveries over time we can see there is some distinct 
 ###
 
 # split the untended use notes column into secondary class and naritive 
-intendedUse2 <- date %>%
+intendedUse2 <- date[!duplicated(date$order_request_id),] %>%
+  filter(intended_use_code %in% c( "RESEARCH")) %>%
   separate(intended_use_note, c("Secondary_Class", "Research_use"), "Research use notes")
 
-intendedUse2 <- intendedUse2[!duplicated(intendedUse2$order_request_id),]
-
-# list of all possible secondary uses for reserach 
+# list of all possible secondary uses for reserach (gathered from GRIN )
 researchUses <- c("Botanical/taxonomic investigations. ","Genetic studies. ","Entomological investigations. ","Plant Pathological investigations. ", "Chemistry. ", "Varietal Development. ", "Bioremediation. ", "Weed Science. ", "Historical, cultural and anthropological research. ")
 
-research <- intendedUse2 %>%
-  filter(intended_use_code %in% c( "RESEARCH")) %>%
-  filter(Secondary_Class %in% researchUses) %>%
-  group_by(Secondary_Class, year)%>%
-  dplyr::summarise(number =n())
 
-ggplot(research, aes(x=year,  y=number, color = Secondary_Class)) +
+
+
+#define function to produce unique DF for use use code 
+cumulativeFun2 <- function(dataFrame, useCode) {
+  # creates a cumulative count of the orders based on use code
+  #returns a datatable 
+  df1 <- dataFrame %>%
+  filter(dataFrame$Secondary_Class == i)%>% 
+  group_by(year)%>%
+  dplyr::summarise(number =n()) %>%
+  mutate(cumsum = cumsum(number))%>%
+  mutate(use = useCode) 
+
+  return(df1)
+}
+
+# initalize empty DF 
+
+research <- data.frame()
+
+# itorate trough use list to apply function and build a complete dataframe 
+
+for(i in researchUses){
+  df1 <- cumulativeFun2(intendedUse2, i)
+  research <- bind_rows(research,df1)
+}
+
+
+ggplot(research, aes(x=year,  y=cumsum, color = use)) +
   geom_point(size=3)+
   labs(x="Year", y="Number of Orders",color = "Secondary_Class", title = 'Orders for Research Over Time')+
-  scale_color_manual(labels = unique(research$Secondary_Class), values=c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"))
+  scale_color_manual( values=c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"))
+
 
 ```
 <br>
 <br>
-**Working on changing this to show total growth over time rather then discrete years**
+
 The research catergory has 9 distinct secondary classes. Their relative abundence is illistrated by the graph above.
 <br>
 <br>
@@ -951,24 +1014,31 @@ The research catergory has 9 distinct secondary classes. Their relative abundenc
 educationUses <- c("Public education, demonstrations. ", "Class instruction. ")
 
 #filter for only educational uses and summaries by use and year
-education <- intendedUse2 %>%
+education <- date[!duplicated(date$order_request_id),] %>%
   filter(intended_use_code %in% c( "EDUCATION")) %>%
-  filter(Secondary_Class %in% educationUses) %>%
-  group_by(Secondary_Class, year)%>%
-  dplyr::summarise(number =n()) %>%
+  separate(intended_use_note, c("Secondary_Class", "Research_use"), "Research use notes") %>%
   filter(!is.na(year))
 
-education2 <- education %>%
-  spread(Secondary_Class, year)
+  # initalize empty DF 
 
-ggplot(education, aes(x=year,  y=number, color = Secondary_Class)) +
+education2 <- data.frame()
+
+# itorate trough use list to apply function and build a complete dataframe 
+
+for(i in educationUses){
+  df1 <- cumulativeFun2(education, i)
+  education2 <- bind_rows(education2,df1)
+}
+
+
+ggplot(education2, aes(x=year,  y=cumsum, color = use)) +
   geom_point(size=3)+
   labs(x="Year", y="Number of Orders",color = "Secondary_Class", title = 'Orders for Education Over Time')+
-  scale_color_manual(labels = unique(education$Secondary_Class), values=c("#e41a1c","#377eb8"))
+  scale_color_manual(values=c("#e41a1c","#377eb8"))
 ```
 <br>
 <br>
-**Working on changing this to show total growth over time rather then discrete years**
+
 The Education catergory has 2 distinct secondary classes. Their relative abundence is illistrated by the graph above.
 <br>
 <br>
@@ -1134,7 +1204,7 @@ DT::datatable(reciever)
 ```
 <br>
 <br>
-**working on the Entiry receiving seeds, not sure how specic it should be** 
+
 This table shows the locations that are receiving the most SOS seeds. The number of unique genera delivered and the number of packets distributed are both shown. 
 
 
